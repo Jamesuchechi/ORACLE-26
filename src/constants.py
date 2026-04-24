@@ -31,6 +31,8 @@ WC2026_GROUPS = {
 }
 
 ALL_WC_TEAMS   = [t for teams in WC2026_GROUPS.values() for t in teams]
+ALL_TEAMS      = ALL_WC_TEAMS
+
 TEAM_TO_GROUP  = {t: g for g, teams in WC2026_GROUPS.items() for t in teams}
 
 WC2026_VENUES = {
