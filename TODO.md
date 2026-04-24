@@ -1,64 +1,55 @@
-# 🔮 ORACLE-26: The Global Intelligence Engine
-**The World Cup 2026 Multi-Signal Prediction Platform**
+# ◈ ORACLE-26: Universal Intelligence Hub — Project Roadmap
+
+This document tracks the end-to-end development of the ORACLE-26 intelligence terminal for the Zerve Hackathon.
 
 ---
 
-## 🏆 THE VISION
-ORACLE-26 is not a sports model; it is a **Unified Intelligence Engine**. It predicts the 2026 World Cup by training on 5 distinct domains of human data. Built natively on **Zerve AI**, it represents the future of production-grade data science.
+## ✅ PHASE 1: Core Signal Engines (COMPLETED)
+- [x] **Sports Engine**: Dixon-Coles Poisson + Elo ranking logic.
+- [x] **Markets Engine**: Polymarket integration + Market Alpha (Vertical II).
+- [x] **Economics Engine**: FRED/World Bank macro stability scoring.
+- [x] **Climate Engine**: NOAA/Open-Meteo risk intelligence (Vertical III).
+- [x] **Social Engine**: Google Trends + Reddit momentum detection (Vertical IV).
+
+## ✅ PHASE 2: Signal Fusion & Interaction (COMPLETED)
+- [x] **Fusion Engine**: Dynamic weighting logic implemented in `src/features/fusion.py`.
+- [x] **Interaction Rules**: Economic crisis penalties, Social-Market alpha, Climate-Econ risk escalation.
+- [x] **Explainability**: "Key Drivers" reasoning tokens added to fusion results.
+
+## 🔄 PHASE 3: Intelligence Backend (FINALIZING)
+- [x] **Dynamic API**: FastAPI endpoints with custom weighting support (`w_sports`, etc.).
+- [x] **Alpha Discovery**: `/v1/alpha/opportunities` endpoint to surface market mispricing.
+- [x] **Executive Briefing**: `/v1/analyst/briefing` endpoint for summarized intelligence.
+- [ ] **Agent Gateway**: Integrate Groq (Llama 3) for real-time natural language analysis.
+- [ ] **Background Sync**: Implement simple scheduler to refresh signal CSVs daily.
+
+## ⬜ PHASE 4: React Premium Terminal (THE FRONTEND)
+- [ ] **P4.1: Foundation & Shell**
+  - [ ] Initialize Vite + React project.
+  - [ ] Setup Tailwind CSS + Framer Motion.
+  - [ ] Build the "Cinematic Terminal" shell (Scanlines, CRT effects, Sidebar).
+- [ ] **P4.2: The Intelligence Hub (Dashboard)**
+  - [ ] **Interactive Leaderboard**: Real-time rank changes using Framer Motion.
+  - [ ] **What-If Sliders**: Connect UI weights to the dynamic API.
+  - [ ] **Signal Breakdown**: Visualize "Key Drivers" for every team.
+- [ ] **P4.3: Alpha Radar & Climate Map**
+  - [ ] **Alert Feed**: Real-time ticker for "Value" and "Hype" opportunities.
+  - [ ] **Venue Stress Map**: Interactive map of WC2026 host cities colored by risk.
+- [ ] **P4.4: Conflux Match Predictor**
+  - [ ] Detailed comparison view for H2H match simulation.
+  - [ ] "Signal Chord" diagram showing domain clashes.
+
+## ⬜ PHASE 5: The Zerve Analyst (AI Agentic UI)
+- [ ] **Analyst Command Center**: Sidebar chat interface using Groq.
+- [ ] **Actionable Insights**: Agent can trigger UI changes (e.g., "Show me high-risk venues").
+- [ ] **Intelligence Reports**: Agent-generated scouting briefs for teams and groups.
+
+## ⬜ PHASE 6: Production & Submission
+- [ ] **Optimization**: Bundle React for production.
+- [ ] **Documentation**: Finalize README.md and API documentation.
+- [ ] **Submission**: Package for ZerveHack 2026 (Project, Video, Summary).
 
 ---
 
-## ✅ PHASE 1 — Sports Intelligence (COMPLETED & ROBUST)
-- [x] **Dixon-Coles Poisson Model**: Goal distribution engine trained on 46,000+ matches.
-- [x] **XGBoost Match Classifier**: Secondary ML layer for non-linear sport signals.
-- [x] **Monte Carlo Simulator**: 10,000-run tournament engine for qualification probs.
-- [x] **FBref Integration**: Advanced xG and possession metrics.
-
----
-
-## 🔄 PHASE 2 — Multi-Domain ML Training (Day 2–3)
-**Objective: Move from "Proxies" to "Trained Models" for every signal.**
-
-### 2.1 The Econ-Stability Model 💰
-- [ ] **Dataset**: Merge 60 years of **World Bank/FRED** data with historical WC outcomes.
-- [ ] **Training**: Train a classifier to identify if "Macro-Economic Stability" (GDP growth, low inflation) correlates with "Underdog Surprises."
-- [ ] **Inference**: Generate an `econ_stability_score` for all 48 teams.
-
-### 2.2 The Market Calibration Model 📈
-- [ ] **Dataset**: Historical betting odds vs. actual outcomes (WC2018, WC2022).
-- [ ] **Training**: Train a "Market Irrationality" detector—identifying when public sentiment (Markets) diverges from historical stats.
-- [ ] **Inference**: Output a `market_wisdom_alpha` signal.
-
-### 2.3 The Climate Resilience Model 🌍
-- [ ] **Dataset**: **NOAA/Open-Meteo** historical weather for all past WC venues.
-- [ ] **Training**: Measure the impact of "Humidity + Altitude" on goal-scoring rates and injury probability for non-native teams.
-- [ ] **Inference**: Dynamic `heat_stress_penalty` per match.
-
-### 2.4 The Social Momentum Engine 📣
-- [ ] **Dataset**: Multi-month **Google Trends** + **Reddit Sentiment** time series.
-- [ ] **Analysis**: Detect "Tipping Points" in social momentum that precede team form improvements.
-
----
-
-## ⬜ PHASE 3 — The Grand Oracle Ensemble (Day 4)
-- [ ] **Model Stacking**: Build a Meta-Learner (XGBoost) that learns the optimal fusion of all 5 domain models.
-- [ ] **Attribution Engine**: Explainable AI (SHAP) to show exactly which signal (e.g. Climate vs Markets) is driving a prediction.
-- [ ] **Calibration**: Platt scaling to ensure probabilities are "Real World" ready.
-
----
-
-## ⬜ PHASE 4 — Premium "Bloomberg-Style" Dashboard (Day 4–5)
-- [ ] **UI/UX Refinement**: 
-  - [ ] Implement Glassmorphism (blur/transparency) via custom Streamlit CSS.
-  - [ ] Custom Neon Green (#00ff88) & Deep Purple palette.
-- [ ] **Interactive Visuals**:
-  - [ ] **3D Radar Signal Chart**: Real-time interaction with the 5-domain intelligence.
-  - [ ] **Live Market Ticker**: Scrolling bar with live Polymarket odds and Forex movements.
-- [ ] **API Playground**: Embeddable "Try it" console for other developers.
-
----
-
-## ⬜ PHASE 5 — Demo, Ship & Submit (Day 6)
-- [ ] **Demo Video**: High-production walkthrough of the Zerve workflow.
-- [ ] **Documentation**: 300-word summary of the "Original Insight" (e.g. "How Inflation Predicts WC Performance").
-- [ ] **Public Launch**: Share on X/LinkedIn tagging @Zerve_AI.
+### **◈ Project Vision**
+*"ORACLE-26 is not a dashboard; it is a multi-modal reasoning engine that uncovers insights where others only see data."*

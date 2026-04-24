@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>◈ CONFLUX — Intelligence Terminal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:        #0a0b0d;
+  --bg1:       #0f1114;
+  --bg2:       #141720;
+  --bg3:       #1a1f2e;
+  --border:    rgba(255,255,255,0.07);
+  --border-hi: rgba(255,255,255,0.14);
+  --amber:     #e8a030;
+  --amber-dim: rgba(232,160,48,0.15);
+  --amber-glow:rgba(232,160,48,0.08);
+  --teal:      #2dd4a0;
+  --teal-dim:  rgba(45,212,160,0.12);
+  --red:       #e85d4a;
+  --red-dim:   rgba(232,93,74,0.12);
+  --blue:      #5b9cf6;
+  --blue-dim:  rgba(91,156,246,0.12);
+  --coral:     #e87060;
+  --muted:     rgba(255,255,255,0.35);
+  --text:      rgba(255,255,255,0.87);
+  --mono: 'DM Mono', monospace;
+  --sans: 'Syne', sans-serif;
+}
+
+html, body { height: 100%; background: var(--bg); color: var(--text); font-family: var(--sans); overflow-x: hidden; }
+
+/* ─── SCAN LINE EFFECT ─── */
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px);
+  pointer-events: none; z-index: 9999;
+}
+
+/* ─── LAYOUT ─── */
+.shell { display: grid; grid-template-rows: 52px 1fr; height: 100vh; }
+
+/* ─── TOPBAR ─── */
+.topbar {
+  display: flex; align-items: center; gap: 24px;
+  padding: 0 24px;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg1);
+}
+.logo {
+  font-family: var(--mono); font-size: 15px; font-weight: 500; letter-spacing: 0.08em;
+  color: var(--amber);
+}
+.logo-mark { font-size: 18px; margin-right: 6px; }
+.logo-sub { color: var(--muted); font-size: 11px; font-weight: 300; letter-spacing: 0.12em; }
+.topbar-spacer { flex: 1; }
+.live-pip { display: flex; align-items: center; gap: 6px; font-family: var(--mono); font-size: 11px; color: var(--teal); letter-spacing: 0.1em; }
+.pip { width: 6px; height: 6px; border-radius: 50%; background: var(--teal); animation: pulse-pip 2s ease-in-out infinite; }
+@keyframes pulse-pip { 0%,100%{opacity:1} 50%{opacity:0.4} }
+.top-time { font-family: var(--mono); font-size: 11px; color: var(--muted); letter-spacing: 0.08em; }
+
+/* ─── MAIN CONTENT ─── */
+.main { display: grid; grid-template-columns: 220px 1fr; overflow: hidden; }
+
+/* ─── SIDEBAR ─── */
+.sidebar {
+  border-right: 1px solid var(--border);
+  background: var(--bg1);
+  padding: 20px 0;
+  overflow-y: auto;
+}
+.sidebar-section { margin-bottom: 24px; }
+.sidebar-label {
+  font-family: var(--mono); font-size: 9px; letter-spacing: 0.18em;
+  color: var(--muted); padding: 0 16px; margin-bottom: 8px; text-transform: uppercase;
+}
+.nav-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 9px 16px; cursor: pointer;
+  font-size: 12px; font-weight: 500; color: var(--muted);
+  border-left: 2px solid transparent;
+  transition: all 0.15s;
+}
+.nav-item:hover { color: var(--text); background: rgba(255,255,255,0.03); }
+.nav-item.active { color: var(--amber); border-left-color: var(--amber); background: var(--amber-glow); }
+.nav-icon { font-size: 14px; width: 18px; text-align: center; }
+.nav-badge {
+  margin-left: auto; font-family: var(--mono); font-size: 9px;
+  background: var(--amber-dim); color: var(--amber);
+  padding: 2px 6px; border-radius: 3px;
+}
+
+.signal-bars { padding: 0 16px; }
+.sbar { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+.sbar-label { font-family: var(--mono); font-size: 10px; color: var(--muted); width: 54px; flex-shrink: 0; }
+.sbar-track { flex: 1; height: 3px; background: rgba(255,255,255,0.08); border-radius: 2px; overflow: hidden; }
+.sbar-fill { height: 100%; border-radius: 2px; transition: width 1s ease; }
+.sbar-val { font-family: var(--mono); font-size: 10px; color: var(--muted); width: 32px; text-align: right; }
+
+/* ─── CONTENT AREA ─── */
+.content { overflow-y: auto; padding: 24px; background: var(--bg); }
+
+/* ─── TABS ─── */
+.tab-row { display: flex; gap: 2px; margin-bottom: 24px; border-bottom: 1px solid var(--border); padding-bottom: 0; }
+.tab-btn {
+  font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em;
+  padding: 8px 16px; cursor: pointer; border: none; background: none;
+  color: var(--muted); border-bottom: 2px solid transparent; margin-bottom: -1px;
+  transition: all 0.15s;
+}
+.tab-btn:hover { color: var(--text); }
+.tab-btn.active { color: var(--amber); border-bottom-color: var(--amber); }
+
+/* ─── CARDS ─── */
+.card {
+  background: var(--bg1); border: 1px solid var(--border);
+  border-radius: 8px; padding: 18px 20px;
+}
+.card-label {
+  font-family: var(--mono); font-size: 9px; letter-spacing: 0.16em;
+  color: var(--muted); text-transform: uppercase; margin-bottom: 6px;
+}
+.card-value { font-family: var(--mono); font-size: 28px; font-weight: 500; color: var(--text); }
+.card-sub { font-family: var(--mono); font-size: 10px; color: var(--muted); margin-top: 4px; }
+
+.metrics-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 20px; }
+
+/* ─── TEAM TABLE ─── */
+.intel-table { width: 100%; border-collapse: collapse; }
+.intel-table th {
+  font-family: var(--mono); font-size: 9px; letter-spacing: 0.12em;
+  color: var(--muted); text-transform: uppercase; text-align: left;
+  padding: 8px 12px; border-bottom: 1px solid var(--border);
+}
+.intel-table td {
+  padding: 9px 12px; border-bottom: 1px solid rgba(255,255,255,0.03);
+  font-family: var(--mono); font-size: 12px; color: var(--text);
+}
+.intel-table tr:hover td { background: rgba(255,255,255,0.02); }
+.rank-cell { color: var(--muted); font-size: 10px; }
+.score-cell { color: var(--amber); }
+.conf-badge {
+  display: inline-block; padding: 2px 7px; border-radius: 3px;
+  font-size: 9px; letter-spacing: 0.08em; text-transform: uppercase;
+}
+.conf-high   { background: var(--teal-dim);  color: var(--teal); }
+.conf-medium { background: var(--amber-dim); color: var(--amber); }
+.conf-low    { background: var(--red-dim);   color: var(--red); }
+
+/* ─── SIGNAL BREAKDOWN ─── */
+.signal-grid5 { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin: 16px 0; }
+.signal-tile {
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: 6px; padding: 12px;
+  text-align: center;
+}
+.signal-tile .icon { font-size: 16px; margin-bottom: 4px; }
+.signal-tile .name { font-family: var(--mono); font-size: 9px; letter-spacing: 0.1em; color: var(--muted); text-transform: uppercase; }
+.signal-tile .val  { font-family: var(--mono); font-size: 20px; font-weight: 500; margin-top: 4px; }
+.signal-bar { height: 3px; border-radius: 2px; margin-top: 6px; }
+
+/* ─── MATCH PREDICTOR ─── */
+.predictor-panel { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px; }
+.team-picker { background: var(--bg2); border: 1px solid var(--border); border-radius: 6px; padding: 14px; }
+.picker-label { font-family: var(--mono); font-size: 9px; letter-spacing: 0.12em; color: var(--muted); text-transform: uppercase; margin-bottom: 8px; }
+.team-select {
+  width: 100%; background: var(--bg3); border: 1px solid var(--border-hi);
+  border-radius: 4px; color: var(--text); font-family: var(--mono); font-size: 12px;
+  padding: 8px 10px; outline: none; cursor: pointer;
+}
+.team-select:focus { border-color: var(--amber); }
+
+.run-btn {
+  width: 100%; padding: 12px;
+  background: var(--amber-dim); border: 1px solid var(--amber);
+  border-radius: 6px; color: var(--amber);
+  font-family: var(--mono); font-size: 12px; letter-spacing: 0.1em;
+  cursor: pointer; margin-bottom: 20px;
+  transition: all 0.2s;
+}
+.run-btn:hover { background: rgba(232,160,48,0.25); }
+.run-btn:active { transform: scale(0.99); }
+
+.prob-bar-row { display: flex; height: 32px; border-radius: 5px; overflow: hidden; margin: 16px 0 6px; }
+.prob-seg { display: flex; align-items: center; justify-content: center; font-family: var(--mono); font-size: 11px; font-weight: 500; transition: width 0.6s ease; }
+.prob-win  { background: rgba(45,212,160,0.7); color: #fff; }
+.prob-draw { background: rgba(255,255,255,0.2); color: rgba(255,255,255,0.8); }
+.prob-loss { background: rgba(232,93,74,0.7);  color: #fff; }
+.prob-labels { display: flex; justify-content: space-between; font-family: var(--mono); font-size: 10px; color: var(--muted); }
+
+/* ─── DIVERGENCE ALERTS ─── */
+.divergence-list { margin-top: 14px; }
+.div-alert {
+  display: flex; align-items: flex-start; gap: 10px;
+  background: rgba(232,160,48,0.06); border: 1px solid rgba(232,160,48,0.2);
+  border-radius: 5px; padding: 10px 12px; margin-bottom: 8px;
+}
+.div-alert.strong { border-color: rgba(232,93,74,0.3); background: rgba(232,93,74,0.06); }
+.div-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; margin-top: 4px; }
+.div-dot.moderate { background: var(--amber); }
+.div-dot.strong   { background: var(--red); }
+.div-text { font-family: var(--mono); font-size: 11px; color: var(--muted); line-height: 1.5; }
+.div-text strong { color: var(--text); }
+
+/* ─── MARKET CALIBRATION ─── */
+.market-row { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.04); }
+.market-name { font-size: 12px; font-weight: 500; flex: 1; }
+.market-prob { font-family: var(--mono); font-size: 11px; color: var(--muted); width: 48px; text-align: right; }
+.alpha-bar { flex: 1; height: 4px; background: rgba(255,255,255,0.08); border-radius: 2px; position: relative; overflow: visible; }
+.alpha-fill { height: 100%; border-radius: 2px; position: absolute; }
+.alpha-pos { background: var(--teal); right: 50%; }
+.alpha-neg { background: var(--red);  left: 50%; }
+.alpha-label { font-family: var(--mono); font-size: 10px; width: 48px; text-align: right; }
+
+/* ─── CLIMATE RISK ─── */
+.region-card { background: var(--bg2); border: 1px solid var(--border); border-radius: 6px; padding: 14px; margin-bottom: 10px; }
+.region-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+.region-name { font-size: 13px; font-weight: 600; }
+.risk-badge { font-family: var(--mono); font-size: 9px; padding: 3px 8px; border-radius: 3px; text-transform: uppercase; letter-spacing: 0.08em; }
+.risk-extreme { background: var(--red-dim);   color: var(--red); }
+.risk-high    { background: var(--amber-dim); color: var(--amber); }
+.risk-medium  { background: var(--blue-dim);  color: var(--blue); }
+.risk-low     { background: var(--teal-dim);  color: var(--teal); }
+.risk-meter-track { height: 6px; background: rgba(255,255,255,0.08); border-radius: 3px; overflow: hidden; }
+.risk-meter-fill  { height: 100%; border-radius: 3px; transition: width 1s ease; }
+
+/* ─── CULTURAL MOMENTS ─── */
+.culture-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+.culture-card { background: var(--bg2); border: 1px solid var(--border); border-radius: 6px; padding: 14px; }
+.culture-topic { font-size: 13px; font-weight: 600; margin-bottom: 4px; }
+.culture-cat { font-family: var(--mono); font-size: 9px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 10px; }
+.culture-score { font-family: var(--mono); font-size: 24px; color: var(--amber); }
+.culture-tipping { display: inline-block; margin-top: 6px; padding: 2px 8px; border-radius: 3px; font-family: var(--mono); font-size: 9px; letter-spacing: 0.1em; }
+.tipping-yes { background: rgba(232,160,48,0.2); color: var(--amber); border: 1px solid rgba(232,160,48,0.3); }
+.tipping-no  { background: rgba(255,255,255,0.05); color: var(--muted); }
+
+/* ─── SCROLLBAR ─── */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 2px; }
+
+/* ─── TICKER ─── */
+.ticker {
+  position: fixed; bottom: 0; left: 0; right: 0;
+  background: var(--bg1); border-top: 1px solid var(--border);
+  padding: 6px 0; overflow: hidden; z-index: 100;
+}
+.ticker-inner {
+  display: flex; gap: 48px; white-space: nowrap;
+  animation: ticker-scroll 40s linear infinite;
+}
+.ticker-inner:hover { animation-play-state: paused; }
+@keyframes ticker-scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+.tick-item { font-family: var(--mono); font-size: 10px; color: var(--muted); }
+.tick-item span { color: var(--amber); }
+.tick-item .up   { color: var(--teal); }
+.tick-item .down { color: var(--red); }
+</style>
+</head>
+<body>
+
+<div class="shell">
+
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div class="logo">
+      <span class="logo-mark">◈</span>CONFLUX
+      <span class="logo-sub">INTELLIGENCE TERMINAL v1.0</span>
+    </div>
+    <div class="topbar-spacer"></div>
+    <div class="live-pip"><div class="pip"></div>LIVE · ALL SIGNALS ACTIVE</div>
+    <div class="top-time" id="clock"></div>
+  </div>
+
+  <!-- MAIN -->
+  <div class="main">
+
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+      <div class="sidebar-section">
+        <div class="sidebar-label">Verticals</div>
+        <div class="nav-item active" onclick="switchTab('wc2026',this)">
+          <span class="nav-icon">⚽</span> World Cup 2026
+          <span class="nav-badge">V-I</span>
+        </div>
+        <div class="nav-item" onclick="switchTab('markets',this)">
+          <span class="nav-icon">📈</span> Market Calibration
+          <span class="nav-badge">V-II</span>
+        </div>
+        <div class="nav-item" onclick="switchTab('climate',this)">
+          <span class="nav-icon">🌩</span> Climate Risk
+          <span class="nav-badge">V-III</span>
+        </div>
+        <div class="nav-item" onclick="switchTab('culture',this)">
+          <span class="nav-icon">🌐</span> Cultural Moment
+          <span class="nav-badge">V-IV</span>
+        </div>
+      </div>
+
+      <div class="sidebar-section">
+        <div class="sidebar-label">Signal Status</div>
+        <div class="signal-bars">
+          <div class="sbar">
+            <div class="sbar-label">SPORTS</div>
+            <div class="sbar-track"><div class="sbar-fill" style="width:81%;background:var(--teal)"></div></div>
+            <div class="sbar-val">0.81</div>
+          </div>
+          <div class="sbar">
+            <div class="sbar-label">MARKETS</div>
+            <div class="sbar-track"><div class="sbar-fill" style="width:74%;background:var(--amber)"></div></div>
+            <div class="sbar-val">0.74</div>
+          </div>
+          <div class="sbar">
+            <div class="sbar-label">FINANCE</div>
+            <div class="sbar-track"><div class="sbar-fill" style="width:62%;background:var(--blue)"></div></div>
+            <div class="sbar-val">0.62</div>
+          </div>
+          <div class="sbar">
+            <div class="sbar-label">CLIMATE</div>
+            <div class="sbar-track"><div class="sbar-fill" style="width:58%;background:#5bc47a"></div></div>
+            <div class="sbar-val">0.58</div>
+          </div>
+          <div class="sbar">
+            <div class="sbar-label">SOCIAL</div>
+            <div class="sbar-track"><div class="sbar-fill" style="width:69%;background:var(--coral)"></div></div>
+            <div class="sbar-val">0.69</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="sidebar-section">
+        <div class="sidebar-label">System</div>
+        <div class="nav-item"><span class="nav-icon">⚙</span> Settings</div>
+        <div class="nav-item"><span class="nav-icon">📡</span> API Docs</div>
+        <div class="nav-item"><span class="nav-icon">◎</span> About CONFLUX</div>
+      </div>
+    </div>
+
+    <!-- CONTENT -->
+    <div class="content" id="content">
+      <!-- Loaded by JS -->
+    </div>
+  </div>
+</div>
+
+<!-- TICKER -->
+<div class="ticker">
+  <div class="ticker-inner" id="ticker">
+    <div class="tick-item">CONFLUX ◈ ARG <span>21.4%</span></div>
+    <div class="tick-item">CONFLUX ◈ FRA <span>17.8%</span></div>
+    <div class="tick-item">CONFLUX ◈ ESP <span>14.3%</span></div>
+    <div class="tick-item">CONFLUX ◈ BRA <span>12.1%</span></div>
+    <div class="tick-item">POLY: FED HOLD JUNE <span>68%</span></div>
+    <div class="tick-item">POLY: US RECESSION 2026 <span>34%</span></div>
+    <div class="tick-item">CLIMATE: TEXAS HEAT <span class="down">HIGH</span></div>
+    <div class="tick-item">TREND: AI AGENTS <span class="up">▲ TIPPING</span></div>
+    <div class="tick-item">DIVERGENCE: MOROCCO <span class="up">+3.1pp vs market</span></div>
+    <div class="tick-item">CONFLUX ◈ ENG <span>10.6%</span></div>
+    <div class="tick-item">CONFLUX ◈ GER <span>9.2%</span></div>
+    <div class="tick-item">EIA: TEXAS GRID STRESS <span class="down">ELEVATED</span></div>
+    <div class="tick-item">CULTURAL: SOLAR ENERGY <span class="up">▲ BUILDING</span></div>
+    <!-- duplicate for seamless loop -->
+    <div class="tick-item">CONFLUX ◈ ARG <span>21.4%</span></div>
+    <div class="tick-item">CONFLUX ◈ FRA <span>17.8%</span></div>
+    <div class="tick-item">CONFLUX ◈ ESP <span>14.3%</span></div>
+    <div class="tick-item">CONFLUX ◈ BRA <span>12.1%</span></div>
+    <div class="tick-item">POLY: FED HOLD JUNE <span>68%</span></div>
+    <div class="tick-item">POLY: US RECESSION 2026 <span>34%</span></div>
+    <div class="tick-item">CLIMATE: TEXAS HEAT <span class="down">HIGH</span></div>
+    <div class="tick-item">TREND: AI AGENTS <span class="up">▲ TIPPING</span></div>
+    <div class="tick-item">DIVERGENCE: MOROCCO <span class="up">+3.1pp vs market</span></div>
+    <div class="tick-item">CONFLUX ◈ ENG <span>10.6%</span></div>
+    <div class="tick-item">CONFLUX ◈ GER <span>9.2%</span></div>
+  </div>
+</div>
+
+<script>
+// ─── CLOCK ───
+function updateClock() {
+  const now = new Date();
+  document.getElementById('clock').textContent =
+    now.toISOString().replace('T',' ').slice(0,19) + ' UTC';
+}
+setInterval(updateClock, 1000);
+updateClock();
+
+// ─── TEAM DATA ───
+const TEAMS = [
+  {rank:1,  team:'Argentina',   group:'H', elo:2090, sports:0.88, markets:0.82, finance:0.62, climate:0.78, social:0.76, conflux:0.832, conf:'high'},
+  {rank:2,  team:'France',      group:'D', elo:2050, sports:0.84, markets:0.76, finance:0.80, climate:0.81, social:0.65, conflux:0.801, conf:'high'},
+  {rank:3,  team:'Spain',       group:'E', elo:2040, sports:0.82, markets:0.71, finance:0.78, climate:0.82, social:0.61, conflux:0.779, conf:'high'},
+  {rank:4,  team:'Brazil',      group:'G', elo:2010, sports:0.79, markets:0.68, finance:0.55, climate:0.74, social:0.84, conflux:0.742, conf:'high'},
+  {rank:5,  team:'England',     group:'F', elo:2020, sports:0.80, markets:0.66, finance:0.77, climate:0.83, social:0.72, conflux:0.760, conf:'high'},
+  {rank:6,  team:'Germany',     group:'J', elo:1990, sports:0.77, markets:0.64, finance:0.84, climate:0.82, social:0.58, conflux:0.736, conf:'high'},
+  {rank:7,  team:'Netherlands', group:'K', elo:1980, sports:0.75, markets:0.60, finance:0.81, climate:0.83, social:0.54, conflux:0.711, conf:'medium'},
+  {rank:8,  team:'Portugal',    group:'I', elo:2000, sports:0.78, markets:0.58, finance:0.72, climate:0.79, social:0.68, conflux:0.722, conf:'medium'},
+  {rank:9,  team:'Croatia',     group:'H', elo:1950, sports:0.71, markets:0.49, finance:0.65, climate:0.78, social:0.48, conflux:0.643, conf:'medium'},
+  {rank:10, team:'Morocco',     group:'D', elo:1910, sports:0.66, markets:0.58, finance:0.44, climate:0.62, social:0.61, conflux:0.620, conf:'medium'},
+  {rank:11, team:'Belgium',     group:'G', elo:1960, sports:0.72, markets:0.54, finance:0.78, climate:0.80, social:0.52, conflux:0.659, conf:'medium'},
+  {rank:12, team:'USA',         group:'B', elo:1900, sports:0.64, markets:0.60, finance:0.88, climate:0.75, social:0.70, conflux:0.673, conf:'medium'},
+];
+
+const MARKET_EVENTS = [
+  {id:'fed_rate_june',    desc:'Fed rate hold — June 2026',   market:0.68, model:0.61, alpha:-0.07, strength:'moderate'},
+  {id:'us_recession',     desc:'US recession probability 2026',market:0.34, model:0.28, alpha:-0.06, strength:'noise'},
+  {id:'btc_100k',         desc:'BTC reaches $100k in 2026',   market:0.42, model:0.55, alpha:+0.13, strength:'moderate'},
+  {id:'sp500_5000',       desc:'S&P 500 above 5000 year-end',  market:0.71, model:0.63, alpha:-0.08, strength:'moderate'},
+  {id:'ai_agi_2026',      desc:'AGI milestone declared 2026',  market:0.12, model:0.08, alpha:-0.04, strength:'noise'},
+  {id:'ukraine_ceasefire',desc:'Ukraine ceasefire agreement',  market:0.28, model:0.41, alpha:+0.13, strength:'moderate'},
+];
+
+const CLIMATE_REGIONS = [
+  {region:'Texas',      type:'Heat / Grid',   temp:38, risk:0.84, color:'var(--red)'},
+  {region:'India',      type:'Heat stress',   temp:42, risk:0.79, color:'var(--red)'},
+  {region:'Australia',  type:'Wildfire',       temp:35, risk:0.71, color:'var(--amber)'},
+  {region:'Florida',    type:'Hurricane',      temp:33, risk:0.65, color:'var(--amber)'},
+  {region:'Sahel',      type:'Drought',        temp:40, risk:0.62, color:'var(--amber)'},
+  {region:'California', type:'Wildfire',       temp:32, risk:0.58, color:'var(--amber)'},
+  {region:'UK',         type:'Flooding',       temp:19, risk:0.41, color:'var(--blue)'},
+];
+
+const CULTURAL = [
+  {topic:'AI agents',         cat:'Technology', score:0.84, tipping:true},
+  {topic:'Weight-loss drugs', cat:'Health',     score:0.78, tipping:true},
+  {topic:'Solar energy',      cat:'Technology', score:0.71, tipping:false},
+  {topic:'EV adoption',       cat:'Automotive', score:0.68, tipping:false},
+  {topic:'Space tourism',     cat:'Technology', score:0.55, tipping:false},
+  {topic:'Quantum computing', cat:'Technology', score:0.52, tipping:false},
+  {topic:'Plant-based food',  cat:'Food',       score:0.46, tipping:false},
+  {topic:'Pickleball',        cat:'Sports',     score:0.43, tipping:false},
+];
+
+// ─── TAB SWITCHING ───
+function switchTab(tab, el) {
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  el.classList.add('active');
+  renderTab(tab);
+}
+
+function renderTab(tab) {
+  const c = document.getElementById('content');
+  if (tab === 'wc2026')  c.innerHTML = renderWC();
+  if (tab === 'markets') c.innerHTML = renderMarkets();
+  if (tab === 'climate') c.innerHTML = renderClimate();
+  if (tab === 'culture') c.innerHTML = renderCulture();
+}
+
+// ─── WC2026 TAB ───
+function renderWC() {
+  const teamOpts = TEAMS.map(t => `<option value="${t.team}">${t.team}</option>`).join('');
+  const rows = TEAMS.map(t => `
+    <tr>
+      <td class="rank-cell">${t.rank}</td>
+      <td>${t.team}</td>
+      <td class="rank-cell">${t.group}</td>
+      <td class="rank-cell">${t.elo}</td>
+      <td>${bar(t.sports, 'var(--teal)')}</td>
+      <td>${bar(t.markets,'var(--amber)')}</td>
+      <td>${bar(t.finance,'var(--blue)')}</td>
+      <td>${bar(t.climate,'#5bc47a')}</td>
+      <td>${bar(t.social, 'var(--coral)')}</td>
+      <td class="score-cell">${t.conflux.toFixed(3)}</td>
+      <td><span class="conf-badge conf-${t.conf}">${t.conf}</span></td>
+    </tr>`).join('');
+
+  return `
+    <div class="metrics-grid">
+      <div class="card"><div class="card-label">Teams</div><div class="card-value">48</div><div class="card-sub">12 groups</div></div>
+      <div class="card"><div class="card-label">Matches</div><div class="card-value">104</div><div class="card-sub">Jun 11 – Jul 19</div></div>
+      <div class="card"><div class="card-label">Simulations</div><div class="card-value">10k</div><div class="card-sub">Monte Carlo</div></div>
+      <div class="card"><div class="card-label">Signals</div><div class="card-value">5</div><div class="card-sub">Daily refresh</div></div>
+    </div>
+
+    <div class="card" style="margin-bottom:20px">
+      <div class="card-label" style="margin-bottom:14px">Match Predictor — CONFLUX Multi-Signal</div>
+      <div class="predictor-panel">
+        <div class="team-picker">
+          <div class="picker-label">Team 1</div>
+          <select class="team-select" id="t1">${teamOpts}</select>
+        </div>
+        <div class="team-picker">
+          <div class="picker-label">Team 2</div>
+          <select class="team-select" id="t2">${TEAMS.map((t,i)=>`<option value="${t.team}" ${i===1?'selected':''}>${t.team}</option>`).join('')}</select>
+        </div>
+      </div>
+      <button class="run-btn" onclick="runPrediction()">◈ RUN CONFLUX PREDICTION</button>
+      <div id="pred-result"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-label" style="margin-bottom:12px">Intelligence Rankings — All 48 Teams (showing top 12)</div>
+      <div style="overflow-x:auto">
+        <table class="intel-table">
+          <thead>
+            <tr>
+              <th>#</th><th>Team</th><th>Grp</th><th>Elo</th>
+              <th>Sports</th><th>Markets</th><th>Finance</th><th>Climate</th><th>Social</th>
+              <th>Conflux ◈</th><th>Conf</th>
+            </tr>
+          </thead>
+          <tbody>${rows}</tbody>
+        </table>
+      </div>
+    </div>`;
+}
+
+function bar(val, color) {
+  return `<div style="width:70px;height:3px;background:rgba(255,255,255,0.08);border-radius:2px;overflow:hidden">
+    <div style="width:${(val*100).toFixed(0)}%;height:100%;background:${color};border-radius:2px"></div></div>`;
+}
+
+function runPrediction() {
+  const t1 = TEAMS.find(t => t.team === document.getElementById('t1').value);
+  const t2 = TEAMS.find(t => t.team === document.getElementById('t2').value);
+  if (!t1 || !t2 || t1.team === t2.team) {
+    document.getElementById('pred-result').innerHTML = '<div style="color:var(--muted);font-family:var(--mono);font-size:11px">Select two different teams.</div>';
+    return;
+  }
+
+  // Compute probabilities from CONFLUX scores
+  const delta = t1.conflux - t2.conflux;
+  const adj   = Math.tanh(delta * 4) * 0.14;
+  let win  = 0.40 + adj;
+  let draw = 0.22;
+  let loss = 1 - win - draw;
+  const tot = win + draw + loss;
+  win /= tot; draw /= tot; loss /= tot;
+
+  // Divergences
+  const domains = ['sports','markets','finance','climate','social'];
+  const divs = domains.filter(d => Math.abs(t1[d] - t2[d]) >= 0.15).map(d => {
+    const gap = Math.abs(t1[d] - t2[d]);
+    const fav = t1[d] > t2[d] ? t1.team : t2.team;
+    const sev = gap >= 0.22 ? 'strong' : 'moderate';
+    return {d, gap, fav, sev};
+  });
+
+  const divHTML = divs.length ? `<div class="divergence-list">
+    ${divs.map(dv => `<div class="div-alert ${dv.sev}">
+      <div class="div-dot ${dv.sev}"></div>
+      <div class="div-text"><strong>${dv.d.toUpperCase()}</strong> — ${dv.fav} leads by ${(dv.gap*100).toFixed(0)}pp (${dv.sev} divergence)</div>
+    </div>`).join('')}
+  </div>` : '<div style="font-family:var(--mono);font-size:11px;color:var(--muted);margin-top:10px">No significant cross-domain divergences detected.</div>';
+
+  const xg1 = (1.2 + t1.sports * 0.8 + delta * 0.3).toFixed(2);
+  const xg2 = (1.2 + t2.sports * 0.8 - delta * 0.3).toFixed(2);
+
+  document.getElementById('pred-result').innerHTML = `
+    <div style="border-top:1px solid var(--border);padding-top:16px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
+        <div style="font-size:14px;font-weight:600">${t1.team} vs ${t2.team}</div>
+        <div style="font-family:var(--mono);font-size:11px;color:var(--muted)">xG: ${xg1} – ${xg2}</div>
+      </div>
+      <div class="prob-bar-row">
+        <div class="prob-seg prob-win"  style="width:${(win*100).toFixed(0)}%">${(win*100).toFixed(0)}%</div>
+        <div class="prob-seg prob-draw" style="width:${(draw*100).toFixed(0)}%">${(draw*100).toFixed(0)}%</div>
+        <div class="prob-seg prob-loss" style="width:${(loss*100).toFixed(0)}%">${(loss*100).toFixed(0)}%</div>
+      </div>
+      <div class="prob-labels"><span>${t1.team} win</span><span>Draw</span><span>${t2.team} win</span></div>
+
+      <div class="signal-grid5" style="margin-top:16px">
+        ${['sports','markets','finance','climate','social'].map((d,i) => {
+          const colors = ['var(--teal)','var(--amber)','var(--blue)','#5bc47a','var(--coral)'];
+          const icons  = ['⚽','📈','💰','🌩','🌐'];
+          const v1 = t1[d]; const v2 = t2[d];
+          const fav = v1 > v2 ? t1.team.slice(0,3).toUpperCase() : t2.team.slice(0,3).toUpperCase();
+          const sign = v1 > v2 ? '+' : '−';
+          return `<div class="signal-tile">
+            <div class="icon">${icons[i]}</div>
+            <div class="name">${d}</div>
+            <div class="val" style="color:${colors[i]};font-size:13px">${fav} ${sign}${(Math.abs(v1-v2)*100).toFixed(0)}pp</div>
+            <div class="signal-bar" style="background:${colors[i]};width:${(Math.max(v1,v2)*100).toFixed(0)}%"></div>
+          </div>`;
+        }).join('')}
+      </div>
+      ${divHTML}
+    </div>`;
+}
+
+// ─── MARKETS TAB ───
+function renderMarkets() {
+  const rows = MARKET_EVENTS.map(e => {
+    const pct = (Math.abs(e.alpha) * 100).toFixed(1);
+    const dir = e.alpha > 0 ? 'VALUE' : 'HYPE';
+    const col = e.alpha > 0 ? 'var(--teal)' : 'var(--red)';
+    return `<div class="market-row">
+      <div style="min-width:200px">
+        <div class="market-name">${e.desc}</div>
+        <div style="font-family:var(--mono);font-size:9px;color:var(--muted)">${e.id}</div>
+      </div>
+      <div class="market-prob">${(e.market*100).toFixed(0)}%</div>
+      <div style="font-family:var(--mono);font-size:10px;color:var(--muted);width:48px;text-align:right">${(e.model*100).toFixed(0)}%</div>
+      <div class="alpha-bar">
+        ${e.alpha > 0
+          ? `<div class="alpha-fill alpha-pos" style="width:${Math.min(pct*2,50)}%;background:var(--teal)"></div>`
+          : `<div class="alpha-fill alpha-neg" style="width:${Math.min(pct*2,50)}%;background:var(--red)"></div>`}
+        <div style="position:absolute;top:50%;left:50%;width:1px;height:8px;background:rgba(255,255,255,0.2);transform:translate(-50%,-50%)"></div>
+      </div>
+      <div class="alpha-label" style="color:${col}">${e.alpha>0?'+':''}${e.alpha.toFixed(2)}</div>
+      <div style="margin-left:8px">
+        ${e.strength === 'moderate' ? `<span class="conf-badge conf-medium">${dir}</span>` :
+          e.strength === 'strong'   ? `<span class="conf-badge conf-high">${dir}</span>` :
+          `<span class="conf-badge conf-low">NOISE</span>`}
+      </div>
+    </div>`;
+  }).join('');
+
+  return `
+    <div class="metrics-grid">
+      <div class="card"><div class="card-label">Markets tracked</div><div class="card-value">8</div><div class="card-sub">Polymarket · Kalshi</div></div>
+      <div class="card"><div class="card-label">Divergences</div><div class="card-value">4</div><div class="card-sub">Above 10pp threshold</div></div>
+      <div class="card"><div class="card-label">Strongest alpha</div><div class="card-value">+13pp</div><div class="card-sub">BTC · Ukraine</div></div>
+      <div class="card"><div class="card-label">Refresh</div><div class="card-value">6h</div><div class="card-sub">Continuous</div></div>
+    </div>
+
+    <div class="card">
+      <div class="card-label" style="margin-bottom:4px">Market Alpha Signal — CONFLUX vs Market Consensus</div>
+      <div style="font-family:var(--mono);font-size:10px;color:var(--muted);margin-bottom:16px">
+        Alpha = CONFLUX model probability − market implied probability. Positive = market under-prices; negative = over-prices.
+      </div>
+      <div style="display:flex;gap:24px;font-family:var(--mono);font-size:10px;color:var(--muted);padding:6px 0;border-bottom:1px solid var(--border);margin-bottom:4px">
+        <span style="min-width:200px">Event</span>
+        <span style="width:48px;text-align:right">Market</span>
+        <span style="width:48px;text-align:right">Model</span>
+        <span style="flex:1;text-align:center">← HYPE │ VALUE →</span>
+        <span style="width:48px;text-align:right">Alpha</span>
+        <span style="width:64px;margin-left:8px">Signal</span>
+      </div>
+      ${rows}
+    </div>`;
+}
+
+// ─── CLIMATE TAB ───
+function renderClimate() {
+  const cards = CLIMATE_REGIONS.map(r => {
+    const riskPct = (r.risk * 100).toFixed(0);
+    const level = r.risk >= 0.75 ? 'extreme' : r.risk >= 0.55 ? 'high' : r.risk >= 0.40 ? 'medium' : 'low';
+    const labels = {extreme:'Extreme',high:'High',medium:'Medium',low:'Low'};
+    return `<div class="region-card">
+      <div class="region-header">
+        <div class="region-name">${r.region}</div>
+        <span class="risk-badge risk-${level}">${labels[level]} risk</span>
+      </div>
+      <div style="font-family:var(--mono);font-size:10px;color:var(--muted);margin-bottom:8px">${r.type} · ${r.temp}°C avg</div>
+      <div class="risk-meter-track">
+        <div class="risk-meter-fill" style="width:${riskPct}%;background:${r.color}"></div>
+      </div>
+      <div style="font-family:var(--mono);font-size:10px;color:var(--muted);text-align:right;margin-top:4px">${riskPct}%</div>
+    </div>`;
+  }).join('');
+
+  return `
+    <div class="metrics-grid">
+      <div class="card"><div class="card-label">Regions tracked</div><div class="card-value">7</div><div class="card-sub">High risk zones</div></div>
+      <div class="card"><div class="card-label">High risk</div><div class="card-value">2</div><div class="card-sub">Texas · India</div></div>
+      <div class="card"><div class="card-label">WC venues</div><div class="card-value">16</div><div class="card-sub">Stress mapped</div></div>
+      <div class="card"><div class="card-label">Refresh</div><div class="card-value">24h</div><div class="card-sub">NOAA + Open-Meteo</div></div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+      <div>
+        <div style="font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:0.12em;text-transform:uppercase;margin-bottom:12px">Regional Risk Intelligence</div>
+        ${cards}
+      </div>
+      <div class="card">
+        <div class="card-label" style="margin-bottom:12px">WC2026 Venue Stress Map</div>
+        ${[
+          ['Estadio Azteca, MX',     0.31, 'Altitude 2,240m',   'var(--red)'],
+          ['NRG Stadium, Houston',   0.28, 'Heat + humidity',    'var(--red)'],
+          ['AT&T Stadium, Dallas',   0.24, 'High summer heat',   'var(--amber)'],
+          ['Arrowhead, Kansas City', 0.14, 'Moderate altitude',  'var(--amber)'],
+          ['MetLife, New Jersey',    0.06, 'Near-optimal',       'var(--teal)'],
+          ['BC Place, Vancouver',    0.04, 'Mild and temperate', 'var(--teal)'],
+        ].map(([v,s,note,col]) => `
+          <div style="margin-bottom:12px">
+            <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:3px">
+              <span>${v}</span><span style="font-family:var(--mono);color:${col}">${(s*100).toFixed(0)}% stress</span>
+            </div>
+            <div style="font-family:var(--mono);font-size:10px;color:var(--muted);margin-bottom:4px">${note}</div>
+            <div style="height:3px;background:rgba(255,255,255,0.08);border-radius:2px;overflow:hidden">
+              <div style="width:${(s*100).toFixed(0)}%;height:100%;background:${col};border-radius:2px"></div>
+            </div>
+          </div>`).join('')}
+      </div>
+    </div>`;
+}
+
+// ─── CULTURE TAB ───
+function renderCulture() {
+  const cards = CULTURAL.map(t => `
+    <div class="culture-card">
+      <div class="culture-topic">${t.topic}</div>
+      <div class="culture-cat">${t.cat}</div>
+      <div class="culture-score">${(t.score * 100).toFixed(0)}<span style="font-size:14px;color:var(--muted)">%</span></div>
+      <div style="height:3px;background:rgba(255,255,255,0.08);border-radius:2px;margin:8px 0;overflow:hidden">
+        <div style="width:${(t.score*100).toFixed(0)}%;height:100%;background:${t.score > 0.72 ? 'var(--amber)' : t.score > 0.55 ? 'var(--blue)' : 'rgba(255,255,255,0.2)'};border-radius:2px"></div>
+      </div>
+      <span class="culture-tipping ${t.tipping ? 'tipping-yes' : 'tipping-no'}">
+        ${t.tipping ? '▲ TIPPING POINT' : 'BUILDING'}
+      </span>
+    </div>`).join('');
+
+  return `
+    <div class="metrics-grid">
+      <div class="card"><div class="card-label">Topics tracked</div><div class="card-value">8</div><div class="card-sub">Across 5 categories</div></div>
+      <div class="card"><div class="card-label">Tipping now</div><div class="card-value">2</div><div class="card-sub">AI agents · Weight-loss</div></div>
+      <div class="card"><div class="card-label">Threshold</div><div class="card-value">72%</div><div class="card-sub">Tipping point score</div></div>
+      <div class="card"><div class="card-label">Sources</div><div class="card-value">3</div><div class="card-sub">Trends · Reddit · Market</div></div>
+    </div>
+
+    <div class="card" style="margin-bottom:16px">
+      <div class="card-label" style="margin-bottom:6px">Cultural Moment Detector</div>
+      <div style="font-family:var(--mono);font-size:10px;color:var(--muted);margin-bottom:16px">
+        CONFLUX Cultural Tipping Score = Google Trends momentum (45%) + Acceleration (35%) + Reddit presence (20%). Scores ≥ 72% signal imminent mainstream breakthrough.
+      </div>
+      <div class="culture-grid">${cards}</div>
+    </div>`;
+}
+
+// ─── INIT ───
+renderTab('wc2026');
+</script>
+</body>
+</html>

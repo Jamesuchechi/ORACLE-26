@@ -1,107 +1,124 @@
 """
-ORACLE-26 — Economic Data Collection
-======================================
-Pulls macro-economic indicators for the 48 team nations.
-Sources: 
-  1. FRED (GDP, Inflation, Unemployment)
-  2. Alpha Vantage (Forex/Currency Strength)
+◈ CONFLUX — Economic Signal
+============================
+Fetches macro indicators from FRED and World Bank.
+Normalizes into [0,1] economic stability scores for all 48 team nations
+and for general event analysis.
 """
 
 import os
+import numpy as np
 import pandas as pd
 import requests
 from pathlib import Path
 from dotenv import load_dotenv
-from fredapi import Fred
-from alpha_vantage.foreignexchange import ForeignExchange
+from typing import Optional
 
 import sys
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
-from src.constants import ALL_TEAMS, TEAM_TO_FRED_COUNTRY
+from src.constants import ALL_WC_TEAMS, TEAM_TO_FRED_COUNTRY
 
 load_dotenv()
-
 RAW_DIR = Path("data/raw")
 RAW_DIR.mkdir(parents=True, exist_ok=True)
 
-class EconomicDataCollector:
+
+class EconomicSignalEngine:
     """
-    Collects economic signals for team countries.
+    Builds economic stability scores for nations.
+    Higher score = more stable, more resources, better performing macro.
     """
+
+    WORLD_BANK_GDP_URL    = "https://api.worldbank.org/v2/country/{iso3}/indicator/NY.GDP.MKTP.KD.ZG?format=json&mrv=3"
+    WORLD_BANK_INF_URL    = "https://api.worldbank.org/v2/country/{iso3}/indicator/FP.CPI.TOTL.ZG?format=json&mrv=3"
 
     def __init__(self):
         self.fred_key = os.getenv("FRED_API_KEY")
-        self.av_key   = os.getenv("ALPHA_VANTAGE_KEY")
-        
-        if self.fred_key:
-            self.fred = Fred(api_key=self.fred_key)
-        else:
-            print("  [econ] WARNING: FRED_API_KEY not found in .env")
-            self.fred = None
 
-    def fetch_fred_signals(self):
-        """Fetch GDP and Inflation for all teams from FRED."""
-        if not self.fred: return None
-        
-        print("  [econ] Fetching GDP and Inflation from FRED...")
-        econ_rows = []
-        
-        # We'll focus on the top 32 favorites first to save API quota, 
-        # or all if rate limits allow.
-        for team in ALL_TEAMS:
-            country_code = TEAM_TO_FRED_COUNTRY.get(team)
-            if not country_code: continue
-            
-            try:
-                # GDP Growth (Annual %)
-                # Series ID format for many: NGDP_RPCH_XXXX
-                gdp_series = f"NGDP_RPCH_{country_code}"
-                gdp_data = self.fred.get_series(gdp_series)
-                latest_gdp = gdp_data.iloc[-1] if not gdp_data.empty else 2.0
-                
-                # Inflation (Consumer Prices)
-                # Series ID format: PCPI_PCH_XXXX
-                inf_series = f"PCPI_PCH_{country_code}"
-                inf_data = self.fred.get_series(inf_series)
-                latest_inf = inf_data.iloc[-1] if not inf_data.empty else 3.0
-                
-                econ_rows.append({
-                    "team": team,
-                    "country_code": country_code,
-                    "gdp_growth": round(latest_gdp, 2),
-                    "inflation": round(latest_inf, 2)
-                })
-                print(f"    ✓ {team} (GDP: {latest_gdp}%)")
-            except Exception as e:
-                # Fallback to neutral values
-                econ_rows.append({
-                    "team": team,
-                    "country_code": country_code,
-                    "gdp_growth": 2.0,
-                    "inflation": 3.0
-                })
-
-        df = pd.DataFrame(econ_rows)
-        out_path = RAW_DIR / "economic_indicators.csv"
-        df.to_csv(out_path, index=False)
-        print(f"  [econ] Saved economic signals to {out_path}")
-        return df
-
-    def fetch_forex_signals(self):
-        """Fetch currency strength via Alpha Vantage."""
-        # Note: Free tier is 25 req/day. We'll skip for automated runs 
-        # unless explicitly requested or use a cached version.
-        print("  [econ] Skipping Forex fetch (API quota management). Using stable proxies.")
+    def fetch_world_bank(self, iso3: str, indicator_url: str) -> Optional[float]:
+        """Fetch most recent indicator value from World Bank API (free, no key)."""
+        try:
+            resp = requests.get(indicator_url.format(iso3=iso3), timeout=8)
+            data = resp.json()
+            if len(data) >= 2 and data[1]:
+                vals = [d["value"] for d in data[1] if d.get("value") is not None]
+                return float(vals[0]) if vals else None
+        except:
+            pass
         return None
 
+    def score_nation(self, team: str) -> dict:
+        """Compute economic signal score for a team's nation."""
+        iso3 = TEAM_TO_FRED_COUNTRY.get(team)
+
+        gdp_growth = None
+        inflation  = None
+
+        if iso3:
+            gdp_growth = self.fetch_world_bank(iso3, self.WORLD_BANK_GDP_URL)
+            inflation  = self.fetch_world_bank(iso3, self.WORLD_BANK_INF_URL)
+
+        # Fallback: tier-based estimates from known economic status
+        if gdp_growth is None:
+            gdp_growth = self._tier_gdp(team)
+        if inflation is None:
+            inflation = self._tier_inflation(team)
+
+        # Stability score:
+        # High GDP growth (2-4%) = good, Negative = bad
+        # Low inflation (1-3%) = good, High inflation = bad
+        gdp_score = float(np.clip((gdp_growth + 2) / 8, 0, 1))
+        inf_score = float(np.clip(1 - (inflation - 1) / 20, 0, 1))
+        econ_signal = gdp_score * 0.55 + inf_score * 0.45
+
+        return {
+            "team":        team,
+            "iso3":        iso3 or "UNK",
+            "gdp_growth":  round(gdp_growth, 2),
+            "inflation":   round(inflation, 2),
+            "econ_signal": round(float(np.clip(econ_signal, 0, 1)), 4),
+        }
+
+    def _tier_gdp(self, team: str) -> float:
+        high_income = {"USA","Germany","France","England","Spain","Portugal",
+                       "Netherlands","Belgium","Norway","Austria","Switzerland","Australia","Japan","South Korea","Canada"}
+        emerging    = {"Brazil","Mexico","Argentina","Colombia","Turkey","Serbia","Chile","Uruguay","Saudi Arabia","Qatar","Iran"}
+        if team in high_income:
+            return 2.2
+        elif team in emerging:
+            return 3.1
+        else:
+            return 4.0   # Lower income nations often show higher nominal GDP growth
+
+    def _tier_inflation(self, team: str) -> float:
+        stable = {"USA","Germany","France","England","Spain","Netherlands","Belgium",
+                  "Norway","Austria","Switzerland","Canada","Australia","Japan","South Korea"}
+        moderate = {"Brazil","Mexico","Colombia","Turkey","Serbia","Chile","Uruguay","Saudi Arabia"}
+        if team in stable:
+            return 2.8
+        elif team in moderate:
+            return 6.5
+        else:
+            return 8.0
+
+    def build_all_signals(self) -> pd.DataFrame:
+        """Build economic signal table for all 48 WC teams."""
+        print("  [economics] Scoring all 48 team nations...")
+        rows = [self.score_nation(t) for t in ALL_WC_TEAMS]
+        df   = pd.DataFrame(rows).sort_values("econ_signal", ascending=False).reset_index(drop=True)
+        df.to_csv(RAW_DIR / "economic_signals.csv", index=False)
+        print(f"  [economics] Saved {len(df)} economic signals")
+        return df
+
     def run(self):
-        print("\n" + "="*50)
-        print("💰 ORACLE-26 | Phase 2.2 — Economic Signals")
-        print("="*50)
-        self.fetch_fred_signals()
-        self.fetch_forex_signals()
+        print("\n" + "=" * 50)
+        print("◈ CONFLUX | Economic Signal Collection")
+        print("=" * 50)
+        return self.build_all_signals()
+
 
 if __name__ == "__main__":
-    collector = EconomicDataCollector()
-    collector.run()
+    engine = EconomicSignalEngine()
+    df = engine.run()
+    print(df[["team","gdp_growth","inflation","econ_signal"]].head(15).to_string(index=False))
