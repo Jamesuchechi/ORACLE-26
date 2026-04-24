@@ -16,18 +16,18 @@ SYSTEM_SUBTITLE = "Universal Multi-Signal Intelligence Engine"
 # VERTICAL I — FIFA World Cup 2026
 # ─────────────────────────────────────────────────────────────
 WC2026_GROUPS = {
-    "A": ["Mexico",    "South Korea", "Czechia",       "South Africa"],
-    "B": ["USA",       "Australia",   "Paraguay",       "Turkey"],
-    "C": ["Canada",    "Switzerland", "Japan",          "Bosnia"],
-    "D": ["France",    "Morocco",     "Ghana",          "Haiti"],
-    "E": ["Spain",     "Ivory Coast", "Serbia",         "New Zealand"],
-    "F": ["England",   "Senegal",     "DR Congo",       "Uzbekistan"],
-    "G": ["Brazil",    "Colombia",    "Belgium",        "Saudi Arabia"],
-    "H": ["Argentina", "Ecuador",     "Croatia",        "Algeria"],
-    "I": ["Portugal",  "Egypt",       "Iran",           "Panama"],
-    "J": ["Germany",   "Cameroon",    "Uruguay",        "Costa Rica"],
-    "K": ["Netherlands","Tunisia",    "Chile",          "Iraq"],
-    "L": ["Italy",     "Scotland",    "Austria",        "Peru"],
+    "A": ["Mexico",    "South Africa", "South Korea", "Czechia"],
+    "B": ["Canada",    "Bosnia",       "Ukraine",     "Switzerland"],
+    "C": ["Brazil",    "Morocco",      "Chile",       "Scotland"],
+    "D": ["USA",       "Paraguay",     "Australia",   "Turkey"],
+    "E": ["Germany",   "Sweden",       "Ivory Coast", "Ecuador"],
+    "F": ["Netherlands","Japan",       "Peru",        "Tunisia"],
+    "G": ["Belgium",   "Egypt",        "Iran",        "New Zealand"],
+    "H": ["Spain",     "Venezuela",    "Saudi Arabia","Uruguay"],
+    "I": ["France",    "Senegal",      "Iraq",        "Norway"],
+    "J": ["Argentina", "Algeria",      "Austria",     "Colombia"],
+    "K": ["Portugal",  "DR Congo",     "Uzbekistan",  "Denmark"],
+    "L": ["England",   "Croatia",      "Ghana",       "Panama"],
 }
 
 ALL_WC_TEAMS   = [t for teams in WC2026_GROUPS.values() for t in teams]
@@ -107,14 +107,14 @@ TEAM_TO_FRED_COUNTRY = {
 # ─────────────────────────────────────────────────────────────
 TRACKED_MARKET_EVENTS = {
     # Polymarket slugs / Kalshi tickers
-    "wc2026_winner":          {"type": "sports",    "description": "FIFA WC 2026 winner"},
-    "fed_rate_june":          {"type": "economics", "description": "Fed rate decision June 2026"},
-    "fed_rate_july":          {"type": "economics", "description": "Fed rate decision July 2026"},
-    "us_recession_2026":      {"type": "economics", "description": "US recession probability 2026"},
-    "ai_agi_2026":            {"type": "technology","description": "AGI milestone by end 2026"},
-    "btc_100k_2026":          {"type": "crypto",    "description": "BTC reaches $100k in 2026"},
-    "sp500_5000_eoy":         {"type": "finance",   "description": "S&P 500 above 5000 end 2026"},
-    "ukraine_ceasefire_2026": {"type": "geopolitics","description": "Ukraine ceasefire agreement"},
+    "wc2026_winner":          {"type": "sports",    "description": "FIFA WC 2026 winner", "preferred_source": "polymarket"},
+    "fed_rate_june":          {"type": "economics", "description": "Fed rate decision June 2026", "preferred_source": "kalshi"},
+    "fed_rate_july":          {"type": "economics", "description": "Fed rate decision July 2026", "preferred_source": "kalshi"},
+    "us_recession_2026":      {"type": "economics", "description": "US recession probability 2026", "preferred_source": "kalshi"},
+    "ai_agi_2026":            {"type": "technology","description": "AGI milestone by end 2026", "preferred_source": "polymarket"},
+    "btc_100k_2026":          {"type": "crypto",    "description": "BTC reaches $100k in 2026", "preferred_source": "polymarket"},
+    "sp500_5000_eoy":         {"type": "finance",   "description": "S&P 500 above 5000 end 2026", "preferred_source": "kalshi"},
+    "ukraine_ceasefire_2026": {"type": "geopolitics","description": "Ukraine ceasefire agreement", "preferred_source": "polymarket"},
 }
 
 MARKET_DIVERGENCE_THRESHOLD = 0.10   # 10pp divergence triggers alert

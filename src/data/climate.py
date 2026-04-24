@@ -136,28 +136,48 @@ class ClimateSignalEngine:
     # Vertical III: Regional Climate Risk
     # ──────────────────────────────────────────────
 
+    def fetch_energy_grid_stress(self, region: str) -> float:
+        """
+        Estimate energy grid stress based on climate load.
+        In production, this would pull from EIA or regional grid operators.
+        """
+        info = TRACKED_CLIMATE_REGIONS.get(region, {})
+        if not info: return 0.5
+        
+        # Pull current temp for the region
+        climate = self.fetch_venue_climate(info["lat"], info["lon"], region)
+        temp = climate["avg_temp_c"]
+        
+        # High heat stress (>32C) or extreme cold triggers grid stress
+        stress = 0.2
+        if temp > 32: stress += (temp - 32) * 0.1
+        if temp < 5:  stress += (5 - temp) * 0.1
+        
+        return float(np.clip(stress, 0.1, 0.95))
+
     def compute_regional_risk(self, region: str) -> dict:
         """
         Compute climate risk score for a tracked region.
-        Signal 0 = low risk, 1 = extreme risk (inverted for fusion: 0=bad, 1=safe).
+        Signal 0 = low risk, 1 = extreme risk.
         """
         info = TRACKED_CLIMATE_REGIONS.get(region, {})
         if not info:
             return {"region": region, "climate_risk_signal": 0.5}
 
         climate = self.fetch_venue_climate(info["lat"], info["lon"], region)
+        grid_stress = self.fetch_energy_grid_stress(region)
 
-        # For risk: high temp + high humidity = HIGH risk (opposite of venue comfort)
+        # For risk: high temp + high humidity = HIGH risk
         temp_risk = float(np.clip((climate["avg_temp_c"] - 20) / 25, 0, 1))
         hum_risk  = float(np.clip((climate["avg_humidity"] - 50) / 50, 0, 1))
 
         risk_types = {
-            "heat_grid":   temp_risk * 0.7 + hum_risk * 0.3,
-            "wildfire":    temp_risk * 0.8 + hum_risk * 0.2,
-            "hurricane":   hum_risk  * 0.6 + temp_risk * 0.4,
-            "flooding":    hum_risk  * 0.7 + temp_risk * 0.3,
+            "heat_grid":   temp_risk * 0.5 + hum_risk * 0.2 + grid_stress * 0.3,
+            "wildfire":    temp_risk * 0.7 + hum_risk * 0.1 + grid_stress * 0.2,
+            "hurricane":   hum_risk  * 0.5 + temp_risk * 0.3 + grid_stress * 0.2,
+            "flooding":    hum_risk  * 0.6 + temp_risk * 0.2 + grid_stress * 0.2,
             "heat_stress": temp_risk * 0.6 + hum_risk * 0.4,
-            "drought":     temp_risk * 0.5 + (1 - hum_risk) * 0.5,
+            "drought":     temp_risk * 0.4 + (1 - hum_risk) * 0.4 + grid_stress * 0.2,
         }
         raw_risk = risk_types.get(info["risk_type"], 0.5)
 
@@ -166,6 +186,7 @@ class ClimateSignalEngine:
             "risk_type":           info["risk_type"],
             "avg_temp_c":          climate["avg_temp_c"],
             "avg_humidity":        climate["avg_humidity"],
+            "grid_stress":         round(grid_stress, 4),
             "raw_risk_score":      round(raw_risk, 4),
             "climate_risk_signal": round(raw_risk, 4),  # 0=safe, 1=extreme risk
         }

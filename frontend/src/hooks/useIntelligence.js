@@ -9,6 +9,7 @@ export const useIntelligence = () => {
   const [rankings, setRankings] = useState([]);
   const [alpha, setAlpha] = useState(null);
   const [briefing, setBriefing] = useState(null);
+  const [venues, setVenues] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   
@@ -53,10 +54,19 @@ export const useIntelligence = () => {
     }
   };
 
+  const fetchVenues = async () => {
+    try {
+      const response = await axios.get('/v1/predict/climate/venues');
+      setVenues(response.data);
+    } catch (err) {
+      console.error('Venues fetch failed', err);
+    }
+  };
+
   useEffect(() => {
     setLoading(true);
     const init = async () => {
-      await Promise.all([fetchRankings(), fetchAlpha(), fetchBriefing()]);
+      await Promise.all([fetchRankings(), fetchAlpha(), fetchBriefing(), fetchVenues()]);
       setLoading(false);
     };
     init();
@@ -70,12 +80,28 @@ export const useIntelligence = () => {
     setWeights(prev => ({ ...prev, [key]: val }));
   };
 
+  const predictMatch = async (team1, team2, venue) => {
+    try {
+      const params = new URLSearchParams({
+        team1, team2, venue,
+        ...Object.entries(weights).reduce((acc, [k, v]) => ({ ...acc, [k]: v.toString() }), {})
+      });
+      const response = await axios.get(`/v1/predict/wc2026/match?${params}`);
+      return response.data;
+    } catch (err) {
+      console.error('Match prediction failed', err);
+      return null;
+    }
+  };
+
   return {
     rankings,
     alpha,
     briefing,
+    venues,
     weights,
     updateWeight,
+    predictMatch,
     loading,
     error,
     refresh: fetchRankings

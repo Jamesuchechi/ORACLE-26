@@ -34,7 +34,35 @@ class EconomicSignalEngine:
     WORLD_BANK_INF_URL    = "https://api.worldbank.org/v2/country/{iso3}/indicator/FP.CPI.TOTL.ZG?format=json&mrv=3"
 
     def __init__(self):
-        self.fred_key = os.getenv("FRED_API_KEY")
+        self.fred_key   = os.getenv("FRED_API_KEY")
+        self.alpha_key  = os.getenv("ALPHA_VANTAGE_KEY")
+
+    def fetch_fred_indicator(self, series_id: str) -> Optional[float]:
+        """Fetch most recent value from FRED API."""
+        if not self.fred_key: return None
+        try:
+            url = f"https://api.stlouisfed.org/fred/series/observations?series_id={series_id}&api_key={self.fred_key}&file_type=json&sort_order=desc&limit=1"
+            resp = requests.get(url, timeout=5)
+            data = resp.json()
+            if "observations" in data and data["observations"]:
+                return float(data["observations"][0]["value"])
+        except: return None
+        return None
+
+    def fetch_alpha_vantage_equity(self, symbol: str) -> Optional[float]:
+        """Fetch daily return signal for a symbol from Alpha Vantage."""
+        if not self.alpha_key: return None
+        try:
+            url = f"https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol={symbol}&apikey={self.alpha_key}"
+            resp = requests.get(url, timeout=5)
+            data = resp.json().get("Global Quote", {})
+            if not data: return None
+            # Return percentage change normalized
+            change = float(data.get("10. change percent", "0%").strip("%"))
+            return change
+        except: return None
+        return None
+
 
     def fetch_world_bank(self, iso3: str, indicator_url: str) -> Optional[float]:
         """Fetch most recent indicator value from World Bank API (free, no key)."""
@@ -105,11 +133,25 @@ class EconomicSignalEngine:
     def build_all_signals(self) -> pd.DataFrame:
         """Build economic signal table for all 48 WC teams."""
         print("  [economics] Scoring all 48 team nations...")
-        rows = [self.score_nation(t) for t in ALL_WC_TEAMS]
-        df   = pd.DataFrame(rows).sort_values("econ_signal", ascending=False).reset_index(drop=True)
+        
+        # Pull global macro baseline
+        us_unemployment = self.fetch_fred_indicator("UNRATE") or 3.8
+        sp500_momentum  = self.fetch_alpha_vantage_equity("SPY") or 0.12
+        
+        rows = []
+        for team in ALL_WC_TEAMS:
+            score_data = self.score_nation(team)
+            # Adjust score based on global macro baseline
+            if sp500_momentum > 0:
+                score_data["econ_signal"] = float(np.clip(score_data["econ_signal"] + 0.02, 0, 1))
+            
+            rows.append(score_data)
+            
+        df = pd.DataFrame(rows).sort_values("econ_signal", ascending=False).reset_index(drop=True)
         df.to_csv(RAW_DIR / "economic_signals.csv", index=False)
-        print(f"  [economics] Saved {len(df)} economic signals")
+        print(f"  [economics] Saved {len(df)} economic signals (Global Unemployment: {us_unemployment}%)")
         return df
+
 
     def run(self):
         print("\n" + "=" * 50)
