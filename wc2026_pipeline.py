@@ -20,6 +20,7 @@ import pandas as pd
 import numpy as np
 from pathlib import Path
 from datetime import datetime
+import os
 
 from typing import Optional
 import sys
@@ -377,8 +378,13 @@ def Optional(x): return x  # Python typing stub for clarity in _get_row
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="◈ CONFLUX Pipeline")
     parser.add_argument("--all",      action="store_true")
+    parser.add_argument("--quick",    action="store_true", help="Skip heavy scrapes, use smart fallbacks")
     parser.add_argument("--vertical", choices=["wc2026","market_calib","climate_risk","cultural_moment"])
     args = parser.parse_args()
+
+    if args.quick:
+        print("  [system] Quick mode active: Using smart-fallbacks for heavy signals.")
+        os.environ["CONFLUX_QUICK_MODE"] = "1"
 
     pipeline = ConfluxPipeline()
 
