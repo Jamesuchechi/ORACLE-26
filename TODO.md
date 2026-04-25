@@ -1,247 +1,241 @@
-# ◈ CONFLUX — Gap Analysis & Updated Roadmap
-> Last updated: April 2026 | Priority: CRITICAL → HIGH → MEDIUM → LOW
+# ◈ CONFLUX — Hackathon Battle Plan
+> 47 tasks · Prioritized by judging criteria weight · Your path to $5,000
+> 
+> **Judging weights:** Analytical Depth 35% · End-to-End Workflow 30% · Storytelling 20% · Creativity 15%
 
 ---
 
-## 🔴 CRITICAL — Breaks the App
+## Legend
 
-### C1. Missing Constant: `ALL_TEAMS` vs `ALL_WC_TEAMS`
-- **Files affected:** `src/api/routes.py`, `src/models/train.py`, `src/features/sports_features.py`
-- **Problem:** `from src.constants import ALL_TEAMS` fails — only `ALL_WC_TEAMS` exists
-- **Fix:** Add alias `ALL_TEAMS = ALL_WC_TEAMS` in `src/constants.py` OR rename all imports
-- [x] Add `ALL_TEAMS = ALL_WC_TEAMS` to `src/constants.py`
-
-### C2. Missing Constant: `TEAM_TO_RESULTS_NAME`
-- **Files affected:** `src/features/sports_features.py` (used in 6+ places)
-- **Problem:** `from src.constants import TEAM_TO_RESULTS_NAME` — not defined anywhere
-- **Fix:** Add mapping dict to `src/constants.py` (team display name → FBref/results CSV name)
-- [x] Define `TEAM_TO_RESULTS_NAME` in `src/constants.py`
-
-### C3. Two Competing FastAPI Apps
-- **Files:** `api.py` (root) vs `src/api/main.py`
-- **Problem:** Frontend vite proxy targets port 8000. Which app runs? Routes differ.
-  - Root `api.py` has `/v1/predict/wc2026/rankings` ✓
-  - `src/api/main.py` has `/predict` (different schema) ✓
-  - Frontend calls `/v1/predict/climate/venues` — only in root `api.py`
-- **Fix:** Consolidate into single app. Root `api.py` is the correct one. Delete or archive `src/api/`.
-- [x] Delete `src/api/routes.py`, `src/api/schemas.py`, `src/api/main.py`
-- [x] Update `BACKEND.md` to reflect single entry point: `python api.py`
-
-### C4. `bootstrap_signals.py` — `random_variation` Called Before Definition
-- **File:** `src/data/bootstrap_signals.py` line ~85
-- **Problem:** `random_variation(team)` called in main `bootstrap()` function but defined below it
-- **Fix:** Move `random_variation` function above `bootstrap()` 
-- [x] Reorder function definitions in `bootstrap_signals.py`
-
-### C5. `SportsDataCollector` Import Does Not Exist
-- **File:** `src/models/train.py`
-- **Problem:** `from src.data.sports import SportsDataCollector` — class is named `SportsSignalEngine`
-- **Fix:** Update import to `from src.data.sports import SportsSignalEngine as SportsDataCollector`
-- [x] Fix import in `train.py`
-
-### C6. Frontend `SignalRadar` Data Shape Mismatch
-- **File:** `frontend/src/components/SignalRadar.jsx`
-- **Problem:** Expects `data.sports`, `data.markets` etc. directly. API returns:
-  ```json
-  { "signal_breakdown": { "sports": 0.8, ... } }
-  ```
-  But rankings endpoint returns flat: `{ "sports": 0.8, "markets": 0.7, ... }`
-  TeamDetail fetches squad — squad has no `signal_breakdown` key at all.
-- **Fix:** Normalize shape in `useIntelligence.js` hook; ensure `team.signal_breakdown` is always populated
-- [x] In `useIntelligence.js`, after fetching rankings, map each team to add `signal_breakdown: { sports, markets, finance, climate, social }`
+| Badge | Meaning |
+|-------|---------|
+| 🔴 CRITICAL | Breaks the demo or costs decisive points — do these first |
+| 🟠 HIGH | Significant score impact — do before submission |
+| 🔵 MEDIUM | Polish and differentiation — do if time allows |
+| 🟢 LOW | Nice to have — only if everything else is done |
 
 ---
 
-## 🟠 HIGH — Incorrect Logic / Misleading Output
+## Phase 0 — Deploy First (Judges Cannot Run localhost)
+> **This is prerequisite for everything. Without a live URL, judges cannot evaluate your project.**
 
-### H1. Climate Signal Hardcoded in WC2026 Pipeline
-- **File:** `wc2026_pipeline.py` line ~118
-- **Problem:** `climate = 0.75` — every team gets identical climate signal. 
-  Climate IS computed per venue, but never mapped to teams based on their group's venue.
-- **Fix:** Map each team's group to their likely venues, average venue climate signals
-- [x] Create `team_to_venue_climate()` helper in pipeline using `WC2026_GROUPS` + `WC2026_VENUES`
-- [x] Replace hardcoded `0.75` with computed per-team climate resilience
+- [x] 🔴 **CRITICAL · 1h · Impact: Decisive** — Add `VITE_API_URL` env var to `vite.config.js` and `useIntelligence.js` — replace all `localhost:8000` hardcodes with `import.meta.env.VITE_API_URL || 'http://localhost:8000'`
+  > Without this, your frontend literally cannot work for judges. Do this absolute first.
 
-### H2. `fuse_match` Draw Probability Can Go Negative
-- **File:** `src/features/fusion.py` `fuse_match()` method
-- **Problem:** 
-  ```python
-  raw_loss = sports_draw_prob - adjustment  # This is DRAW, not loss — naming bug
-  raw_draw = 1 - raw_win - max(0, raw_loss)  # Can be negative
-  ```
-  Variable naming is wrong: `raw_loss` is assigned `sports_draw_prob - adjustment` which makes no sense.
-- **Fix:** Rewrite probability adjustment logic clearly:
-  ```python
-  base_win = sports_win_prob
-  base_draw = sports_draw_prob  
-  base_loss = 1 - base_win - base_draw
-  # Apply delta adjustment to win/loss symmetrically, preserve draw
-  win_p = np.clip(base_win + adjustment, 0.02, 0.95)
-  loss_p = np.clip(base_loss - adjustment, 0.02, 0.95)
-  draw_p = np.clip(1 - win_p - loss_p, 0.05, 0.40)
-  ```
-- [x] Rewrite `fuse_match` probability adjustment in `fusion.py`
+- [x] 🔴 **CRITICAL · 2h · Impact: Decisive** — Deploy FastAPI backend to Railway or Render — set all env vars in dashboard, verify `/health` returns 200
+  > Free tier is fine. Get a public HTTPS URL. Railway takes ~15 minutes from zero.
 
-### H3. Alpha Detection Compares Incompatible Scales
-- **File:** `api.py` `/v1/alpha/opportunities` and `wc2026_pipeline.py`
-- **Problem:** `alpha_gap = conflux_score - markets` 
-  - `conflux_score` is a weighted composite across 5 domains [0,1]
-  - `markets` is a single domain signal, normalized differently
-  - Comparing them directly is mathematically wrong
-- **Fix:** Alpha should compare market-implied win probability vs sports-model win probability
-  ```python
-  # True alpha: what does Polymarket say vs what does our Poisson model say
-  df["alpha_gap"] = df["market_signal_raw"] - df["sports_signal"]
-  ```
-- [x] Redefine alpha computation to use raw market probability vs sports model probability
+- [x] 🔴 **CRITICAL · 1h · Impact: Decisive** — Deploy React frontend to Vercel — connect `VITE_API_URL` to your Railway URL in Vercel env settings
+  > vercel.com → import repo → add env var → done. Takes 10 minutes once backend is live.
 
-### H4. `SquadEngine` `generate_squad` Has Duplicate `return` Statement
-- **File:** `src/data/squads.py` end of `generate_squad()`
-- **Problem:** Two `return sorted(squad, ...)` statements — dead code after first return
-- [x] Remove redundant return in `squads.py`
+- [ ] 🔴 **CRITICAL · 30m · Impact: High** — Run `wc2026_pipeline.py --all` on the server after deploy, verify all CSV outputs exist in `data/processed/`
+  > API returns 404 on most endpoints if `processed/` files are missing. Pipeline must run successfully on the server.
 
-### H5. Market Signals Fall Back to Synthetic for All 48 Teams
-- **File:** `src/data/markets.py` `scan_wc_markets()`
-- **Problem:** Polymarket slug format `fifa-world-cup-2026-winner-{team-name}` almost certainly returns no data for most teams. Falls back to `_fallback_market_prob()` silently.
-- **Fix:** Add explicit logging of how many teams got real vs synthetic data. Add Metaculus as additional source.
-- [x] Log real vs synthetic signal count in `scan_wc_markets()`
-- [x] Add Metaculus API fallback for WC2026 team probabilities
-
-### H6. Google Trends Rate Limiting — Silent Failures
-- **File:** `src/data/social.py`
-- **Problem:** `fetch_team_trends()` processes 48 teams in batches of 5, sleeping 2s between. Trends API will block after ~10 requests. Falls to synthetic silently.
-- **Fix:** Implement proper exponential backoff + cache results to avoid re-fetching
-- [x] Add exponential backoff in `fetch_trends_batch()`
-- [x] Cache results to `data/raw/trends_cache.json` with 24h TTL
+- [ ] 🟠 **HIGH · 30m · Impact: High** — Enhance `/health` endpoint response to show data freshness timestamp, signal counts, and pipeline last-run time
+  > Judges will hit `/health` first. Make it impressive — show it's a live system, not a static demo.
 
 ---
 
-## 🟡 MEDIUM — Missing Features / Incomplete Verticals
+## Phase 1 — Fix Broken Logic (Stops Demo From Failing)
+> **These are silent failures that will embarrass you during the demo or cost points when judges inspect the code.**
 
-### M1. `zerve_analyst` Cannot Handle Cross-Domain Queries
-- **File:** `src/features/analyst.py`
-- **Problem:** TODO.md Phase 4 item: "Handle cross-domain queries (e.g., 'How does US inflation affect WC2026 venue logistics?')" — not implemented. Currently just dumps `context_data` as JSON to LLM without structured cross-domain reasoning.
-- **Fix:** Add structured context builder that pulls from all 4 verticals before calling LLM
-  ```python
-  def build_cross_domain_context(self, query: str) -> dict:
-      # Detect query intent (WC / market / climate / cultural)
-      # Pull relevant signals from each CSV
-      # Return structured context with cross-domain links
-  ```
-- [x] Implement `build_cross_domain_context()` in `analyst.py`
-- [x] Update `/v1/analyst/chat` to use cross-domain context
+- [ ] 🔴 **CRITICAL · 30m · Impact: High** — Fix `fuse_match()` probability math in `src/features/fusion.py` — `draw_p` can go negative; rewrite with `np.clip` on all three, then re-normalize so they sum to exactly 1.0
+  > Current code has a `raw_loss` naming bug that corrupts match predictor output silently.
 
-### M2. MatchPredictor Venue Climate Not Used in Prediction
-- **File:** `frontend/src/components/MatchPredictor.jsx` + `api.py` `/v1/predict/wc2026/match`
-- **Problem:** Venue is selected in UI and passed to API. API adds `venue_context` to response but the climate signal in the prediction is the team's generic climate score, not the venue-specific one.
-- **Fix:** In `predict_match` endpoint, look up venue climate from `venue_climate_signals.csv` and apply altitude/heat penalty to both teams' climate scores before fusion
-- [x] Fetch venue climate data in match prediction endpoint
-- [x] Apply venue-specific climate penalty to team signals
+- [ ] 🔴 **CRITICAL · 20m · Impact: High** — Fix alpha gap calculation — use `sports` signal vs `market_signal` (same normalized scale), not `conflux_score` vs raw `markets`
+  > Current alpha is mathematically invalid — comparing a weighted composite against a raw signal. Judges who check the math will notice.
 
-### M3. Zerve Notebooks — Not Created
-- **TODO Phase 4:** "Finalize the public Zerve project with executable analysis blocks"
-- **Problem:** No notebooks exist. The `notebooks/` directory structure is planned but empty.
-- **Fix:** Create 4 key notebooks mirroring the pipeline phases
-- [x] `01_sports_signal.ipynb` — Elo, form, Dixon-Coles fitting
-- [x] `02_market_calibration.ipynb` — Alpha detection walkthrough  
-- [x] `03_climate_risk.ipynb` — Venue heat/altitude analysis
-- [x] `04_signal_fusion.ipynb` — Full CONFLUX fusion + rankings
+- [ ] 🔴 **CRITICAL · 30m · Impact: Medium** — Add Groq fallback in `analyst.py` — if all LLM providers fail, return a structured template response built directly from `context_data`, never return an empty string or raise an exception
+  > Demo dies silently if `GROQ_API_KEY` is missing or rate-limited mid-presentation. Template fallback keeps every endpoint alive.
 
-### M4. API Not Secured / No Rate Limiting
-- **TODO Phase 4:** "Secure and document all endpoints for external consumption"
-- **Problem:** All endpoints are fully open, no API key, no rate limiting
-- **Fix:** Add simple API key header check + slowapi rate limiter
-- [x] Add `X-API-Key` header validation middleware
-- [x] Add `slowapi` rate limiting (100 req/min per IP)
-- [x] Add OpenAPI tag descriptions to all endpoints
+- [ ] 🔴 **CRITICAL · 20m · Impact: Medium** — Fix `Social.jsx` field names: `t.momentum` → `t.momentum_score`, `t.tipping` → `t.is_tipping`
+  > Social view renders `NaN%` and `undefined` for every trend row currently.
 
-### M5. Finance View Crashes When FRED Key Missing
-- **File:** `frontend/src/views/Finance.jsx` + `src/data/economics.py`
-- **Problem:** Finance view fetches `/v1/finance/dashboard`. If `data/raw/economic_signals.csv` doesn't exist AND FRED key is missing, the `build_all_signals()` call silently uses tier-based estimates but `gdp_growth` field may be None, causing pandas errors.
-- [x] Add null-safe fallback in `EconomicSignalEngine.score_nation()` 
-- [x] Add error boundary in `Finance.jsx`
+- [ ] 🔴 **CRITICAL · 10m · Impact: Low** — Fix `TeamDetail.jsx` null guard: `squadData?.total_valuation ? \`€${(squadData.total_valuation/1000000).toFixed(0)}M\` : 'N/A'`
+  > Shows `NaN M` whenever squad data is missing or zero.
 
-### M6. Social View: `momentum` Field Missing from API Response
-- **File:** `frontend/src/views/Social.jsx`
-- **Problem:** Renders `t.momentum` but `cultural_moment_signals.csv` has `momentum_score` not `momentum`
-  ```jsx
-  momentum: `+${(t.momentum * 100).toFixed(0)}%`  // t.momentum is undefined
-  ```
-- [x] Fix field name: `t.momentum_score` in `Social.jsx`
-- [x] Also fix: `t.tipping_point` → `t.is_tipping`
+- [ ] 🟠 **HIGH · 20m · Impact: Medium** — Add `AbortController` with 10s timeout to all `fetch()` calls in Climate, Finance, and Social views — add visible error UI state with a retry button
+  > Views hang forever if the API is slow. During a live demo, a frozen screen is fatal.
 
-### M7. TeamDetail Squad Valuation Display Bug
-- **File:** `frontend/src/views/TeamDetail.jsx`  
-- **Problem:** `€${(squadData?.total_valuation / 1000000).toFixed(0)}M` — if `total_valuation` is 0 or undefined, shows `NaN M`
-- [x] Add null guard: `squadData?.total_valuation ? `€${...}M` : 'N/A'`
+- [ ] 🟠 **HIGH · 15m · Impact: Low** — Verify countdown in `App.jsx` is using the dynamic `Math.ceil()` calculation, not the hardcoded `782` fallback — should show ~47 days to kickoff
+  > 47 days creates real urgency and shows attention to detail. 782 destroys credibility instantly.
+
+- [ ] 🟠 **HIGH · 15m · Impact: Medium** — Move `from src.features.analyst import zerve_analyst` to top of `api.py` inside a `try/except`, set `zerve_analyst = None` on failure, check `if zerve_analyst is None` inside routes and return graceful 503 response
+  > A missing API key currently throws an unhandled exception on the first request to analyst endpoints, silently killing half your API.
 
 ---
 
-## 🔵 LOW — Polish / Enhancement
+## Phase 2 — Analytical Depth (35% of Score — Your Biggest Gap)
+> **This is the category that separates winners from participants. Claims need evidence. Evidence needs numbers.**
 
-### L1. Countdown is Wrong
-- **File:** `frontend/src/App.jsx` line ~192
-- **Problem:** Shows `782 DAYS` hardcoded. World Cup starts June 11, 2026 — from April 2026 that's ~48 days.
-- [x] Replace hardcoded `782` with dynamic calculation: `Math.ceil((new Date('2026-06-11') - new Date()) / 86400000)`
+- [ ] 🔴 **CRITICAL · 3h · Impact: Decisive** — Build `backtest_accuracy.py` — run CONFLUX match predictions against actual 2018 + 2022 World Cup results, compute: accuracy vs pure Elo baseline, Brier score, upset detection rate (when underdog won, did CONFLUX diverge from favorite?)
+  > The "2.3x upset detection" claim in README has zero supporting evidence. Either prove it with this backtest or remove the claim. Judges will look.
 
-### L2. `terminal.html` Standalone vs React App Inconsistency  
-- **Problem:** `terminal.html` is a beautiful standalone HTML terminal with hardcoded data. The React app in `frontend/` is the live version but has different data/styling. Submitters might be confused which to demo.
-- [x] Add comment to `terminal.html`: "Static demo — see frontend/ for live version"
-- [ ] Or: Use `terminal.html` as the Zerve-deployed static app and React as local dev
+- [ ] 🔴 **CRITICAL · 2h · Impact: Decisive** — Add `/v1/model/validation` endpoint — return calibration curve data, accuracy by confidence tier (high/medium/low), sample size, and comparison vs Elo-only baseline
+  > Judges want to see if the model actually works, not just that it exists. This endpoint is your proof.
 
-### L3. Flag API for Scotland Returns Wrong Code
-- **File:** `frontend/src/utils/flags.js`
-- **Problem:** `'Scotland': 'gb-sct'` — `flagcdn.com` uses `gb-sct` but many flag APIs don't support subdivision codes
-- [x] Test and fix Scotland, Bosnia flag codes
+- [ ] 🔴 **CRITICAL · 2h · Impact: Decisive** — Get real Polymarket odds for top 10 teams (Argentina, France, Brazil, England, Spain, Germany, Portugal, Netherlands, Morocco, USA) — hardcode as `REAL_MARKET_ODDS` dict in `markets.py` as a verified fallback when API returns no data
+  > Even static verified odds are infinitely more credible than synthetic fallback. Judges can cross-check against polymarket.com.
 
-### L4. `BACKEND.md` Refers to `wc2026_pipeline.py --all` but File is Named That — OK
-- [x] Actually fine. But `BACKEND.md` says "outputs saved to `data/processed/conflux_*.csv`" — the actual output files are named differently than documented.
-- [x] Update `BACKEND.md` output file list to match actual filenames
+- [ ] 🟠 **HIGH · 2h · Impact: High** — Build the divergence evidence story — find the single most compelling team where CONFLUX score differs from real Polymarket odds by 10pp+, run the full analysis, document why (economic signal? social momentum? climate advantage?), surface it as the centrepiece of the analyst briefing
+  > One real, defensible divergence example beats 100 synthetic ones. This is your thesis made concrete.
 
-### L5. No Loading State for Heavy API Calls
-- **Files:** Multiple views
-- **Problem:** Climate, Finance, Social views show "Scanning..." text but if API is down, they hang forever — no timeout or error state.
-- [x] Add `AbortController` with 10s timeout to all `fetch()` calls in views
-- [x] Add error UI state to all views
+- [ ] 🟠 **HIGH · 1h · Impact: High** — Add model confidence calibration output — for predictions where CONFLUX says 70% win probability, calculate actual win rate in historical data, surface as a "reliability score" per confidence tier
+  > Calibration is what separates serious forecasting from vibes. This one metric signals genuine analytical rigour.
+
+- [ ] 🔵 **MEDIUM · 1h · Impact: Medium** — Replace hardcoded correlation matrix in `src/data/fusion.py` with real computed Pearson correlations between the 5 signals across all 48 teams, update `/v1/fusion/hub` to return these real values
+  > The current matrix uses `np.random.random() * 0.05` jitter on hardcoded values. Replace with real signal correlations from your data.
 
 ---
 
-## 📋 PHASE 4 COMPLETION CHECKLIST (from original TODO)
+## Phase 3 — The Killer Feature (Win the Demo, Win the Prize)
+> **These features directly demonstrate your thesis and are the most screenshot-able, share-worthy parts of the project.**
 
-### Phase 4: Zerve Integration & Deployment
-- [x] **C1–C6** above must be fixed first (app must run cleanly)
-- [x] **Autonomous Reasoning**: Implement `build_cross_domain_context()` (see M1)
-- [ ] **API Production**: 
-  - [x] Fix route conflicts (C3)
-- [x] Add auth + rate limiting (M4)
-- [x] Write API documentation in `API_DOCS.md`
+- [ ] 🔴 **CRITICAL · 3h · Impact: Decisive** — Build DIVERGENCE ALERT view as the landing section of the dashboard — surface top 5 teams where CONFLUX most disagrees with Polymarket, showing: team name, direction (underpriced/overpriced), magnitude in percentage points, AI one-line explanation, confidence level
+  > This IS your thesis made visible. It should be the first thing every judge sees when they open your app.
 
-- [x] **Zerve Notebooks**: Create 4 notebooks (M3)
-- [ ] **Deploy to Zerve**:
-  - [ ] Run `wc2026_pipeline.py --all` successfully (requires C1–C6 fixed)
-  - [ ] Start `api.py` and verify all endpoints return data
-  - [ ] Publish Zerve project URL
-  - [ ] Deploy frontend (Vercel/Netlify or Zerve App)
+- [ ] 🔴 **CRITICAL · 2h · Impact: Decisive** — Build Group Stage Bracket Simulator — run Monte Carlo for all 12 groups, show advancement probability for each team with progress bars, make each group clickable to show the full standings simulation
+  > Highly shareable, visually impressive, demonstrates the full pipeline working end-to-end. This is the kind of thing that gets posted on X.
 
----
+- [ ] 🟠 **HIGH · 2h · Impact: High** — Add "Upset Alert" badge to match predictor — when CONFLUX win probability for the underdog exceeds the market-implied probability by 8pp+, show a highlighted UPSET ALERT with confidence level and which signal is driving the divergence
+  > Makes the analytical insight immediately actionable in one click. Judges love things that are both smart and visually clear.
 
-## 🗂 File Health Summary
+- [ ] 🟠 **HIGH · 1h · Impact: High** — Add signal weight sensitivity analysis to match predictor — interactive sliders showing how final win probability shifts as you change each signal's weight — prove that multi-signal beats single-signal
+  > This is an interactive proof of your core thesis. It takes 60 seconds to demonstrate and is unforgettable.
 
-| File | Status | Issue |
-|------|--------|-------|
-| `src/constants.py` | 🔴 Broken | Missing `ALL_TEAMS`, `TEAM_TO_RESULTS_NAME` |
-| `api.py` | 🟡 Partial | Climate signal hardcoded; alpha logic wrong |
-| `src/features/fusion.py` | 🟠 Bug | `fuse_match` probability math wrong |
-| `src/data/bootstrap_signals.py` | 🔴 Broken | Function called before definition |
-| `src/models/train.py` | 🔴 Broken | Wrong class import |
-| `src/api/` (whole dir) | 🔴 Conflict | Duplicate app, wrong imports |
-| `src/data/squads.py` | 🟡 Minor | Duplicate return statement |
-| `frontend/src/hooks/useIntelligence.js` | 🟠 Bug | Missing `signal_breakdown` mapping |
-| `frontend/src/views/Social.jsx` | 🟠 Bug | Wrong field names |
-| `frontend/src/views/TeamDetail.jsx` | 🟡 Minor | Null guard missing |
-| `frontend/src/App.jsx` | 🟡 Minor | Hardcoded countdown |
-| `wc2026_pipeline.py` | 🟠 Bug | Hardcoded climate `0.75` |
+- [ ] 🟠 **HIGH · 1.5h · Impact: High** — Build `/v1/predict/wc2026/tournament` endpoint — return full bracket simulation results with probability of reaching each round (R32, R16, QF, SF, Final, Win) for all 48 teams
+  > Gives judges an API endpoint that is genuinely useful, well-designed, and demonstrates production thinking beyond the minimum.
+
+- [ ] 🔵 **MEDIUM · 1h · Impact: Medium** — Add historical WC performance context to team rankings — show average round reached 1990–2022 alongside CONFLUX score — lets judges see whether the model aligns with historical performance or is finding something new
+  > Context makes rankings meaningful. Pure numbers without reference points are hard to evaluate.
 
 ---
 
-*CONFLUX Intelligence Engine · Gap Analysis v2 · April 2026*
+## Phase 4 — UI Polish and Demo Flow
+> **First impressions are disproportionately weighted. The dashboard landing page and first 60 seconds of video do most of the work.**
+
+- [ ] 🟠 **HIGH · 1h · Impact: High** — Redesign dashboard landing — move DIVERGENCE ALERTS section to the top above the leaderboard table — lead with your unique insight, not a ranked list every competitor has
+  > First impression matters more than the depth of the app. Lead with what makes you different.
+
+- [ ] 🟠 **HIGH · 30m · Impact: High** — Add loading skeleton screens to all views — replace "Scanning..." and "Syncing..." text with animated placeholder cards that match the final layout
+  > Perceived performance matters enormously during a demo. Skeletons feel dramatically faster than spinner text.
+
+- [ ] 🟠 **HIGH · 45m · Impact: Medium** — Add toast notifications when signals refresh — "Market signal updated · 3 new divergences detected" — pulse the live neural link indicator in the header
+  > Makes the system feel alive and dynamic during a demo rather than static.
+
+- [ ] 🔵 **MEDIUM · 30m · Impact: Medium** — Fix all 48 team flag codes in `flags.js` — test Scotland (`gb-sct`), Bosnia (`ba`), New Zealand (`nz`), South Africa (`za`), Ivory Coast (`ci`), DR Congo (`cd`), Uzbekistan (`uz`) — verify every flag loads
+  > Broken flags during a live demo look unprofessional and undermine confidence in the data quality.
+
+- [ ] 🔵 **MEDIUM · 30m · Impact: Medium** — Add mobile responsive breakpoints to Dashboard and Leaderboard — the signal fingerprint bars overflow on screens narrower than 768px
+  > Judges may open the app on a phone. A broken mobile layout is a bad signal about code quality.
+
+- [ ] 🔵 **MEDIUM · 20m · Impact: Low** — Add "Copy shareable link" button that encodes selected team and weights in URL query params
+  > Shareable links = free publicity = Zerve amplification before judging ends.
+
+- [ ] 🟢 **LOW · 15m · Impact: Low** — Add CONFLUX version string and pipeline last-run timestamp to the footer and `/health` response
+  > Small production signal that shows you think like a real engineer.
+
+---
+
+## Phase 5 — AI Analyst Upgrade
+> **The analyst is a major differentiator. Right now it's a thin wrapper. Make it earn its place.**
+
+- [ ] 🟠 **HIGH · 2h · Impact: High** — Implement `build_cross_domain_context()` properly — detect query intent (WC / market / climate / cultural keywords), pull relevant rows from all 4 vertical CSVs, build structured context with explicit cross-domain links before calling the LLM
+  > Currently dumps raw JSON to the LLM with no structure. Structured context produces 5x more insightful responses.
+
+- [ ] 🟠 **HIGH · 1h · Impact: High** — Add 5 pre-built quick-action buttons in the analyst chat UI: "Who will win the World Cup?", "Top 3 upset picks?", "Biggest market mispricing?", "Climate risk briefing", "Cultural moment report"
+  > Judges are busy. Quick prompts ensure they see your best AI outputs without having to think of questions.
+
+- [ ] 🔵 **MEDIUM · 1h · Impact: Medium** — Add streaming response support to `/v1/analyst/chat` using FastAPI `StreamingResponse` with Server-Sent Events, update `AnalystChat.jsx` to consume the stream
+  > Streaming feels dramatically more impressive than waiting 3 seconds for a wall of text to appear.
+
+- [ ] 🔵 **MEDIUM · 30m · Impact: Medium** — Cache analyst briefing for 30 minutes in memory using a simple dict with timestamp — avoid calling the LLM on every `/v1/analyst/briefing` request during judging
+  > Prevents rate limit errors during demo. The briefing content doesn't need to change every request.
+
+- [ ] 🟢 **LOW · 1h · Impact: Medium** — Add conversation memory to analyst chat — pass the last 5 messages as context in each subsequent API call so follow-up questions work naturally
+  > Currently each message is completely stateless. Memory makes it feel like a real analyst, not a one-shot query tool.
+
+---
+
+## Phase 6 — Zerve Notebooks and Submission Assets
+> **Notebooks are required. The project summary and demo video are the two assets judges spend the most time with.**
+
+- [ ] 🟠 **HIGH · 2h · Impact: High** — Execute all 4 existing notebooks end-to-end in Zerve — fix any import errors, cell ordering issues, or missing file dependencies — every cell must run without errors
+  > Zerve notebooks are a required submission component. They must run cleanly or you lose End-to-End Workflow points.
+
+- [ ] 🟠 **HIGH · 1h · Impact: High** — Add rich markdown narrative cells to each notebook — explain the insight above each code block: "Why does economic stability predict football performance?", "What does this divergence tell us?", "What would this mean for a bettor?"
+  > Judges read notebooks. Tell the story between the code cells. Analysis without narrative is just code.
+
+- [ ] 🟠 **HIGH · 30m · Impact: High** — Create `05_divergence_analysis.ipynb` — the centrepiece analytical notebook: load real Polymarket odds for top teams, compute CONFLUX vs market divergence, plot calibration curve, highlight the single best value opportunity with full explanation
+  > This is the notebook that wins the Analytical Depth score. Make it the best thing in the repo.
+
+- [ ] 🔴 **CRITICAL · 1h · Impact: Decisive** — Write the 300-word project summary — open with a concrete finding, not a technology description. Structure: "We found X → here is the evidence → this is why it matters → here is what we built to surface it"
+  > Judges read this first. If it opens with "CONFLUX is a multi-signal intelligence engine" instead of a real finding, you lose the analytical depth category before they even open the app.
+
+- [ ] 🔴 **CRITICAL · 3h · Impact: Decisive** — Record the 3-minute demo video with this exact structure: (0:00-0:15) state the question out loud → (0:15-0:45) show data being collected live → (0:45-1:30) show the divergence alert for your best example team → (1:30-2:15) run match predictor for that team, show upset alert → (2:15-2:45) show AI analyst explaining the cross-domain reasoning → (2:45-3:00) show a live API call from terminal proving production deployment
+  > Practice this 3 times before recording. The arc — question, evidence, insight, production — is more compelling than a feature tour. Watch past hackathon winning demos before you record.
+
+---
+
+## Phase 7 — Production Signals and Amplification
+> **These details signal to judges that you built something real, not a hackathon prototype.**
+
+- [ ] 🟠 **HIGH · 1h · Impact: High** — Verify `slowapi` rate limiting is installed in `requirements.txt` and actually working on the deployed server — test with `curl` in a loop to confirm 429 responses fire correctly
+  > Rate limit errors during judging from judges hammering the API = lost points. The middleware is coded but may not be installed.
+
+- [ ] 🟠 **HIGH · 30m · Impact: High** — Add full OpenAPI documentation — add `description`, `summary`, `response_model`, and example responses to all major endpoints in `api.py` — make `/docs` look impressive
+  > Judges will visit `/docs`. A well-documented API signals production engineering. An empty one signals a prototype.
+
+- [ ] 🔵 **MEDIUM · 30m · Impact: Medium** — Set up data refresh on a schedule — re-run `bootstrap_signals.py` every 24h via Railway cron tab or an APScheduler job in `api.py` startup
+  > Live data refresh is a production signal. "Data refreshed 3 hours ago" in the dashboard is a credibility multiplier.
+
+- [ ] 🔵 **MEDIUM · 20m · Impact: Medium** — Post on LinkedIn and X immediately after your app is deployed — include the live URL, your single best finding (the divergence number), one screenshot of the divergence alert UI, and tag `@Zerve AI` (LinkedIn) and `@Zerve_AI` (X)
+  > Zerve amplifies good submissions. Early posts get more reach before judging ends. Don't wait until the deadline.
+
+- [ ] 🔵 **MEDIUM · 30m · Impact: Medium** — Replace `allow_origins=["*"]` in CORS middleware with your production Vercel URL only
+  > Security detail that signals production thinking. Wildcard CORS is a red flag in any production review.
+
+- [ ] 🟢 **LOW · 1h · Impact: Medium** — Write `DEPLOYMENT.md` with clear step-by-step instructions: clone → install → set env vars → run pipeline → start API → start frontend
+  > Judges appreciate projects they could actually reproduce and use after the hackathon. This signals long-term thinking.
+
+---
+
+## Quick Reference — The 10 Highest-Impact Tasks
+
+If you are short on time, these 10 tasks have the highest return on effort:
+
+| # | Task | Why |
+|---|------|-----|
+| 1 | Deploy to Railway + Vercel | Judges need a live URL |
+| 2 | Run pipeline on server | Most endpoints 404 without it |
+| 3 | Build divergence alert view | Your thesis made visible |
+| 4 | Get real Polymarket odds | Credibility for all alpha claims |
+| 5 | Build backtest module | Proves the 2.3x claim |
+| 6 | Write project summary | Judges read this first |
+| 7 | Record demo video | Most-watched submission asset |
+| 8 | Fix fuse_match() probability math | Silent crash in match predictor |
+| 9 | Build bracket simulator | Shareable, impressive, end-to-end |
+| 10 | Execute all Zerve notebooks | Required deliverable |
+
+---
+
+## The One Thing That Wins It
+
+Before anything else, run this in a Python shell against your real data:
+
+```python
+import pandas as pd
+
+df = pd.read_csv('data/processed/conflux_wc2026.csv')
+df['alpha'] = df['sports'] - df['markets']
+df['abs_alpha'] = df['alpha'].abs()
+
+high_div = df[df['abs_alpha'] > 0.10].sort_values('alpha', ascending=False)
+print(high_div[['subject','sports','markets','alpha','conflux_score']])
+```
+
+Whatever comes out of that — **that is your story**. Find the team with the biggest divergence. That number becomes your project summary opener, your video hook, your LinkedIn post, and the centrepiece of your demo. Everything else in CONFLUX exists to explain why that number is meaningful.
+
+---
+
+*Built for ZerveHack 2026 · CONFLUX Intelligence Engine · We need to win this.*

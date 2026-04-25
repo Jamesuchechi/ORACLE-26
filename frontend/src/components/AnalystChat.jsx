@@ -27,7 +27,7 @@ const AnalystChat = ({ isOpen, onClose }) => {
     setLoading(true);
 
     try {
-      const response = await axios.post('http://localhost:8000/v1/analyst/chat', { message: userMsg.text });
+      const response = await axios.post('/v1/analyst/chat', { message: userMsg.text });
       setMessages(prev => [...prev, { role: 'bot', text: response.data.response }]);
     } catch (err) {
       setMessages(prev => [...prev, { role: 'bot', text: "Communication link severed. Please check system status." }]);

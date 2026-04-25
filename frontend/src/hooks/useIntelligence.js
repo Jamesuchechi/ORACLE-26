@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 
-axios.defaults.baseURL = 'http://localhost:8000';
+axios.defaults.baseURL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
 axios.defaults.timeout = 30000; // 30s timeout
 axios.defaults.headers.common['X-API-Key'] = 'conflux_dev_2026';
 

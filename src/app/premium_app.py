@@ -12,6 +12,9 @@ import plotly.express as px
 from datetime import datetime, timedelta
 from pathlib import Path
 import requests
+import os
+
+API_URL = os.getenv("API_URL", "http://localhost:8000")
 
 # Page Setup
 st.set_page_config(page_title="ORACLE-26 | Terminal", layout="wide", initial_sidebar_state="collapsed")
@@ -252,7 +255,7 @@ with tab_predictor:
     if st.button("RUN ORACLE-26 PREDICTION", use_container_width=True):
         with st.spinner("Processing multi-signal ensemble..."):
             try:
-                resp = requests.get(f"http://localhost:8000/api/v1/predict?team1={t1}&team2={t2}").json()
+                resp = requests.get(f"{API_URL}/api/v1/predict?team1={t1}&team2={t2}").json()
                 
                 st.markdown("<br>", unsafe_allow_html=True)
                 st.markdown("<div class='glass-card'>", unsafe_allow_html=True)

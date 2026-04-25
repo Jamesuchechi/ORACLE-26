@@ -11,6 +11,9 @@ import plotly.graph_objects as go
 from pathlib import Path
 import requests
 from datetime import datetime
+import os
+
+API_URL = os.getenv("API_URL", "http://localhost:8000")
 
 # Page Config
 st.set_page_config(
@@ -114,7 +117,7 @@ elif page == "Match Predictor":
     if st.button("RUN MULTI-SIGNAL PREDICTION"):
         # Call Local API
         try:
-            resp = requests.get(f"http://localhost:8000/api/v1/predict?team1={t1}&team2={t2}").json()
+            resp = requests.get(f"{API_URL}/api/v1/predict?team1={t1}&team2={t2}").json()
             
             st.markdown("---")
             res_col1, res_col2 = st.columns([1, 1])
