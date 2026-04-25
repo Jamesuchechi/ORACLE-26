@@ -71,7 +71,6 @@ folium>=0.15.0
 # App / API
 fastapi>=0.104.0
 uvicorn>=0.24.0
-streamlit>=1.28.0               # Optional: local app preview
 
 # Utilities
 tqdm>=4.66.0
@@ -231,10 +230,6 @@ oracle-26/
 │   │   ├── main.py             # FastAPI app
 │   │   ├── routes.py           # Endpoint definitions
 │   │   └── schemas.py          # Request/response models
-│   │
-│   └── app/                    # Interactive app
-│       ├── dashboard.py        # Main app entry point
-│       └── components/         # UI components
 │
 ├── notebooks/                  # Zerve notebooks (analysis)
 │   ├── 01_sports_eda.ipynb
@@ -290,11 +285,6 @@ uvicorn src.api.main:app --reload --port 8000
 curl "http://localhost:8000/predict?team1=Brazil&team2=Germany"
 ```
 
-### Step 4: Launch local app (optional preview)
-```bash
-streamlit run src/app/dashboard.py
-# Opens at http://localhost:8501
-```
 
 ---
 
@@ -318,11 +308,11 @@ Run notebooks `01` through `08` in sequence inside Zerve. Each notebook saves it
 3. Click **Deploy**
 4. Copy the public endpoint URL → add to README as `ZERVE_API_ENDPOINT`
 
-### Step 5: Deploy the App
-1. In Zerve, navigate to App deployment
-2. Point it to `src/app/dashboard.py`
-3. Click **Deploy**
-4. Copy the public app URL → share this in your submission and social posts
+### Step 5: Deploy the Frontend
+1. Go to Vercel (or similar)
+2. Connect your repo
+3. Set `VITE_API_URL` to your Zerve/Render API endpoint
+4. Deploy
 
 ### Step 6: Verify everything is live
 ```bash
