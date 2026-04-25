@@ -51,64 +51,66 @@ const FusionView = () => {
 
   return (
     <div className="space-y-8 pb-12">
-      <div className="grid grid-cols-12 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
         {/* Left Col: Matrix & Radar */}
-        <div className="col-span-8 space-y-8">
-          <div className="terminal-card bg-bg1/20 border-white/5 p-8 relative overflow-hidden">
+        <div className="col-span-1 lg:col-span-8 space-y-8">
+          <div className="terminal-card bg-bg1/20 border-white/5 p-4 lg:p-8 relative overflow-hidden">
              <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue via-teal to-coral opacity-30" />
-             <div className="flex justify-between items-center mb-8">
-               <h3 className="text-2xl font-bold flex items-center gap-3">
+             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
+               <h3 className="text-xl lg:text-2xl font-bold flex items-center gap-3">
                  <Globe className="text-blue" size={24} />
-                 Cross-Domain Interaction Matrix
+                 Interaction Matrix
                </h3>
-               <div className="text-right">
+               <div className="text-left sm:text-right">
                  <p className="text-[10px] font-mono text-white/20 uppercase tracking-[0.2em]">Neural Synchronization</p>
                  <p className="text-xs font-mono text-teal">CALIBRATED_ACTIVE</p>
                </div>
              </div>
 
-             <div className="grid grid-cols-5 gap-2 font-mono">
-               <div className="bg-transparent" />
-               {domains.map(d => (
-                 <div key={d} className="text-center p-2 text-[10px] text-white/40 uppercase font-bold">{d}</div>
-               ))}
+             <div className="overflow-x-auto pb-4">
+               <div className="grid grid-cols-5 gap-2 font-mono min-w-[500px]">
+                 <div className="bg-transparent" />
+                 {domains.map(d => (
+                   <div key={d} className="text-center p-2 text-[10px] text-white/40 uppercase font-bold">{d}</div>
+                 ))}
 
-               {domains.map(d1 => (
-                 <React.Fragment key={d1}>
-                   <div className="p-3 text-[10px] text-white/40 uppercase font-bold flex items-center">{d1}</div>
-                   {domains.map(d2 => {
-                     const val = matrix[d1][d2];
-                     const isDiagonal = d1 === d2;
-                     return (
-                       <motion.div 
-                         key={`${d1}-${d2}`}
-                         onHoverStart={() => setActiveCell({ d1, d2, val })}
-                         onHoverEnd={() => setActiveCell(null)}
-                         whileHover={{ scale: 1.05, zIndex: 10 }}
-                         className={`p-4 rounded border flex flex-col items-center justify-center transition-all cursor-crosshair ${
-                           isDiagonal 
-                           ? 'bg-white/5 border-white/20' 
-                           : val > 0.7 
-                           ? 'bg-blue/10 border-blue/30 shadow-[0_0_15px_rgba(59,130,246,0.1)]' 
-                           : 'bg-white/[0.02] border-white/5'
-                         }`}
-                       >
-                         <span className={`text-lg font-bold ${val > 0.7 ? 'text-blue' : 'text-white/60'}`}>
-                           {val.toFixed(2)}
-                         </span>
-                       </motion.div>
-                     );
-                   })}
-                 </React.Fragment>
-               ))}
+                 {domains.map(d1 => (
+                   <React.Fragment key={d1}>
+                     <div className="p-3 text-[10px] text-white/40 uppercase font-bold flex items-center">{d1}</div>
+                     {domains.map(d2 => {
+                       const val = matrix[d1][d2];
+                       const isDiagonal = d1 === d2;
+                       return (
+                         <motion.div 
+                           key={`${d1}-${d2}`}
+                           onHoverStart={() => setActiveCell({ d1, d2, val })}
+                           onHoverEnd={() => setActiveCell(null)}
+                           whileHover={{ scale: 1.05, zIndex: 10 }}
+                           className={`p-4 rounded border flex flex-col items-center justify-center transition-all cursor-crosshair ${
+                             isDiagonal 
+                             ? 'bg-white/5 border-white/20' 
+                             : val > 0.7 
+                             ? 'bg-blue/10 border-blue/30 shadow-[0_0_15px_rgba(59,130,246,0.1)]' 
+                             : 'bg-white/[0.02] border-white/5'
+                           }`}
+                         >
+                           <span className={`text-lg font-bold ${val > 0.7 ? 'text-blue' : 'text-white/60'}`}>
+                             {val.toFixed(2)}
+                           </span>
+                         </motion.div>
+                       );
+                     })}
+                   </React.Fragment>
+                 ))}
+               </div>
              </div>
 
-             <div className="mt-8 p-4 rounded-lg bg-white/[0.02] border border-white/5 flex items-center justify-between">
+             <div className="mt-8 p-4 rounded-lg bg-white/[0.02] border border-white/5 flex flex-col sm:flex-row items-center justify-between gap-4">
                 <div className="flex items-center gap-4">
                   <Terminal size={16} className="text-white/20" />
-                  <p className="text-xs text-white/40">
+                  <p className="text-[10px] lg:text-xs text-white/40">
                     {activeCell 
-                      ? `ANALYSIS: ${activeCell.d1.toUpperCase()} → ${activeCell.d2.toUpperCase()} correlation at ${activeCell.val.toFixed(2)}. Influence high.`
+                      ? `ANALYSIS: ${activeCell.d1.toUpperCase()} → ${activeCell.d2.toUpperCase()} correlation at ${activeCell.val.toFixed(2)}.`
                       : "Hover over interaction cells for detailed signal mapping."
                     }
                   </p>
@@ -124,7 +126,7 @@ const FusionView = () => {
           <div className="terminal-card bg-bg1/20 border-white/5 p-6">
             <h3 className="text-lg font-bold mb-6 flex items-center gap-2">
               <Activity size={18} className="text-coral" />
-              Intelligence Feed (Cross-Domain)
+              Intelligence Feed
             </h3>
             <div className="space-y-3">
               {data.alerts.map((alert, i) => (
@@ -142,7 +144,7 @@ const FusionView = () => {
                   }`}>
                     {alert.domain}
                   </span>
-                  <p className="text-xs text-white/70 leading-relaxed">{alert.msg}</p>
+                  <p className="text-[11px] lg:text-xs text-white/70 leading-relaxed">{alert.msg}</p>
                 </motion.div>
               ))}
             </div>
@@ -150,10 +152,10 @@ const FusionView = () => {
         </div>
 
         {/* Right Col: Balance Radar */}
-        <div className="col-span-4 space-y-8">
-           <div className="terminal-card bg-bg1/40 border-white/10 p-8 shadow-[0_0_50px_rgba(0,0,0,0.3)]">
+        <div className="col-span-1 lg:col-span-4 space-y-8">
+           <div className="terminal-card bg-bg1/40 border-white/10 p-6 lg:p-8 shadow-[0_0_50px_rgba(0,0,0,0.3)]">
               <div className="text-center mb-8">
-                <h3 className="text-sm font-bold uppercase tracking-[0.3em] text-white/60 mb-2">Global Signal Balance</h3>
+                <h3 className="text-sm font-bold uppercase tracking-[0.3em] text-white/60 mb-2">Signal Balance</h3>
                 <p className="text-[10px] font-mono text-white/20">REAL-TIME CONFLUX RADAR</p>
               </div>
 
@@ -178,9 +180,9 @@ const FusionView = () => {
 
               <div className="mt-8 grid grid-cols-2 gap-4">
                  {radarData.map(d => (
-                   <div key={d.subject} className="p-4 rounded-xl bg-white/[0.02] border border-white/5">
+                   <div key={d.subject} className="p-3 lg:p-4 rounded-xl bg-white/[0.02] border border-white/5 text-center lg:text-left">
                       <p className="text-[9px] font-mono text-white/20 uppercase mb-1">{d.subject}</p>
-                      <p className="text-xl font-mono font-bold text-white/80">{d.A.toFixed(0)}%</p>
+                      <p className="text-lg lg:text-xl font-mono font-bold text-white/80">{d.A.toFixed(0)}%</p>
                    </div>
                  ))}
               </div>

@@ -68,9 +68,9 @@ const MarketsView = ({ alpha, rankings }) => {
   );
 
   return (
-    <div className="space-y-8">
-      <div className="grid grid-cols-12 gap-8">
-        <div className="col-span-8 space-y-6">
+    <div className="space-y-8 pb-12">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        <div className="col-span-1 lg:col-span-8 space-y-8">
           <div className="terminal-card bg-bg1/20 border-white/5 p-6">
             <h3 className="text-xl font-bold mb-6 flex items-center gap-2">
               <TrendingUp className="text-amber" size={20} />
@@ -184,7 +184,7 @@ const MarketsView = ({ alpha, rankings }) => {
           </AnimatePresence>
         </div>
 
-        <div className="col-span-4 space-y-6">
+        <div className="col-span-1 lg:col-span-4 space-y-6">
           {selectedEvent && (
             <div className="terminal-card bg-bg1/40 border-amber/20 p-6 shadow-[0_0_30px_rgba(232,160,48,0.05)]">
                <h3 className="text-[10px] font-mono font-bold text-amber tracking-[0.2em] uppercase mb-6 flex items-center gap-2">

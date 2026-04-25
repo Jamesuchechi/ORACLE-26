@@ -14,14 +14,14 @@ const Leaderboard = ({ rankings, loading, onTeamClick }) => {
 
   return (
     <div className="overflow-hidden">
-      <div className="grid grid-cols-12 px-4 py-2 text-[9px] font-mono text-white/20 uppercase tracking-widest border-b border-white/5">
+      <div className="hidden lg:grid grid-cols-12 px-4 py-2 text-[9px] font-mono text-white/20 uppercase tracking-widest border-b border-white/5">
         <div className="col-span-1">Rank</div>
         <div className="col-span-4">Subject / Team</div>
         <div className="col-span-5">Intelligence Fingerprint</div>
         <div className="col-span-2 text-right">Conflux Score</div>
       </div>
       
-      <div className="mt-4 space-y-1 relative">
+      <div className="mt-4 space-y-2 lg:space-y-1 relative">
         <AnimatePresence mode="popLayout">
           {rankings.map((team, index) => (
             <motion.div
@@ -30,35 +30,36 @@ const Leaderboard = ({ rankings, loading, onTeamClick }) => {
               initial={{ opacity: 0, x: -10 }}
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, scale: 0.95 }}
-              transition={{ 
-                type: "spring", 
-                stiffness: 500, 
-                damping: 30, 
-                mass: 1,
-                opacity: { duration: 0.2 }
-              }}
-              className={`grid grid-cols-12 items-center px-4 py-4 rounded-xl border border-transparent transition-all hover:bg-white/[0.04] hover:border-white/10 group cursor-pointer relative overflow-hidden`}
+              className="grid grid-cols-12 lg:items-center px-4 py-4 lg:py-4 rounded-xl border border-white/5 lg:border-transparent transition-all hover:bg-white/[0.04] hover:border-white/10 group cursor-pointer relative overflow-hidden bg-white/[0.01] lg:bg-transparent"
               onClick={() => onTeamClick(team)}
             >
-              <div className="col-span-1 font-mono text-[11px] text-white/20 font-bold">
-                {String(index + 1).padStart(2, '0')}
-              </div>
-              
-              <div className="col-span-4 flex items-center gap-4">
-                <div className="relative">
+              {/* Rank & Team Name Info */}
+              <div className="col-span-10 lg:col-span-5 flex items-center gap-4">
+                <div className="font-mono text-[11px] text-white/20 font-bold w-6 shrink-0">
+                  {String(index + 1).padStart(2, '0')}
+                </div>
+                <div className="relative shrink-0">
                   <img 
                     src={getFlagUrl(team.subject)} 
                     alt={team.subject} 
-                    className="w-8 h-5 object-cover rounded-sm shadow-lg border border-white/10 group-hover:border-amber/40 transition-colors"
+                    className="w-10 h-6 lg:w-8 lg:h-5 object-cover rounded-sm shadow-lg border border-white/10 group-hover:border-amber/40 transition-colors"
                   />
                 </div>
-                <div>
-                  <h4 className="text-xs font-bold tracking-wider group-hover:text-amber transition-colors text-white/80">{team.subject}</h4>
+                <div className="truncate">
+                  <h4 className="text-sm lg:text-xs font-bold tracking-wider group-hover:text-amber transition-colors text-white/80 truncate">{team.subject}</h4>
                   <p className="text-[9px] font-mono text-white/20 uppercase tracking-tighter">Confidence: <span className={team.confidence === 'high' ? 'text-teal' : 'text-amber/50'}>{team.confidence}</span></p>
                 </div>
               </div>
+
+              {/* Score (Mobile Positioned Right) */}
+              <div className="col-span-2 lg:hidden text-right">
+                <span className="font-mono text-xs font-black text-amber">
+                  {team.conflux_score.toFixed(2)}
+                </span>
+              </div>
               
-              <div className="col-span-5 flex items-center gap-1">
+              {/* Signal Fingerprint */}
+              <div className="col-span-12 lg:col-span-5 flex items-center gap-1 mt-4 lg:mt-0 px-2 lg:px-0">
                 <SignalBar val={team.sports} color="bg-blue" label="S" />
                 <SignalBar val={team.markets} color="bg-amber" label="M" />
                 <SignalBar val={team.finance} color="bg-teal" label="E" />
@@ -66,8 +67,8 @@ const Leaderboard = ({ rankings, loading, onTeamClick }) => {
                 <SignalBar val={team.social} color="bg-coral" label="T" />
               </div>
 
-              
-              <div className="col-span-2 text-right">
+              {/* Score (Desktop Positioned Right) */}
+              <div className="hidden lg:block lg:col-span-2 text-right">
                 <span className="font-mono text-sm font-black text-amber drop-shadow-[0_0_8px_rgba(245,158,11,0.3)]">
                   {team.conflux_score.toFixed(3)}
                 </span>

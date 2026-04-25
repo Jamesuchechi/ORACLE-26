@@ -57,16 +57,16 @@ const ClimateView = () => {
   ] : [];
 
   return (
-    <div className="space-y-8">
-      <div className="grid grid-cols-12 gap-8">
-        <div className="col-span-7 space-y-6">
+    <div className="space-y-8 pb-12">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        <div className="col-span-1 lg:col-span-8 space-y-8">
           <div className="terminal-card bg-bg1/20 border-white/5 p-6">
             <h3 className="text-xl font-bold mb-6 flex items-center gap-2">
               <CloudRain className="text-blue" size={20} />
               Atmospheric Stress Grid
             </h3>
             
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {(data?.venue_risks || []).slice(0, 10).map(venue => (
                 <div 
                   key={venue.venue}
@@ -77,12 +77,12 @@ const ClimateView = () => {
                     : 'border-white/5 bg-white/[0.02] hover:bg-white/[0.05]'
                   }`}
                 >
-                  <div className="flex justify-between items-start mb-3">
-                    <div>
-                      <h4 className="text-sm font-bold">{venue.city}</h4>
-                      <p className="text-[9px] font-mono text-white/20 uppercase">{venue.venue}</p>
+                  <div className="flex flex-col sm:flex-row justify-between items-start gap-2 mb-3">
+                    <div className="truncate w-full">
+                      <h4 className="text-sm font-bold truncate">{venue.city}</h4>
+                      <p className="text-[9px] font-mono text-white/20 uppercase truncate">{venue.venue}</p>
                     </div>
-                    <div className={`px-2 py-0.5 rounded text-[8px] font-mono font-bold ${
+                    <div className={`shrink-0 px-2 py-0.5 rounded text-[8px] font-mono font-bold ${
                       venue.status === 'CRITICAL' ? 'bg-red/20 text-red' : venue.status === 'WARNING' ? 'bg-amber/20 text-amber' : 'bg-teal/20 text-teal'
                     }`}>
                       {venue.status}
@@ -101,7 +101,7 @@ const ClimateView = () => {
           </div>
         </div>
 
-        <div className="col-span-5 space-y-6">
+        <div className="col-span-1 lg:col-span-4 space-y-6">
           <AnimatePresence mode="wait">
             {selectedVenue && (
               <motion.div 

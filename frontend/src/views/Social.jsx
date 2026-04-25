@@ -53,9 +53,9 @@ const SocialView = () => {
   ];
 
   return (
-    <div className="space-y-8">
-      <div className="grid grid-cols-12 gap-8">
-        <div className="col-span-8 space-y-6">
+    <div className="space-y-8 pb-12">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        <div className="col-span-1 lg:col-span-8 space-y-8">
           <div className="terminal-card bg-bg1/20 border-white/5 p-6">
             <div className="flex justify-between items-center mb-6">
               <h3 className="text-xl font-bold flex items-center gap-2">
@@ -68,16 +68,16 @@ const SocialView = () => {
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-4 mb-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
               {trends.map(trend => (
                 <motion.div 
                   key={trend.tag} 
                   whileHover={{ scale: 1.02 }}
                   className="p-4 rounded-xl border border-white/5 bg-white/[0.02]"
                 >
-                  <div className="flex justify-between items-start mb-3">
-                    <span className="text-sm font-bold text-amber">{trend.tag}</span>
-                    <span className="text-[10px] font-mono text-teal flex items-center gap-1">
+                  <div className="flex justify-between items-start mb-3 gap-4">
+                    <span className="text-sm font-bold text-amber truncate break-all">{trend.tag}</span>
+                    <span className="text-[10px] font-mono text-teal flex items-center gap-1 shrink-0">
                       <TrendingUp size={10} /> {trend.momentum}
                     </span>
                   </div>
@@ -103,18 +103,18 @@ const SocialView = () => {
                  <AreaChart size={12} /> Sentiment Velocity (24h)
                </p>
                <ResponsiveContainer width="100%" height="100%">
-                 <ReAreaChart data={velocityData}>
-                   <defs>
-                     <linearGradient id="colorVal" x1="0" y1="0" x2="0" y2="1">
-                       <stop offset="5%" stopColor="#e8a030" stopOpacity={0.3}/>
-                       <stop offset="95%" stopColor="#e8a030" stopOpacity={0}/>
-                     </linearGradient>
-                   </defs>
-                   <Tooltip 
-                     contentStyle={{ background: '#111', border: '1px solid rgba(255,255,255,0.1)', fontSize: '10px', fontFamily: 'monospace' }}
-                   />
-                   <Area type="monotone" dataKey="val" stroke="#e8a030" fillOpacity={1} fill="url(#colorVal)" />
-                 </ReAreaChart>
+                <ReAreaChart data={velocityData} margin={{ top: 5, right: 5, left: -20, bottom: 0 }}>
+                  <defs>
+                    <linearGradient id="colorVal" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="#e8a030" stopOpacity={0.3}/>
+                      <stop offset="95%" stopColor="#e8a030" stopOpacity={0}/>
+                    </linearGradient>
+                  </defs>
+                  <Tooltip 
+                    contentStyle={{ background: '#111', border: '1px solid rgba(255,255,255,0.1)', fontSize: '10px', fontFamily: 'monospace' }}
+                  />
+                  <Area type="monotone" dataKey="val" stroke="#e8a030" fillOpacity={1} fill="url(#colorVal)" strokeWidth={2} />
+                </ReAreaChart>
                </ResponsiveContainer>
             </div>
           </div>
@@ -131,12 +131,12 @@ const SocialView = () => {
                     <h4 className="text-xs font-bold mb-1">{item.topic}</h4>
                     <p className="text-[10px] text-white/40 italic">{item.description}</p>
                   </div>
-                  <div className="flex items-center gap-8">
-                    <div className="text-center">
+                  <div className="flex flex-col sm:flex-row items-end sm:items-center gap-4 sm:gap-8">
+                    <div className="text-right sm:text-center">
                        <p className="text-[9px] font-mono text-white/20 uppercase">Social</p>
                        <p className="text-sm font-mono font-bold text-amber">{(item.social_sentiment * 100).toFixed(0)}%</p>
                     </div>
-                    <div className="text-center">
+                    <div className="text-right sm:text-center">
                        <p className="text-[9px] font-mono text-white/20 uppercase">Market R</p>
                        <p className="text-sm font-mono font-bold text-teal">{item.market_corr.toFixed(2)}</p>
                     </div>
@@ -147,7 +147,7 @@ const SocialView = () => {
           </div>
         </div>
 
-        <div className="col-span-4 space-y-6">
+        <div className="col-span-1 lg:col-span-4 space-y-6">
           <div className="terminal-card bg-bg1/40 border-amber/20 p-6 shadow-[0_0_30px_rgba(232,160,48,0.05)]">
             <h3 className="text-[10px] font-mono font-bold text-amber tracking-[0.2em] uppercase mb-8 flex items-center gap-2">
               <Sparkles size={12} /> Tipping Point Analysis

@@ -13,19 +13,28 @@ const DashboardView = ({ rankings, loading, venues, weights, updateWeight, alpha
       initial={{ opacity: 0, x: -20 }}
       animate={{ opacity: 1, x: 0 }}
       exit={{ opacity: 0, x: 20 }}
-      className="grid grid-cols-12 gap-8"
+      className="grid grid-cols-1 lg:grid-cols-12 gap-8"
     >
-      <div className="col-span-8 space-y-8">
-        <div className="terminal-card min-h-[500px] border-white/5 bg-bg1/20 backdrop-blur-sm">
+      <div className="col-span-1 lg:col-span-8 space-y-8">
+        <div className="terminal-card min-h-0 lg:min-h-[500px] border-white/5 bg-bg1/20 backdrop-blur-sm">
           <Leaderboard rankings={rankings} loading={loading} onTeamClick={onTeamClick} />
         </div>
         <VenueRiskGrid venues={venues} />
-        <SignalStream />
+        {/* On mobile, we want the live signal stream to follow the core data immediately */}
+        <div className="lg:hidden">
+          <SignalStream />
+        </div>
       </div>
-      <div className="col-span-4 space-y-6">
+      
+      <div className="col-span-1 lg:col-span-4 space-y-6">
         <IntelligenceControls weights={weights} onWeightChange={updateWeight} />
         <AlphaRadarBrief alpha={alpha} rankings={rankings} />
         <AnalystSummary briefing={briefing} />
+        
+        {/* On desktop, the stream sits nicely at the bottom of the main col, but we can also place it here for secondary feed */}
+        <div className="hidden lg:block">
+          <SignalStream />
+        </div>
       </div>
     </motion.div>
   );

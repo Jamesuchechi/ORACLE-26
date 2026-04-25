@@ -51,14 +51,14 @@ const FinanceView = () => {
   }));
 
   return (
-    <div className="space-y-8">
-      <div className="grid grid-cols-4 gap-6">
+    <div className="space-y-8 pb-12">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
         {indicators.map(ind => (
-          <div key={ind.name} className="terminal-card bg-bg1/20 border-white/5 p-4">
-            <p className="text-[10px] font-mono text-white/20 uppercase mb-1">{ind.name}</p>
-            <div className="flex items-end justify-between">
-              <p className="text-2xl font-mono font-bold">{ind.value}</p>
-              <span className={`text-[10px] font-mono ${ind.change.startsWith('+') ? 'text-teal' : 'text-red'}`}>
+          <div key={ind.name} className="terminal-card bg-bg1/20 border-white/5 p-3 lg:p-4">
+            <p className="text-[9px] lg:text-[10px] font-mono text-white/20 uppercase mb-1 truncate">{ind.name}</p>
+            <div className="flex items-end justify-between gap-2">
+              <p className="text-xl lg:text-2xl font-mono font-bold truncate">{ind.value}</p>
+              <span className={`text-[10px] font-mono shrink-0 ${ind.change.startsWith('+') ? 'text-teal' : 'text-red'}`}>
                 {ind.change}
               </span>
             </div>
@@ -66,8 +66,8 @@ const FinanceView = () => {
         ))}
       </div>
 
-      <div className="grid grid-cols-12 gap-8">
-        <div className="col-span-8">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        <div className="col-span-1 lg:col-span-8 space-y-8">
           <div className="terminal-card bg-bg1/20 border-white/5 p-6 h-[400px] flex flex-col">
             <div className="flex justify-between items-center mb-6">
               <h3 className="text-[10px] font-mono font-bold text-white/40 tracking-[0.2em] uppercase flex items-center gap-2">
@@ -87,29 +87,36 @@ const FinanceView = () => {
             
             <div className="flex-1 w-full">
               <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={highlights.slice(0, 8)}>
+                <BarChart 
+                  data={highlights.slice(0, 8)}
+                  margin={{ top: 10, right: 10, left: -25, bottom: 20 }}
+                >
                   <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" vertical={false} />
                   <XAxis 
                     dataKey="team" 
                     axisLine={false} 
                     tickLine={false} 
-                    tick={{ fill: 'rgba(255,255,255,0.3)', fontSize: 10, fontFamily: 'monospace' }}
+                    tick={{ fill: 'rgba(255,255,255,0.3)', fontSize: 9, fontFamily: 'monospace' }}
+                    interval={0}
+                    angle={window.innerWidth < 640 ? -45 : 0}
+                    textAnchor={window.innerWidth < 640 ? 'end' : 'middle'}
+                    height={40}
                   />
                   <YAxis 
                     axisLine={false} 
                     tickLine={false} 
-                    tick={{ fill: 'rgba(255,255,255,0.3)', fontSize: 10, fontFamily: 'monospace' }}
+                    tick={{ fill: 'rgba(255,255,255,0.3)', fontSize: 9, fontFamily: 'monospace' }}
                   />
                   <Tooltip 
                     contentStyle={{ backgroundColor: '#0f1114', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px' }}
                     itemStyle={{ fontSize: '11px', fontFamily: 'monospace' }}
                   />
-                  <Bar dataKey="gdp_growth" name="GDP Growth" radius={[4, 4, 0, 0]} barSize={20}>
+                  <Bar dataKey="gdp_growth" name="GDP Growth" radius={[2, 2, 0, 0]} barSize={window.innerWidth < 640 ? 10 : 25}>
                     {highlights.slice(0, 8).map((entry, index) => (
                       <Cell key={`cell-gdp-${index}`} fill={entry.team === selectedTeam ? '#e8a030' : 'rgba(232, 160, 48, 0.3)'} />
                     ))}
                   </Bar>
-                  <Bar dataKey="inflation" name="Inflation" radius={[4, 4, 0, 0]} barSize={20}>
+                  <Bar dataKey="inflation" name="Inflation" radius={[2, 2, 0, 0]} barSize={window.innerWidth < 640 ? 10 : 25}>
                     {highlights.slice(0, 8).map((entry, index) => (
                       <Cell key={`cell-inf-${index}`} fill={entry.team === selectedTeam ? '#5b9cf6' : 'rgba(91, 156, 246, 0.3)'} />
                     ))}
@@ -119,7 +126,7 @@ const FinanceView = () => {
             </div>
           </div>
         </div>
-        <div className="col-span-4 flex flex-col gap-6">
+        <div className="col-span-1 lg:col-span-4 flex flex-col gap-6">
           <div className="terminal-card bg-bg1/40 border-white/5 p-6 flex-1 overflow-y-auto max-h-[400px]">
             <h3 className="text-sm font-bold mb-4 flex items-center gap-2">
               <Landmark size={16} className="text-amber" />

@@ -15,7 +15,9 @@ import {
   ArrowDownRight,
   MessageSquare,
   Landmark,
-  Users
+  Users,
+  Menu,
+  X
 } from 'lucide-react';
 
 import { useIntelligence } from './hooks/useIntelligence';
@@ -37,26 +39,32 @@ const Shell = ({ children, briefing, currentView, onViewChange }) => (
     <div className="crt-overlay opacity-[0.12]" />
     <div className="scanline-move" />
     
-    <header className="h-14 border-b border-white/5 bg-bg1/60 backdrop-blur-xl flex items-center px-6 justify-between shrink-0 z-50">
+    <header className="h-14 border-b border-white/5 bg-bg1/60 backdrop-blur-xl flex items-center px-4 lg:px-6 justify-between shrink-0 z-50">
       <div className="flex items-center gap-3">
+        <button 
+          onClick={() => onViewChange('toggleMobileMenu')}
+          className="lg:hidden p-2 text-white/60 hover:text-white transition-colors"
+        >
+          {currentView === 'mobileMenuOpen' ? <X size={20} /> : <Menu size={20} />}
+        </button>
         <motion.div 
           animate={{ rotate: [0, 90, 180, 270, 360] }}
           transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-          className="text-amber text-xl"
+          className="text-amber text-xl hidden xs:block"
         >
           ◈
         </motion.div>
-        <h1 className="font-mono text-xs tracking-[0.3em] font-bold text-white/90">
-          CONFLUX <span className="text-white/20 font-light ml-1">v.2.0.26 // INTELLIGENCE TERMINAL</span>
+        <h1 className="font-mono text-[10px] lg:text-xs tracking-[0.2em] lg:tracking-[0.3em] font-bold text-white/90 truncate">
+          CONFLUX <span className="text-white/20 font-light ml-1 hidden sm:inline">v.2.0.26 // INTELLIGENCE TERMINAL</span>
         </h1>
       </div>
       
-      <div className="flex items-center gap-8">
-        <div className="flex items-center gap-2 text-[9px] font-mono text-teal tracking-[0.2em] uppercase bg-teal/5 px-3 py-1 rounded-full border border-teal/20">
+      <div className="flex items-center gap-4 lg:gap-8">
+        <div className="flex items-center gap-2 text-[8px] lg:text-[9px] font-mono text-teal tracking-[0.1em] lg:tracking-[0.2em] uppercase bg-teal/5 px-2 lg:px-3 py-1 rounded-full border border-teal/20">
           <div className="w-1.5 h-1.5 rounded-full bg-teal animate-pulse shadow-[0_0_8px_rgba(20,184,166,0.8)]" />
-          Neural Link: Stable
+          <span className="hidden xs:inline">Neural Link:</span> Stable
         </div>
-        <div className="text-[10px] font-mono text-white/20 tracking-widest uppercase flex items-center gap-3">
+        <div className="text-[10px] font-mono text-white/20 tracking-widest uppercase hidden md:flex items-center gap-3">
           <Clock size={12} className="text-white/10" />
           {new Date().toISOString().replace('T', ' ').slice(0, 19)} UTC
         </div>
@@ -64,92 +72,118 @@ const Shell = ({ children, briefing, currentView, onViewChange }) => (
     </header>
 
     <main className="flex-1 flex overflow-hidden relative">
-      <nav className="w-64 border-r border-white/5 bg-bg1/40 backdrop-blur-3xl flex flex-col py-8 shrink-0 z-40">
-        <div className="px-6 mb-10">
-          <p className="text-[9px] font-mono text-white/20 tracking-[0.3em] uppercase mb-6 flex items-center gap-2">
-            <Shield size={10} /> Active Verticals
-          </p>
-          <div className="space-y-1.5">
-            <NavItem 
-              icon={<Activity size={14}/>} 
-              label="WC2026 Simulation" 
-              active={currentView === 'dashboard'} 
-              badge="V-I" 
-              onClick={() => onViewChange('dashboard')}
-            />
-            <NavItem 
-              icon={<Swords size={14}/>} 
-              label="Match Predictor" 
-              active={currentView === 'simulator'} 
-              badge="LIVE" 
-              onClick={() => onViewChange('simulator')}
-            />
-            <NavItem 
-              icon={<TrendingUp size={14}/>} 
-              label="Market Calibration" 
-              active={currentView === 'markets'}
-              badge="V-II" 
-              onClick={() => onViewChange('markets')}
-            />
-            <NavItem 
-              icon={<Landmark size={14}/>} 
-              label="Finance & Economics" 
-              active={currentView === 'finance'}
-              badge="V-III" 
-              onClick={() => onViewChange('finance')}
-            />
-            <NavItem 
-              icon={<CloudRain size={14}/>} 
-              label="Climate Risk" 
-              active={currentView === 'climate'}
-              badge="V-IV" 
-              onClick={() => onViewChange('climate')}
-            />
-            <NavItem 
-              icon={<Users size={14}/>} 
-              label="Social Trends" 
-              active={currentView === 'social'}
-              badge="V-V" 
-              onClick={() => onViewChange('social')}
-            />
-          </div>
-        </div>
+      {/* Sidebar Drawer */}
+      <AnimatePresence>
+        {(currentView === 'mobileMenuOpen' || typeof window !== 'undefined' && window.innerWidth > 1024) && (
+          <motion.nav 
+            initial={{ x: -280 }}
+            animate={{ x: 0 }}
+            exit={{ x: -280 }}
+            transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+            className={`fixed lg:relative inset-y-0 left-0 w-64 border-r border-white/5 bg-bg1/90 lg:bg-bg1/40 backdrop-blur-3xl flex flex-col py-8 shrink-0 z-[60] lg:z-40`}
+          >
+            <div className="px-6 mb-10">
+              <p className="text-[9px] font-mono text-white/20 tracking-[0.3em] uppercase mb-6 flex items-center gap-2">
+                <Shield size={10} /> Active Verticals
+              </p>
+              <div className="space-y-1.5">
+                <NavItem 
+                  icon={<Activity size={14}/>} 
+                  label="WC2026 Simulation" 
+                  active={currentView === 'dashboard'} 
+                  badge="V-I" 
+                  onClick={() => onViewChange('dashboard')}
+                />
+                <NavItem 
+                  icon={<Swords size={14}/>} 
+                  label="Match Predictor" 
+                  active={currentView === 'simulator'} 
+                  badge="LIVE" 
+                  onClick={() => onViewChange('simulator')}
+                />
+                <NavItem 
+                  icon={<TrendingUp size={14}/>} 
+                  label="Market Calibration" 
+                  active={currentView === 'markets'}
+                  badge="V-II" 
+                  onClick={() => onViewChange('markets')}
+                />
+                <NavItem 
+                  icon={<Landmark size={14}/>} 
+                  label="Finance & Economics" 
+                  active={currentView === 'finance'}
+                  badge="V-III" 
+                  onClick={() => onViewChange('finance')}
+                />
+                <NavItem 
+                  icon={<CloudRain size={14}/>} 
+                  label="Climate Risk" 
+                  active={currentView === 'climate'}
+                  badge="V-IV" 
+                  onClick={() => onViewChange('climate')}
+                />
+                <NavItem 
+                  icon={<Users size={14}/>} 
+                  label="Social Trends" 
+                  active={currentView === 'social'}
+                  badge="V-V" 
+                  onClick={() => onViewChange('social')}
+                />
+              </div>
+            </div>
 
-        <div className="px-6 mb-10">
-          <p className="text-[9px] font-mono text-white/20 tracking-[0.3em] uppercase mb-6 flex items-center gap-2">
-            <Cpu size={10} /> Core Modules
-          </p>
-            <NavItem 
-              icon={<Cpu size={14}/>} 
-              label="Fusion Hub" 
-              active={currentView === 'fusion'}
-              badge="CORE" 
-              onClick={() => onViewChange('fusion')}
-            />
-            <NavItem 
-              icon={<Zap size={14}/>} 
-              label="Alpha Discovery" 
-              active={currentView === 'alpha'}
-              badge="NEW" 
-              onClick={() => onViewChange('alpha')}
-            />
-        </div>
-        
-        <div className="mt-auto px-6">
-          <div className="p-4 rounded-2xl bg-amber/5 border border-amber/10 relative overflow-hidden group">
-             <div className="absolute top-0 left-0 w-1 h-full bg-amber scale-y-0 group-hover:scale-y-100 transition-transform origin-top" />
-             <div className="flex items-center gap-2 mb-3">
-                <div className="w-6 h-6 rounded-lg bg-amber/20 flex items-center justify-center text-amber text-[10px] font-bold">AI</div>
-                <p className="text-[10px] font-bold text-amber/80 uppercase tracking-widest">Analyst Briefing</p>
-             </div>
-             <p className="text-[10px] text-white/40 leading-relaxed line-clamp-3 font-medium">
-               {briefing?.summary || "Analyzing current signal confluence for anomalies..."}
-             </p>
-          </div>
-        </div>
-      </nav>
+            <div className="px-6 mb-10">
+              <p className="text-[9px] font-mono text-white/20 tracking-[0.3em] uppercase mb-6 flex items-center gap-2">
+                <Cpu size={10} /> Core Modules
+              </p>
+              <div className="space-y-1.5">
+                <NavItem 
+                  icon={<Cpu size={14}/>} 
+                  label="Fusion Hub" 
+                  active={currentView === 'fusion'}
+                  badge="CORE" 
+                  onClick={() => onViewChange('fusion')}
+                />
+                <NavItem 
+                  icon={<Zap size={14}/>} 
+                  label="Alpha Discovery" 
+                  active={currentView === 'alpha'}
+                  badge="NEW" 
+                  onClick={() => onViewChange('alpha')}
+                />
+              </div>
+            </div>
+            
+            <div className="mt-auto px-6">
+              <div className="p-4 rounded-2xl bg-amber/5 border border-amber/10 relative overflow-hidden group">
+                 <div className="absolute top-0 left-0 w-1 h-full bg-amber scale-y-0 group-hover:scale-y-100 transition-transform origin-top" />
+                 <div className="flex items-center gap-2 mb-3">
+                    <div className="w-6 h-6 rounded-lg bg-amber/20 flex items-center justify-center text-amber text-[10px] font-bold">AI</div>
+                    <p className="text-[10px] font-bold text-amber/80 uppercase tracking-widest">Analyst Briefing</p>
+                 </div>
+                 <p className="text-[10px] text-white/40 leading-relaxed line-clamp-3 font-medium">
+                   {briefing?.summary || "Analyzing current signal confluence for anomalies..."}
+                 </p>
+              </div>
+            </div>
+          </motion.nav>
+        )}
+      </AnimatePresence>
 
-      <section className="flex-1 overflow-y-auto p-10 relative scroll-smooth bg-[radial-gradient(circle_at_top_right,_rgba(245,158,11,0.03),_transparent_40%)]">
+      {/* Backdrop */}
+      <AnimatePresence>
+        {currentView === 'mobileMenuOpen' && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => onViewChange('closeMobileMenu')}
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[55] lg:hidden"
+          />
+        )}
+      </AnimatePresence>
+      
+      <section className="flex-1 overflow-y-auto p-4 lg:p-10 relative scroll-smooth bg-[radial-gradient(circle_at_top_right,_rgba(245,158,11,0.03),_transparent_40%)]">
         {children}
       </section>
     </main>
@@ -205,6 +239,18 @@ const App = () => {
   const [view, setView] = useState('dashboard');
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [selectedTeam, setSelectedTeam] = useState(null);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  const handleViewChange = (newView) => {
+    if (newView === 'toggleMobileMenu') {
+      setIsMobileMenuOpen(!isMobileMenuOpen);
+    } else if (newView === 'closeMobileMenu') {
+      setIsMobileMenuOpen(false);
+    } else {
+      setView(newView);
+      setIsMobileMenuOpen(false);
+    }
+  };
 
   const renderView = () => {
     switch (view) {
@@ -267,7 +313,7 @@ const App = () => {
   const headerInfo = getHeaderInfo();
 
   return (
-    <Shell briefing={briefing} currentView={view} onViewChange={setView}>
+    <Shell briefing={briefing} currentView={isMobileMenuOpen ? 'mobileMenuOpen' : view} onViewChange={handleViewChange}>
       <AnalystChat isOpen={isChatOpen} onClose={() => setIsChatOpen(false)} />
       
       <AnimatePresence>
@@ -288,21 +334,21 @@ const App = () => {
           key={view}
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="mb-10 flex justify-between items-end"
+          className="mb-10 flex flex-col lg:flex-row justify-between items-start lg:items-end gap-6"
         >
           <div>
             <div className="flex items-center gap-2 text-[10px] font-mono text-amber mb-2 uppercase tracking-[0.4em]">
               <Shield size={12} /> Intelligence Vertical {headerInfo.v}
             </div>
-            <h2 className="text-4xl font-bold mb-3 tracking-tight">
+            <h2 className="text-2xl lg:text-4xl font-bold mb-3 tracking-tight">
               {headerInfo.title}
             </h2>
-            <p className="text-white/40 text-sm max-w-2xl font-medium leading-relaxed">
+            <p className="text-white/40 text-xs lg:text-sm max-w-2xl font-medium leading-relaxed">
               {headerInfo.desc}
             </p>
           </div>
           
-          <div className="bg-bg1/40 border border-white/5 p-4 rounded-xl flex items-center gap-4">
+          <div className="bg-bg1/40 border border-white/5 p-4 rounded-xl flex items-center gap-4 w-full lg:w-auto">
             <div className="w-10 h-10 rounded-lg bg-amber/5 flex items-center justify-center text-amber">
               <Clock size={20} />
             </div>

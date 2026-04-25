@@ -37,16 +37,16 @@ const MatchPredictor = ({ rankings, venues, onPredict }) => {
           <select 
             value={venue}
             onChange={(e) => setVenue(e.target.value)}
-            className="bg-transparent border-none focus:ring-0 text-white/50 cursor-pointer"
+            className="bg-transparent border-none focus:ring-0 text-white/50 cursor-pointer max-w-[140px] sm:max-w-[250px] truncate"
           >
             {venues.map(v => <option key={v.venue} value={v.venue} className="bg-bg1">{v.city} ({v.venue})</option>)}
           </select>
         </div>
       </div>
 
-      <div className="grid grid-cols-11 gap-4 items-center">
+      <div className="flex flex-col lg:grid lg:grid-cols-11 gap-6 lg:gap-4 items-center">
         {/* Team 1 Selection */}
-        <div className="col-span-5 space-y-4">
+        <div className="w-full lg:col-span-5 space-y-4">
           <div className="p-4 rounded-xl bg-white/[0.02] border border-white/5 text-center flex flex-col items-center">
             {team1 && (
               <img 
@@ -58,7 +58,7 @@ const MatchPredictor = ({ rankings, venues, onPredict }) => {
             <select 
               value={team1} 
               onChange={(e) => setTeam1(e.target.value)}
-              className="w-full bg-transparent border-none text-xl font-bold text-center focus:ring-0 appearance-none"
+              className="w-full bg-transparent border-none text-xl font-bold text-center focus:ring-0 appearance-none truncate"
             >
               <option value="" className="bg-bg1 text-white/20">Select Team A</option>
               {rankings.map(r => <option key={r.subject} value={r.subject} className="bg-bg1">{r.subject}</option>)}
@@ -70,14 +70,20 @@ const MatchPredictor = ({ rankings, venues, onPredict }) => {
         </div>
 
         {/* VS Divider */}
-        <div className="col-span-1 flex flex-col items-center">
+        <div className="hidden lg:flex lg:col-span-1 flex-col items-center">
            <div className="h-12 w-[1px] bg-white/5 mb-4" />
            <div className="w-8 h-8 rounded-full border border-white/10 flex items-center justify-center text-[10px] font-mono text-white/20">VS</div>
            <div className="h-12 w-[1px] bg-white/5 mt-4" />
         </div>
 
+        <div className="lg:hidden flex items-center justify-center py-2">
+          <div className="h-[1px] flex-1 bg-white/5" />
+          <div className="px-4 text-[10px] font-mono text-white/10">VERSUS</div>
+          <div className="h-[1px] flex-1 bg-white/5" />
+        </div>
+
         {/* Team 2 Selection */}
-        <div className="col-span-5 space-y-4">
+        <div className="w-full lg:col-span-5 space-y-4">
           <div className="p-4 rounded-xl bg-white/[0.02] border border-white/5 text-center flex flex-col items-center">
             {team2 && (
               <img 
@@ -89,7 +95,7 @@ const MatchPredictor = ({ rankings, venues, onPredict }) => {
             <select 
               value={team2} 
               onChange={(e) => setTeam2(e.target.value)}
-              className="w-full bg-transparent border-none text-xl font-bold text-center focus:ring-0 appearance-none"
+              className="w-full bg-transparent border-none text-xl font-bold text-center focus:ring-0 appearance-none truncate"
             >
               <option value="" className="bg-bg1 text-white/20">Select Team B</option>
               {rankings.map(r => <option key={r.subject} value={r.subject} className="bg-bg1">{r.subject}</option>)}
@@ -121,7 +127,7 @@ const MatchPredictor = ({ rankings, venues, onPredict }) => {
             animate={{ opacity: 1, y: 0 }}
             className="pt-8 border-t border-white/5"
           >
-            <div className="grid grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 lg:gap-6">
               <ProbCard label="WIN" team={team1} prob={prediction.win_prob} color="text-teal" />
               <ProbCard label="DRAW" team="NEUTRAL" prob={prediction.draw_prob} color="text-white/40" />
               <ProbCard label="WIN" team={team2} prob={prediction.loss_prob} color="text-blue" />
@@ -138,12 +144,12 @@ const MatchPredictor = ({ rankings, venues, onPredict }) => {
                   </div>
                </div>
 
-               <div className="grid grid-cols-3 gap-4">
+               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                   {Object.entries(prediction.advantages).map(([key, team]) => (
                     <div key={key} className="p-3 rounded-lg border border-white/5 bg-white/[0.01]">
                        <p className="text-[8px] font-mono text-white/20 uppercase mb-1">{key.replace('_', ' ')}</p>
-                       <p className="text-[10px] font-bold text-teal flex items-center gap-2">
-                         <Shield size={10} /> {team}
+                       <p className="text-[10px] font-bold text-teal flex items-center gap-2 truncate">
+                         <Shield size={10} className="shrink-0" /> {team}
                        </p>
                     </div>
                   ))}
@@ -179,7 +185,7 @@ const ProbCard = ({ label, team, prob, color }) => (
       />
     )}
     <p className="text-[9px] font-mono text-white/20 uppercase tracking-widest mb-1">{team}</p>
-    <p className={`text-3xl font-mono font-bold ${color}`}>{(prob * 100).toFixed(1)}%</p>
+    <p className={`text-2xl lg:text-3xl font-mono font-bold ${color}`}>{(prob * 100).toFixed(1)}%</p>
     <p className="text-[9px] font-bold text-white/10 uppercase mt-1">{label}</p>
   </div>
 );

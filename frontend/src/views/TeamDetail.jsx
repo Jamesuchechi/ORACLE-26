@@ -40,10 +40,11 @@ const TeamDetail = ({ team, onClose }) => {
 
   return (
     <motion.div 
-      initial={{ opacity: 0, x: 20 }}
+      initial={{ opacity: 0, x: '100%' }}
       animate={{ opacity: 1, x: 0 }}
-      exit={{ opacity: 0, x: 20 }}
-      className="fixed inset-y-0 right-0 w-[550px] bg-bg/95 backdrop-blur-3xl border-l border-white/10 z-[100] shadow-[0_0_80px_rgba(0,0,0,0.8)] flex flex-col overflow-hidden"
+      exit={{ opacity: 0, x: '100%' }}
+      transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+      className="fixed inset-y-0 right-0 w-full lg:w-[550px] bg-bg/95 backdrop-blur-3xl border-l border-white/10 z-[100] shadow-[0_0_80px_rgba(0,0,0,0.8)] flex flex-col overflow-hidden"
     >
       {/* Scanline Overlay */}
       <div className="absolute inset-0 pointer-events-none z-10 opacity-[0.03] bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.25)_50%)] bg-[length:100%_4px]" />
@@ -77,9 +78,9 @@ const TeamDetail = ({ team, onClose }) => {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
-              className="p-6 space-y-8"
+              className="p-4 lg:p-6 space-y-6 lg:space-y-8"
             >
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <StatBox label="Conflux Score" value={team.conflux_score.toFixed(3)} color="text-amber" icon={<Activity size={14}/>} />
                 <StatBox label="Squad Valuation" value={loading ? "..." : (squadData?.total_valuation ? `€${(squadData.total_valuation / 1000000).toFixed(0)}M` : 'N/A')} color="text-teal" icon={<DollarSign size={14}/>} />
               </div>
@@ -112,33 +113,40 @@ const TeamDetail = ({ team, onClose }) => {
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ delay: idx * 0.05 }}
                         onClick={() => setSelectedPlayer(player)}
-                        className="group flex items-center gap-4 p-4 rounded-xl bg-white/[0.02] border border-white/5 hover:border-amber/30 hover:bg-white/[0.04] transition-all cursor-pointer relative overflow-hidden"
+                        className="group flex flex-col sm:flex-row items-start sm:items-center gap-4 p-4 rounded-xl bg-white/[0.02] border border-white/5 hover:border-amber/30 hover:bg-white/[0.04] transition-all cursor-pointer relative overflow-hidden"
                       >
                         <div className="absolute inset-y-0 left-0 w-1 bg-amber scale-y-0 group-hover:scale-y-100 transition-transform origin-top" />
-                        <img 
-                          src={player.image_url || `https://api.dicebear.com/7.x/avataaars/svg?seed=${player.name}`} 
-                          alt={player.name} 
-                          className="w-12 h-12 rounded-xl bg-bg1 border border-white/10 group-hover:border-amber/50 transition-colors"
-                        />
-                        <div className="flex-1">
-                          <div className="flex items-center gap-2">
-                            <h4 className="text-sm font-bold text-white/80 group-hover:text-white transition-colors">{player.name}</h4>
-                            {player.is_star && <Star size={10} className="fill-amber text-amber" />}
-                          </div>
-                          <p className="text-[10px] font-mono text-white/30 uppercase tracking-wider">{player.position} • {player.club}</p>
-                          <div className="mt-2 w-full flex items-center gap-3">
-                            <div className="flex-1 h-1 bg-white/5 rounded-full overflow-hidden">
-                              <motion.div 
-                                initial={{ width: 0 }}
-                                animate={{ width: `${(player.conflux_influence || 0) * 100}%` }}
-                                className="h-full bg-amber/40" 
-                              />
+                        <div className="flex items-center gap-4 w-full">
+                          <img 
+                            src={player.image_url || `https://api.dicebear.com/7.x/avataaars/svg?seed=${player.name}`} 
+                            alt={player.name} 
+                            className="w-10 h-10 lg:w-12 lg:h-12 rounded-xl bg-bg1 border border-white/10 group-hover:border-amber/50 transition-colors"
+                          />
+                          <div className="flex-1">
+                            <div className="flex items-center gap-2">
+                              <h4 className="text-sm font-bold text-white/80 group-hover:text-white transition-colors truncate">{player.name}</h4>
+                              {player.is_star && <Star size={10} className="fill-amber text-amber" />}
                             </div>
-                            <span className="text-[9px] font-mono text-white/20">{((player.conflux_influence || 0) * 100).toFixed(0)}%</span>
+                            <p className="text-[10px] font-mono text-white/30 uppercase tracking-wider truncate">{player.position} • {player.club}</p>
+                          </div>
+                          <div className="text-right sm:hidden">
+                            <p className="text-xs font-mono font-bold text-white/80">€{(player.market_value_eur / 1000000).toFixed(1)}M</p>
                           </div>
                         </div>
-                        <div className="text-right">
-                          <p className="text-xs font-mono font-bold text-white/80 tracking-tighter">€{(player.market_value_eur / 1000000).toFixed(1)}M</p>
+
+                        <div className="mt-1 sm:mt-0 w-full flex items-center gap-3">
+                          <div className="flex-1 h-1 bg-white/5 rounded-full overflow-hidden">
+                            <motion.div 
+                              initial={{ width: 0 }}
+                              animate={{ width: `${(player.conflux_influence || 0) * 100}%` }}
+                              className="h-full bg-amber/40" 
+                            />
+                          </div>
+                          <span className="text-[9px] font-mono text-white/20">{((player.conflux_influence || 0) * 100).toFixed(0)}%</span>
+                        </div>
+
+                        <div className="hidden sm:block text-right">
+                          <p className="text-xs font-mono font-bold text-white/80 tracking-tighter whitespace-nowrap">€{(player.market_value_eur / 1000000).toFixed(1)}M</p>
                           <div className="flex items-center justify-end gap-1 mt-1">
                              <TrendingUp size={10} className="text-teal" />
                              <span className="text-[8px] font-mono text-teal">+1.2%</span>
@@ -188,21 +196,21 @@ const PlayerDetail = ({ player, team, onBack }) => {
         <ArrowLeft size={14} /> Back to Roster
       </button>
 
-      <div className="flex items-start gap-6">
-        <div className="relative">
+      <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6">
+        <div className="relative shrink-0">
           <img 
             src={player.image_url || `https://api.dicebear.com/7.x/avataaars/svg?seed=${player.name}`} 
             alt={player.name} 
-            className="w-32 h-32 rounded-3xl bg-bg1 border border-white/10 shadow-2xl"
+            className="w-24 h-24 lg:w-32 lg:h-32 rounded-3xl bg-bg1 border border-white/10 shadow-2xl"
           />
-          <div className="absolute -bottom-2 -right-2 w-10 h-10 rounded-full bg-bg border border-white/10 flex items-center justify-center overflow-hidden">
+          <div className="absolute -bottom-2 -right-2 w-8 h-8 lg:w-10 lg:h-10 rounded-full bg-bg border border-white/10 flex items-center justify-center overflow-hidden">
             <img src={getFlagUrl(team.subject)} alt={team.subject} className="w-full h-full object-cover" />
           </div>
         </div>
-        <div className="flex-1 py-2">
-          <h3 className="text-3xl font-bold tracking-tighter mb-1">{player.name}</h3>
-          <p className="text-sm font-mono text-amber mb-4 uppercase tracking-widest">{player.position} // {player.club}</p>
-          <div className="flex gap-4">
+        <div className="flex-1 py-2 text-center sm:text-left">
+          <h3 className="text-2xl lg:text-3xl font-bold tracking-tighter mb-1 truncate max-w-[280px] sm:max-w-none">{player.name}</h3>
+          <p className="text-xs lg:text-sm font-mono text-amber mb-4 uppercase tracking-widest">{player.position} // {player.club}</p>
+          <div className="flex flex-wrap justify-center sm:justify-start gap-3 lg:gap-4">
              <div className="px-3 py-1.5 rounded-lg bg-white/5 border border-white/5 flex items-center gap-2">
                 <BarChart2 size={12} className="text-teal" />
                 <span className="text-[10px] font-mono font-bold">€{(player.market_value_eur / 1000000).toFixed(1)}M</span>
@@ -260,8 +268,8 @@ const PlayerDetail = ({ player, team, onBack }) => {
       </div>
 
       {/* Intelligence Insights */}
-      <div className="grid grid-cols-2 gap-4">
-        <div className="p-5 rounded-2xl bg-white/[0.02] border border-white/5">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="p-4 lg:p-5 rounded-2xl bg-white/[0.02] border border-white/5">
            <h5 className="text-[9px] font-mono text-white/20 uppercase tracking-[0.2em] mb-3 flex items-center gap-2">
              <Info size={12} className="text-amber" /> Tactical Profile
            </h5>
@@ -271,7 +279,7 @@ const PlayerDetail = ({ player, team, onBack }) => {
              <InsightItem label="Social Momentum" value="Rising" />
            </ul>
         </div>
-        <div className="p-5 rounded-2xl bg-white/[0.02] border border-white/5">
+        <div className="p-4 lg:p-5 rounded-2xl bg-white/[0.02] border border-white/5">
            <h5 className="text-[9px] font-mono text-white/20 uppercase tracking-[0.2em] mb-3 flex items-center gap-2">
              <Shield size={12} className="text-teal" /> Conflux Matrix
            </h5>
