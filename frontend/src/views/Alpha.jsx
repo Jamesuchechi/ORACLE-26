@@ -1,15 +1,29 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Target, TrendingUp, AlertTriangle, CheckCircle2, ChevronRight, Zap, Info, ShieldCheck, Filter } from 'lucide-react';
+import { Target, TrendingUp, AlertTriangle, CheckCircle2, ChevronRight, Zap, Info, ShieldCheck, Filter, Activity } from 'lucide-react';
 import axios from 'axios';
-import { ScatterChart, Scatter, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell, ReferenceLine } from 'recharts';
+import { 
+  ScatterChart, Scatter, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell, ReferenceLine,
+  BarChart, Bar, ComposedChart, Line, Legend, Area
+} from 'recharts';
 
 const AlphaView = () => {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [selectedAlpha, setSelectedAlpha] = useState(null);
+  const [isDeploying, setIsDeploying] = useState(false);
+  const [isDeployed, setIsDeployed] = useState(false);
+  const [chartType, setChartType] = useState('scatter'); // 'scatter' | 'bar' | 'delta'
+
+  const handleDeploy = () => {
+    setIsDeploying(true);
+    setTimeout(() => {
+      setIsDeploying(false);
+      setIsDeployed(true);
+    }, 2000);
+  };
 
   useEffect(() => {
     const fetchAlpha = async () => {
@@ -26,6 +40,10 @@ const AlphaView = () => {
     };
     fetchAlpha();
   }, []);
+
+  useEffect(() => {
+    setIsDeployed(false);
+  }, [selectedAlpha]);
 
   if (loading) return <div className="p-12 text-center font-mono text-white/20 animate-pulse uppercase tracking-widest text-xs">Scanning Markets for Divergence...</div>;
   if (error) return <div className="p-12 text-center text-red font-mono text-xs uppercase">{error}</div>;
@@ -47,55 +65,94 @@ const AlphaView = () => {
             <div className="flex justify-between items-center mb-8">
               <h3 className="text-xl font-bold flex items-center gap-3">
                 <Target className="text-teal" size={22} />
-                Opportunity Radar
+                Opportunity Analysis
               </h3>
+              
+              <div className="flex items-center gap-1 bg-white/5 p-1 rounded-lg border border-white/10">
+                <button 
+                  onClick={() => setChartType('scatter')}
+                  className={`p-1.5 rounded-md transition-all ${chartType === 'scatter' ? 'bg-teal text-bg1 shadow-lg' : 'text-white/40 hover:text-white'}`}
+                  title="Scatter Plot (Radar)"
+                >
+                  <Target size={16} />
+                </button>
+                <button 
+                  onClick={() => setChartType('bar')}
+                  className={`p-1.5 rounded-md transition-all ${chartType === 'bar' ? 'bg-teal text-bg1 shadow-lg' : 'text-white/40 hover:text-white'}`}
+                  title="Alpha Ranking (Bar)"
+                >
+                  <TrendingUp size={16} />
+                </button>
+                <button 
+                  onClick={() => setChartType('delta')}
+                  className={`p-1.5 rounded-md transition-all ${chartType === 'delta' ? 'bg-teal text-bg1 shadow-lg' : 'text-white/40 hover:text-white'}`}
+                  title="Divergence Delta"
+                >
+                  <Activity size={16} />
+                </button>
+              </div>
+
               <div className="flex gap-4">
                 <div className="flex items-center gap-2">
                   <div className="w-2 h-2 rounded-full bg-teal" />
                   <span className="text-[10px] font-mono text-white/40 uppercase">High Alpha</span>
                 </div>
-                <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 rounded-full bg-white/20" />
-                  <span className="text-[10px] font-mono text-white/40 uppercase">Market Parity</span>
-                </div>
               </div>
             </div>
 
             <div className="h-96 w-full relative">
-               <div className="absolute top-4 left-4 text-[9px] font-mono text-white/20 uppercase vertical-text">Conflux Model Probability %</div>
-               <div className="absolute bottom-4 right-4 text-[9px] font-mono text-white/20 uppercase">Market Implied Probability %</div>
-               
-               <ResponsiveContainer width="100%" height="100%">
-                 <ScatterChart margin={{ top: 20, right: 20, bottom: 20, left: 20 }}>
-                   <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
-                   <XAxis 
-                     type="number" 
-                     dataKey="x" 
-                     domain={[0, 100]} 
-                     tick={{ fill: 'rgba(255,255,255,0.3)', fontSize: 10, fontFamily: 'monospace' }}
-                   />
-                   <YAxis 
-                     type="number" 
-                     dataKey="y" 
-                     domain={[0, 100]} 
-                     tick={{ fill: 'rgba(255,255,255,0.3)', fontSize: 10, fontFamily: 'monospace' }}
-                   />
-                   <Tooltip 
-                     cursor={{ strokeDasharray: '3 3' }}
-                     contentStyle={{ background: '#111', border: '1px solid rgba(255,255,255,0.1)', fontSize: '10px', fontFamily: 'monospace' }}
-                   />
-                   <ReferenceLine segment={[{ x: 0, y: 0 }, { x: 100, y: 100 }]} stroke="rgba(255,255,255,0.1)" strokeDasharray="5 5" />
-                   <Scatter name="Alpha" data={scatterData} onClick={(e) => setSelectedAlpha(data.alpha_plays.find(p => p.subject === e.name))}>
-                     {scatterData.map((entry, index) => (
-                       <Cell 
-                         key={`cell-${index}`} 
-                         fill={entry.alpha > 10 ? '#2dd4bf' : '#3b82f6'} 
-                         className="cursor-pointer"
-                       />
-                     ))}
-                   </Scatter>
-                 </ScatterChart>
-               </ResponsiveContainer>
+               <AnimatePresence mode="wait">
+                 {chartType === 'scatter' && (
+                   <motion.div key="scatter" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="w-full h-full">
+                     <div className="absolute top-4 left-4 text-[9px] font-mono text-white/20 uppercase vertical-text">Conflux Model Probability %</div>
+                     <div className="absolute bottom-4 right-4 text-[9px] font-mono text-white/20 uppercase">Market Implied Probability %</div>
+                     <ResponsiveContainer width="100%" height="100%">
+                       <ScatterChart margin={{ top: 20, right: 20, bottom: 20, left: 20 }}>
+                         <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
+                         <XAxis type="number" dataKey="x" domain={[0, 100]} tick={{ fill: 'rgba(255,255,255,0.3)', fontSize: 10, fontFamily: 'monospace' }} />
+                         <YAxis type="number" dataKey="y" domain={[0, 100]} tick={{ fill: 'rgba(255,255,255,0.3)', fontSize: 10, fontFamily: 'monospace' }} />
+                         <Tooltip cursor={{ strokeDasharray: '3 3' }} contentStyle={{ background: '#111', border: '1px solid rgba(255,255,255,0.1)', fontSize: '10px', fontFamily: 'monospace' }} />
+                         <ReferenceLine segment={[{ x: 0, y: 0 }, { x: 100, y: 100 }]} stroke="rgba(255,255,255,0.1)" strokeDasharray="5 5" />
+                         <Scatter name="Alpha" data={scatterData} onClick={(e) => setSelectedAlpha(data.alpha_plays.find(p => p.subject === e.name))}>
+                           {scatterData.map((entry, index) => <Cell key={`cell-${index}`} fill={entry.alpha > 10 ? '#2dd4bf' : '#3b82f6'} className="cursor-pointer" />)}
+                         </Scatter>
+                       </ScatterChart>
+                     </ResponsiveContainer>
+                   </motion.div>
+                 )}
+
+                 {chartType === 'bar' && (
+                   <motion.div key="bar" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="w-full h-full">
+                     <ResponsiveContainer width="100%" height="100%">
+                       <BarChart data={scatterData.sort((a,b) => b.alpha - a.alpha)} layout="vertical" margin={{ left: 40 }}>
+                         <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" horizontal={false} />
+                         <XAxis type="number" tick={{ fill: 'rgba(255,255,255,0.3)', fontSize: 10 }} />
+                         <YAxis dataKey="name" type="category" tick={{ fill: 'rgba(255,255,255,0.6)', fontSize: 10, fontWeight: 'bold' }} />
+                         <Tooltip contentStyle={{ background: '#111', border: 'none', borderRadius: '8px' }} />
+                         <Bar dataKey="alpha" name="Alpha Edge %" fill="#2dd4bf" radius={[0, 4, 4, 0]}>
+                            {scatterData.map((entry, index) => <Cell key={`cell-${index}`} fillOpacity={0.4 + (index * 0.1)} />)}
+                         </Bar>
+                       </BarChart>
+                     </ResponsiveContainer>
+                   </motion.div>
+                 )}
+
+                 {chartType === 'delta' && (
+                   <motion.div key="delta" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="w-full h-full">
+                     <ResponsiveContainer width="100%" height="100%">
+                       <ComposedChart data={scatterData}>
+                         <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
+                         <XAxis dataKey="name" tick={{ fill: 'rgba(255,255,255,0.3)', fontSize: 10 }} />
+                         <YAxis tick={{ fill: 'rgba(255,255,255,0.3)', fontSize: 10 }} />
+                         <Tooltip contentStyle={{ background: '#111', border: 'none' }} />
+                         <Bar dataKey="x" name="Market %" fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.2)" />
+                         <Line type="monotone" dataKey="y" name="Model %" stroke="#2dd4bf" strokeWidth={3} dot={{ fill: '#2dd4bf', r: 4 }} />
+                         <Area type="monotone" dataKey="y" fill="#2dd4bf" fillOpacity={0.05} stroke="none" />
+                       </ComposedChart>
+                     </ResponsiveContainer>
+                   </motion.div>
+                 )}
+               </AnimatePresence>
             </div>
             
             <div className="mt-4 p-4 rounded-lg bg-teal/5 border border-teal/20">
@@ -188,15 +245,51 @@ const AlphaView = () => {
                      </div>
                    </div>
 
-                   <div className="p-6 rounded-2xl bg-teal/5 border border-teal/20">
-                      <div className="flex items-center gap-3 mb-4 text-teal">
-                         <ShieldCheck size={18} />
-                         <span className="text-xs font-bold uppercase tracking-widest">Recommended Play</span>
-                      </div>
-                      <p className="text-sm font-bold text-white mb-4">{selectedAlpha.strategy}</p>
-                      <button className="w-full py-3 bg-teal text-bg1 rounded-xl text-xs font-bold uppercase tracking-widest hover:bg-teal/80 transition-all">
-                        DEPLOY_CAPITAL
-                      </button>
+                   <div className="p-6 rounded-2xl bg-teal/5 border border-teal/20 relative overflow-hidden">
+                      {isDeploying && (
+                        <motion.div 
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          className="absolute inset-0 bg-bg1/90 backdrop-blur-sm z-10 flex flex-col items-center justify-center gap-4"
+                        >
+                          <div className="w-8 h-8 border-2 border-teal border-t-transparent rounded-full animate-spin" />
+                          <p className="text-[10px] font-mono text-teal animate-pulse">EXECUTING_SMART_CONTRACT...</p>
+                        </motion.div>
+                      )}
+                      
+                      {isDeployed ? (
+                        <motion.div 
+                          initial={{ scale: 0.9, opacity: 0 }}
+                          animate={{ scale: 1, opacity: 1 }}
+                          className="text-center py-4"
+                        >
+                          <div className="w-12 h-12 bg-teal/20 text-teal rounded-full flex items-center justify-center mx-auto mb-4">
+                            <CheckCircle2 size={24} />
+                          </div>
+                          <h4 className="text-sm font-bold text-white mb-2">Capital Deployed</h4>
+                          <p className="text-[9px] font-mono text-teal/60 mb-4 tracking-tighter">TX: 0x{Math.random().toString(16).slice(2, 10)}...{Math.random().toString(16).slice(2, 6)}</p>
+                          <button 
+                            onClick={() => setIsDeployed(false)}
+                            className="text-[10px] font-bold text-white/40 hover:text-white uppercase tracking-widest underline underline-offset-4"
+                          >
+                            Reset Position
+                          </button>
+                        </motion.div>
+                      ) : (
+                        <>
+                          <div className="flex items-center gap-3 mb-4 text-teal">
+                             <ShieldCheck size={18} />
+                             <span className="text-xs font-bold uppercase tracking-widest">Recommended Play</span>
+                          </div>
+                          <p className="text-sm font-bold text-white mb-4">{selectedAlpha.strategy}</p>
+                          <button 
+                            onClick={handleDeploy}
+                            className="w-full py-3 bg-teal text-bg1 rounded-xl text-xs font-bold uppercase tracking-widest hover:bg-teal/80 transition-all active:scale-95"
+                          >
+                            DEPLOY_CAPITAL
+                          </button>
+                        </>
+                      )}
                    </div>
                  </div>
 

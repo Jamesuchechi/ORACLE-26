@@ -10,21 +10,29 @@ const FusionView = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [activeCell, setActiveCell] = useState(null);
+  const [isScanning, setIsScanning] = useState(false);
+
+  const fetchFusion = async () => {
+    try {
+      const res = await axios.get('/v1/fusion/hub');
+      setData(res.data);
+      setLoading(false);
+    } catch (err) {
+      console.error(err);
+      setError('Fusion Core Synchronization Failed');
+      setLoading(false);
+    }
+  };
+
+  const handleRescan = async () => {
+    setIsScanning(true);
+    await fetchFusion();
+    setTimeout(() => setIsScanning(false), 1500);
+  };
 
   useEffect(() => {
-    const fetchFusion = async () => {
-      try {
-        const res = await axios.get('/v1/fusion/hub');
-        setData(res.data);
-        setLoading(false);
-      } catch (err) {
-        console.error(err);
-        setError('Fusion Core Synchronization Failed');
-        setLoading(false);
-      }
-    };
     fetchFusion();
-    const interval = setInterval(fetchFusion, 10000); // Polling for live updates
+    const interval = setInterval(fetchFusion, 10000); 
     return () => clearInterval(interval);
   }, []);
 
@@ -188,8 +196,16 @@ const FusionView = () => {
               <p className="text-xs text-white/60 leading-relaxed mb-6 italic">
                 "Cross-domain verification has reached 94.2% agreement. The current Alpha Discovery engine is operating at peak efficiency."
               </p>
-              <button className="w-full py-3 bg-blue/20 hover:bg-blue/30 border border-blue/40 rounded-xl text-xs font-bold uppercase tracking-widest transition-all">
-                REQUEST_RESCAN
+              <button 
+                onClick={handleRescan}
+                disabled={isScanning}
+                className={`w-full py-3 border rounded-xl text-xs font-bold uppercase tracking-widest transition-all ${
+                  isScanning 
+                  ? 'bg-blue/40 border-blue text-white cursor-wait animate-pulse' 
+                  : 'bg-blue/20 hover:bg-blue/30 border-blue/40 text-blue'
+                }`}
+              >
+                {isScanning ? 'SCANNING_DOMAINS...' : 'REQUEST_RESCAN'}
               </button>
            </div>
         </div>
