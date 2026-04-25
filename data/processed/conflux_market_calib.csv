@@ -1,9 +1,9 @@
 event_id,description,type,market_prob,model_prob,alpha,signal_strength,direction,conflux_score,interpretation
-fed_rate_july,Fed rate decision July 2026,economics,0.4553949585185246,0.519,0.0636,noise,value,0.49765962301852196,Signal within noise threshold — no actionable divergence.
-ai_agi_2026,AGI milestone by end 2026,technology,0.46847560598496535,0.519,0.0505,noise,value,0.5048539791250644,Signal within noise threshold — no actionable divergence.
-fed_rate_june,Fed rate decision June 2026,economics,0.4910094082495111,0.519,0.028,noise,value,0.5172475703705646,Signal within noise threshold — no actionable divergence.
-wc2026_winner,FIFA WC 2026 winner,sports,0.4946078495031649,0.519,0.0244,noise,value,0.5192267130600741,Signal within noise threshold — no actionable divergence.
-us_recession_2026,US recession probability 2026,economics,0.5433025205554359,0.519,-0.0243,noise,hype,0.5460087821388232,Signal within noise threshold — no actionable divergence.
-btc_100k_2026,BTC reaches $100k in 2026,crypto,0.5245197796925564,0.519,-0.0056,noise,hype,0.5356782746642395,Signal within noise threshold — no actionable divergence.
-ukraine_ceasefire_2026,Ukraine ceasefire agreement,geopolitics,0.5222062138848808,0.519,-0.0032,noise,hype,0.5344058134700178,Signal within noise threshold — no actionable divergence.
-sp500_5000_eoy,S&P 500 above 5000 end 2026,finance,0.5212328578878095,0.519,-0.0023,noise,hype,0.5338704676716286,Signal within noise threshold — no actionable divergence.
+sp500_5000_eoy,S&P 500 above 5000 end 2026,finance,0.4506258029968505,0.519,0.0683,noise,value,0.4950365874816012,Signal within noise threshold — no actionable divergence.
+btc_100k_2026,BTC reaches $100k in 2026,crypto,0.47786714840660144,0.519,0.0411,noise,value,0.5100193274569642,Signal within noise threshold — no actionable divergence.
+us_recession_2026,US recession probability 2026,economics,0.4875223045924318,0.519,0.0314,noise,value,0.5153296633591709,Signal within noise threshold — no actionable divergence.
+ukraine_ceasefire_2026,Ukraine ceasefire agreement,geopolitics,0.5472672775208656,0.519,-0.0283,noise,hype,0.5481893984698095,Signal within noise threshold — no actionable divergence.
+fed_rate_july,Fed rate decision July 2026,economics,0.4996296943118601,0.519,0.0193,noise,value,0.5219887277048565,Signal within noise threshold — no actionable divergence.
+wc2026_winner,FIFA WC 2026 winner,sports,0.5008774966597412,0.519,0.0181,noise,value,0.5226750189961911,Signal within noise threshold — no actionable divergence.
+ai_agi_2026,AGI milestone by end 2026,technology,0.5291320353310531,0.519,-0.0102,noise,hype,0.5382150152654126,Signal within noise threshold — no actionable divergence.
+fed_rate_june,Fed rate decision June 2026,economics,0.5150864363338794,0.519,0.0039,noise,value,0.5304899358169671,Signal within noise threshold — no actionable divergence.

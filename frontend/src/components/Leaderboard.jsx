@@ -16,8 +16,9 @@ const Leaderboard = ({ rankings, loading, onTeamClick }) => {
     <div className="overflow-hidden">
       <div className="hidden lg:grid grid-cols-12 px-4 py-2 text-[9px] font-mono text-white/20 uppercase tracking-widest border-b border-white/5">
         <div className="col-span-1">Rank</div>
-        <div className="col-span-4">Subject / Team</div>
-        <div className="col-span-5">Intelligence Fingerprint</div>
+        <div className="col-span-3">Subject / Team</div>
+        <div className="col-span-2">Legacy</div>
+        <div className="col-span-4">Intelligence Fingerprint</div>
         <div className="col-span-2 text-right">Conflux Score</div>
       </div>
       
@@ -34,7 +35,7 @@ const Leaderboard = ({ rankings, loading, onTeamClick }) => {
               onClick={() => onTeamClick(team)}
             >
               {/* Rank & Team Name Info */}
-              <div className="col-span-10 lg:col-span-5 flex items-center gap-4">
+              <div className="col-span-10 lg:col-span-4 flex items-center gap-4">
                 <div className="font-mono text-[11px] text-white/20 font-bold w-6 shrink-0">
                   {String(index + 1).padStart(2, '0')}
                 </div>
@@ -51,6 +52,13 @@ const Leaderboard = ({ rankings, loading, onTeamClick }) => {
                 </div>
               </div>
 
+              {/* Legacy (Desktop) */}
+              <div className="hidden lg:block lg:col-span-2">
+                <span className="text-[10px] font-mono text-white/40 uppercase tracking-tighter truncate block">
+                  {team.legacy?.best_finish || "N/A"}
+                </span>
+              </div>
+
               {/* Score (Mobile Positioned Right) */}
               <div className="col-span-2 lg:hidden text-right">
                 <span className="font-mono text-xs font-black text-amber">
@@ -59,7 +67,7 @@ const Leaderboard = ({ rankings, loading, onTeamClick }) => {
               </div>
               
               {/* Signal Fingerprint */}
-              <div className="col-span-12 lg:col-span-5 flex items-center gap-1 mt-4 lg:mt-0 px-2 lg:px-0">
+              <div className="col-span-12 lg:col-span-4 flex items-center gap-1 mt-4 lg:mt-0 px-2 lg:px-0">
                 <SignalBar val={team.sports} color="bg-blue" label="S" />
                 <SignalBar val={team.markets} color="bg-amber" label="M" />
                 <SignalBar val={team.finance} color="bg-teal" label="E" />

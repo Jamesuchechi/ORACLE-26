@@ -12,22 +12,31 @@ const SocialView = () => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 10000); // 10s timeout
+
     const fetchData = async () => {
       try {
         const [socialRes, corrRes] = await Promise.all([
-          axios.get('/v1/social/trends'),
-          axios.get('/v1/social/correlation')
+          axios.get('/v1/social/trends', { signal: controller.signal }),
+          axios.get('/v1/social/correlation', { signal: controller.signal })
         ]);
         setData(socialRes.data);
         setCorrelation(corrRes.data);
         setLoading(false);
+        clearTimeout(timeoutId);
       } catch (err) {
+        if (axios.isCancel(err)) return;
         console.error(err);
-        setError(err.code === 'ECONNABORTED' ? 'Neural Sync Timeout' : 'Cultural Engine Offline');
+        setError(err.name === 'AbortError' ? 'Neural Sync Timeout (10s)' : 'Cultural Engine Offline');
         setLoading(false);
       }
     };
     fetchData();
+    return () => {
+      controller.abort();
+      clearTimeout(timeoutId);
+    };
   }, []);
 
   if (loading) return <div className="p-12 text-center font-mono text-white/20 animate-pulse uppercase tracking-widest text-xs">Analyzing Cultural Momentum...</div>;
@@ -39,10 +48,10 @@ const SocialView = () => {
   );
 
   const trends = (data?.topics || []).slice(0, 4).map(t => ({
-    tag: `#${t.topic.replace(/\s+/g, '')}`,
+    tag: `#${t.topic?.replace(/\s+/g, '') || 'unknown'}`,
     volume: '900K+',
     sentiment: t.reddit_signal || 0.5,
-    momentum: `+${((t.momentum_score || 0) * 100).toFixed(0)}%`
+    momentum: `+${((t.momentum_score || t.momentum || 0) * 100).toFixed(0)}%`
   }));
 
   // Synthetic sentiment velocity data
@@ -160,7 +169,7 @@ const SocialView = () => {
                       <h4 className="text-xs font-bold">{t.topic}</h4>
                       <p className="text-[9px] font-mono text-white/20 uppercase">{t.category}</p>
                     </div>
-                    <span className="text-lg font-mono font-bold text-amber">{(t.tipping_score * 100).toFixed(0)}%</span>
+                    <span className="text-lg font-mono font-bold text-amber">{((t.tipping_score || t.tipping || 0) * 100).toFixed(0)}%</span>
                   </div>
                   <div className="h-1 bg-white/5 rounded-full overflow-hidden">
                     <motion.div 

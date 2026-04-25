@@ -28,10 +28,10 @@
 - [x] 🔴 **CRITICAL · 1h · Impact: Decisive** — Deploy React frontend to Vercel — connect `VITE_API_URL` to your Railway URL in Vercel env settings
   > vercel.com → import repo → add env var → done. Takes 10 minutes once backend is live.
 
-- [ ] 🔴 **CRITICAL · 30m · Impact: High** — Run `wc2026_pipeline.py --all` on the server after deploy, verify all CSV outputs exist in `data/processed/`
+- [x] 🔴 **CRITICAL · 30m · Impact: High** — Run `wc2026_pipeline.py --all` on the server after deploy, verify all CSV outputs exist in `data/processed/`
   > API returns 404 on most endpoints if `processed/` files are missing. Pipeline must run successfully on the server.
 
-- [ ] 🟠 **HIGH · 30m · Impact: High** — Enhance `/health` endpoint response to show data freshness timestamp, signal counts, and pipeline last-run time
+- [x] 🟠 **HIGH · 30m · Impact: High** — Enhance `/health` endpoint response to show data freshness timestamp, signal counts, and pipeline last-run time
   > Judges will hit `/health` first. Make it impressive — show it's a live system, not a static demo.
 
 ---
@@ -39,28 +39,28 @@
 ## Phase 1 — Fix Broken Logic (Stops Demo From Failing)
 > **These are silent failures that will embarrass you during the demo or cost points when judges inspect the code.**
 
-- [ ] 🔴 **CRITICAL · 30m · Impact: High** — Fix `fuse_match()` probability math in `src/features/fusion.py` — `draw_p` can go negative; rewrite with `np.clip` on all three, then re-normalize so they sum to exactly 1.0
+- [x] 🔴 **CRITICAL · 30m · Impact: High** — Fix `fuse_match()` probability math in `src/features/fusion.py` — `draw_p` can go negative; rewrite with `np.clip` on all three, then re-normalize so they sum to exactly 1.0
   > Current code has a `raw_loss` naming bug that corrupts match predictor output silently.
 
-- [ ] 🔴 **CRITICAL · 20m · Impact: High** — Fix alpha gap calculation — use `sports` signal vs `market_signal` (same normalized scale), not `conflux_score` vs raw `markets`
+- [x] 🔴 **CRITICAL · 20m · Impact: High** — Fix alpha gap calculation — use `sports` signal vs `market_signal` (same normalized scale), not `conflux_score` vs raw `markets`
   > Current alpha is mathematically invalid — comparing a weighted composite against a raw signal. Judges who check the math will notice.
 
-- [ ] 🔴 **CRITICAL · 30m · Impact: Medium** — Add Groq fallback in `analyst.py` — if all LLM providers fail, return a structured template response built directly from `context_data`, never return an empty string or raise an exception
+- [x] 🔴 **CRITICAL · 30m · Impact: Medium** — Add Groq fallback in `analyst.py` — if all LLM providers fail, return a structured template response built directly from `context_data`, never return an empty string or raise an exception
   > Demo dies silently if `GROQ_API_KEY` is missing or rate-limited mid-presentation. Template fallback keeps every endpoint alive.
 
-- [ ] 🔴 **CRITICAL · 20m · Impact: Medium** — Fix `Social.jsx` field names: `t.momentum` → `t.momentum_score`, `t.tipping` → `t.is_tipping`
+- [x] 🔴 **CRITICAL · 20m · Impact: Medium** — Fix `Social.jsx` field names: `t.momentum` → `t.momentum_score`, `t.tipping` → `t.is_tipping`
   > Social view renders `NaN%` and `undefined` for every trend row currently.
 
-- [ ] 🔴 **CRITICAL · 10m · Impact: Low** — Fix `TeamDetail.jsx` null guard: `squadData?.total_valuation ? \`€${(squadData.total_valuation/1000000).toFixed(0)}M\` : 'N/A'`
+- [x] 🔴 **CRITICAL · 10m · Impact: Low** — Fix `TeamDetail.jsx` null guard: `squadData?.total_valuation ? \`€${(squadData.total_valuation/1000000).toFixed(0)}M\` : 'N/A'`
   > Shows `NaN M` whenever squad data is missing or zero.
 
-- [ ] 🟠 **HIGH · 20m · Impact: Medium** — Add `AbortController` with 10s timeout to all `fetch()` calls in Climate, Finance, and Social views — add visible error UI state with a retry button
+- [x] 🟠 **HIGH · 20m · Impact: Medium** — Add `AbortController` with 10s timeout to all `fetch()` calls in Climate, Finance, and Social views — add visible error UI state with a retry button
   > Views hang forever if the API is slow. During a live demo, a frozen screen is fatal.
 
-- [ ] 🟠 **HIGH · 15m · Impact: Low** — Verify countdown in `App.jsx` is using the dynamic `Math.ceil()` calculation, not the hardcoded `782` fallback — should show ~47 days to kickoff
+- [x] 🟠 **HIGH · 15m · Impact: Low** — Verify countdown in `App.jsx` is using the dynamic `Math.ceil()` calculation, not the hardcoded `782` fallback — should show ~47 days to kickoff
   > 47 days creates real urgency and shows attention to detail. 782 destroys credibility instantly.
 
-- [ ] 🟠 **HIGH · 15m · Impact: Medium** — Move `from src.features.analyst import zerve_analyst` to top of `api.py` inside a `try/except`, set `zerve_analyst = None` on failure, check `if zerve_analyst is None` inside routes and return graceful 503 response
+- [x] 🟠 **HIGH · 15m · Impact: Medium** — Move `from src.features.analyst import zerve_analyst` to top of `api.py` inside a `try/except`, set `zerve_analyst = None` on failure, check `if zerve_analyst is None` inside routes and return graceful 503 response
   > A missing API key currently throws an unhandled exception on the first request to analyst endpoints, silently killing half your API.
 
 ---
@@ -68,22 +68,22 @@
 ## Phase 2 — Analytical Depth (35% of Score — Your Biggest Gap)
 > **This is the category that separates winners from participants. Claims need evidence. Evidence needs numbers.**
 
-- [ ] 🔴 **CRITICAL · 3h · Impact: Decisive** — Build `backtest_accuracy.py` — run CONFLUX match predictions against actual 2018 + 2022 World Cup results, compute: accuracy vs pure Elo baseline, Brier score, upset detection rate (when underdog won, did CONFLUX diverge from favorite?)
+- [x] 🔴 **CRITICAL · 3h · Impact: Decisive** — Build `backtest_accuracy.py` — run CONFLUX match predictions against actual 2018 + 2022 World Cup results, compute: accuracy vs pure Elo baseline, Brier score, upset detection rate (when underdog won, did CONFLUX diverge from favorite?)
   > The "2.3x upset detection" claim in README has zero supporting evidence. Either prove it with this backtest or remove the claim. Judges will look.
 
-- [ ] 🔴 **CRITICAL · 2h · Impact: Decisive** — Add `/v1/model/validation` endpoint — return calibration curve data, accuracy by confidence tier (high/medium/low), sample size, and comparison vs Elo-only baseline
+- [x] 🔴 **CRITICAL · 2h · Impact: Decisive** — Add `/v1/model/validation` endpoint — return calibration curve data, accuracy by confidence tier (high/medium/low), sample size, and comparison vs Elo-only baseline
   > Judges want to see if the model actually works, not just that it exists. This endpoint is your proof.
 
-- [ ] 🔴 **CRITICAL · 2h · Impact: Decisive** — Get real Polymarket odds for top 10 teams (Argentina, France, Brazil, England, Spain, Germany, Portugal, Netherlands, Morocco, USA) — hardcode as `REAL_MARKET_ODDS` dict in `markets.py` as a verified fallback when API returns no data
+- [x] 🔴 **CRITICAL · 2h · Impact: Decisive** — Get real Polymarket odds for top 10 teams (Argentina, France, Brazil, England, Spain, Germany, Portugal, Netherlands, Morocco, USA) — hardcode as `REAL_MARKET_ODDS` dict in `markets.py` as a verified fallback when API returns no data
   > Even static verified odds are infinitely more credible than synthetic fallback. Judges can cross-check against polymarket.com.
 
-- [ ] 🟠 **HIGH · 2h · Impact: High** — Build the divergence evidence story — find the single most compelling team where CONFLUX score differs from real Polymarket odds by 10pp+, run the full analysis, document why (economic signal? social momentum? climate advantage?), surface it as the centrepiece of the analyst briefing
+- [x] 🟠 **HIGH · 2h · Impact: High** — Build the divergence evidence story — find the single most compelling team where CONFLUX score differs from real Polymarket odds by 10pp+, run the full analysis, document why (economic signal? social momentum? climate advantage?), surface it as the centrepiece of the analyst briefing
   > One real, defensible divergence example beats 100 synthetic ones. This is your thesis made concrete.
 
-- [ ] 🟠 **HIGH · 1h · Impact: High** — Add model confidence calibration output — for predictions where CONFLUX says 70% win probability, calculate actual win rate in historical data, surface as a "reliability score" per confidence tier
+- [x] 🟠 **HIGH · 1h · Impact: High** — Add model confidence calibration output — for predictions where CONFLUX says 70% win probability, calculate actual win rate in historical data, surface as a "reliability score" per confidence tier
   > Calibration is what separates serious forecasting from vibes. This one metric signals genuine analytical rigour.
 
-- [ ] 🔵 **MEDIUM · 1h · Impact: Medium** — Replace hardcoded correlation matrix in `src/data/fusion.py` with real computed Pearson correlations between the 5 signals across all 48 teams, update `/v1/fusion/hub` to return these real values
+- [x] 🔵 **MEDIUM · 1h · Impact: Medium** — Replace hardcoded correlation matrix in `src/data/fusion.py` with real computed Pearson correlations between the 5 signals across all 48 teams, update `/v1/fusion/hub` to return these real values
   > The current matrix uses `np.random.random() * 0.05` jitter on hardcoded values. Replace with real signal correlations from your data.
 
 ---
@@ -91,22 +91,22 @@
 ## Phase 3 — The Killer Feature (Win the Demo, Win the Prize)
 > **These features directly demonstrate your thesis and are the most screenshot-able, share-worthy parts of the project.**
 
-- [ ] 🔴 **CRITICAL · 3h · Impact: Decisive** — Build DIVERGENCE ALERT view as the landing section of the dashboard — surface top 5 teams where CONFLUX most disagrees with Polymarket, showing: team name, direction (underpriced/overpriced), magnitude in percentage points, AI one-line explanation, confidence level
+- [x] 🔴 **CRITICAL · 3h · Impact: Decisive** — Build DIVERGENCE ALERT view as the landing section of the dashboard — surface top 5 teams where CONFLUX most disagrees with Polymarket, showing: team name, direction (underpriced/overpriced), magnitude in percentage points, AI one-line explanation, confidence level
   > This IS your thesis made visible. It should be the first thing every judge sees when they open your app.
 
-- [ ] 🔴 **CRITICAL · 2h · Impact: Decisive** — Build Group Stage Bracket Simulator — run Monte Carlo for all 12 groups, show advancement probability for each team with progress bars, make each group clickable to show the full standings simulation
+- [x] 🔴 **CRITICAL · 2h · Impact: Decisive** — Build Group Stage Bracket Simulator — run Monte Carlo for all 12 groups, show advancement probability for each team with progress bars, make each group clickable to show the full standings simulation
   > Highly shareable, visually impressive, demonstrates the full pipeline working end-to-end. This is the kind of thing that gets posted on X.
 
-- [ ] 🟠 **HIGH · 2h · Impact: High** — Add "Upset Alert" badge to match predictor — when CONFLUX win probability for the underdog exceeds the market-implied probability by 8pp+, show a highlighted UPSET ALERT with confidence level and which signal is driving the divergence
+- [x] 🟠 **HIGH · 2h · Impact: High** — Add "Upset Alert" badge to match predictor — when CONFLUX win probability for the underdog exceeds the market-implied probability by 8pp+, show a highlighted UPSET ALERT with confidence level and which signal is driving the divergence
   > Makes the analytical insight immediately actionable in one click. Judges love things that are both smart and visually clear.
 
-- [ ] 🟠 **HIGH · 1h · Impact: High** — Add signal weight sensitivity analysis to match predictor — interactive sliders showing how final win probability shifts as you change each signal's weight — prove that multi-signal beats single-signal
+- [x] 🟠 **HIGH · 1h · Impact: High** — Add signal weight sensitivity analysis to match predictor — interactive sliders showing how final win probability shifts as you change each signal's weight — prove that multi-signal beats single-signal
   > This is an interactive proof of your core thesis. It takes 60 seconds to demonstrate and is unforgettable.
 
-- [ ] 🟠 **HIGH · 1.5h · Impact: High** — Build `/v1/predict/wc2026/tournament` endpoint — return full bracket simulation results with probability of reaching each round (R32, R16, QF, SF, Final, Win) for all 48 teams
+- [x] 🟠 **HIGH · 1.5h · Impact: High** — Build `/v1/predict/wc2026/tournament` endpoint — return full bracket simulation results with probability of reaching each round (R32, R16, QF, SF, Final, Win) for all 48 teams
   > Gives judges an API endpoint that is genuinely useful, well-designed, and demonstrates production thinking beyond the minimum.
 
-- [ ] 🔵 **MEDIUM · 1h · Impact: Medium** — Add historical WC performance context to team rankings — show average round reached 1990–2022 alongside CONFLUX score — lets judges see whether the model aligns with historical performance or is finding something new
+- [x] 🔵 **MEDIUM · 1h · Impact: Medium** — Add historical WC performance context to team rankings — show average round reached 1990–2022 alongside CONFLUX score — lets judges see whether the model aligns with historical performance or is finding something new
   > Context makes rankings meaningful. Pure numbers without reference points are hard to evaluate.
 
 ---
@@ -114,7 +114,7 @@
 ## Phase 4 — UI Polish and Demo Flow
 > **First impressions are disproportionately weighted. The dashboard landing page and first 60 seconds of video do most of the work.**
 
-- [ ] 🟠 **HIGH · 1h · Impact: High** — Redesign dashboard landing — move DIVERGENCE ALERTS section to the top above the leaderboard table — lead with your unique insight, not a ranked list every competitor has
+- [x] 🟠 **HIGH · 1h · Impact: High** — Redesign dashboard landing — move DIVERGENCE ALERTS section to the top above the leaderboard table — lead with your unique insight, not a ranked list every competitor has
   > First impression matters more than the depth of the app. Lead with what makes you different.
 
 - [ ] 🟠 **HIGH · 30m · Impact: High** — Add loading skeleton screens to all views — replace "Scanning..." and "Syncing..." text with animated placeholder cards that match the final layout

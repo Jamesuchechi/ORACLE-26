@@ -17,7 +17,8 @@ import {
   Landmark,
   Users,
   Menu,
-  X
+  X,
+  Trophy
 } from 'lucide-react';
 
 import { useIntelligence } from './hooks/useIntelligence';
@@ -95,8 +96,15 @@ const Shell = ({ children, briefing, currentView, onViewChange }) => (
                   onClick={() => onViewChange('dashboard')}
                 />
                 <NavItem 
+                  icon={<Trophy size={14}/>} 
+                  label="Bracket Simulator" 
+                  active={currentView === 'bracket'} 
+                  badge="PRO" 
+                  onClick={() => onViewChange('bracket')}
+                />
+                <NavItem 
                   icon={<Swords size={14}/>} 
-                  label="Match Predictor" 
+                  label="Tactical Matchup" 
                   active={currentView === 'simulator'} 
                   badge="LIVE" 
                   onClick={() => onViewChange('simulator')}
@@ -232,6 +240,7 @@ import SocialView from './views/Social';
 import TeamDetail from './views/TeamDetail';
 import FusionView from './views/Fusion';
 import AlphaView from './views/Alpha';
+import SimulatorView from './views/SimulatorView';
 
 // Main App Component
 const App = () => {
@@ -267,6 +276,17 @@ const App = () => {
             onTeamClick={setSelectedTeam}
           />
         );
+      case 'bracket':
+        return (
+          <motion.div 
+            key="bracket"
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -20 }}
+          >
+            <SimulatorView />
+          </motion.div>
+        );
       case 'simulator':
         return (
           <motion.div 
@@ -299,7 +319,8 @@ const App = () => {
   const getHeaderInfo = () => {
     switch (view) {
       case 'dashboard': return { v: 'I', title: 'World Cup 2026 Simulation', desc: 'Multi-signal fusion engine analyzing the 48-team field across sports performance, prediction markets, macro-economics, and climate resilience.' };
-      case 'simulator': return { v: 'I', title: 'Conflux Match Predictor', desc: 'Simulate specific matchups by choosing two teams and a venue.' };
+      case 'bracket': return { v: 'I', title: 'Tournament Bracket Simulator', desc: 'Monte Carlo simulation of the full 12-group tournament based on conflux signals.' };
+      case 'simulator': return { v: 'I', title: 'Tactical Matchup Predictor', desc: 'Simulate specific matchups by choosing two teams and a venue.' };
       case 'markets': return { v: 'II', title: 'Market Calibration', desc: 'Real-time prediction market signal analysis and alpha detection.' };
       case 'finance': return { v: 'III', title: 'Finance & Economics', desc: 'Macro-economic indicators and financial signals integrated into the conflux engine.' };
       case 'climate': return { v: 'IV', title: 'Climate & Energy', desc: 'Regional climate risk assessment and venue-specific environmental stressors.' };
@@ -389,7 +410,7 @@ const AlphaRadar = ({ alpha, rankings }) => {
         <Zap size={12} className="text-teal" /> Alpha Radar
       </h3>
       <div className="space-y-3">
-        {alpha?.value.map((item, idx) => (
+        {alpha?.value?.map((item, idx) => (
           <AlphaItem 
             key={`value-${item.subject}-${idx}`} 
             item={item} 
@@ -399,7 +420,7 @@ const AlphaRadar = ({ alpha, rankings }) => {
             onToggle={() => setExpandedTeam(expandedTeam === item.subject ? null : item.subject)}
           />
         ))}
-        {alpha?.hype.map((item, idx) => (
+        {alpha?.hype?.map((item, idx) => (
           <AlphaItem 
             key={`hype-${item.subject}-${idx}`} 
             item={item} 

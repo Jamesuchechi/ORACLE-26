@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Swords, Shield, Zap, TrendingUp, CloudRain, MapPin, Activity } from 'lucide-react';
+import { Swords, Shield, Zap, TrendingUp, CloudRain, MapPin, Activity, AlertTriangle } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import { getFlagUrl } from '../utils/flags';
 
@@ -10,18 +10,32 @@ const MatchPredictor = ({ rankings, venues, onPredict }) => {
   const [venue, setVenue] = useState('MetLife Stadium');
   const [prediction, setPrediction] = useState(null);
   const [simulating, setSimulating] = useState(false);
+  const [weights, setWeights] = useState({
+    sports: 0.4,
+    markets: 0.25,
+    finance: 0.15,
+    climate: 0.1,
+    social: 0.1
+  });
 
   const handleSimulate = async () => {
     if (!team1 || !team2 || team1 === team2) return;
     setSimulating(true);
-    setPrediction(null);
-    
-    // Artificial delay for "Reasoning" feel
-    setTimeout(async () => {
-      const res = await onPredict(team1, team2, venue);
-      setPrediction(res);
-      setSimulating(false);
-    }, 1200);
+    // Don't clear prediction immediately to allow comparison
+    const res = await onPredict(team1, team2, venue, weights);
+    setPrediction(res);
+    setSimulating(false);
+  };
+
+  // Re-simulate when weights change and we already have a prediction
+  useEffect(() => {
+    if (prediction && !simulating) {
+      handleSimulate();
+    }
+  }, [weights]);
+
+  const handleWeightChange = (key, val) => {
+    setWeights(prev => ({ ...prev, [key]: parseFloat(val) }));
   };
 
   const getTeam = (name) => rankings.find(r => r.subject === name);
@@ -30,8 +44,20 @@ const MatchPredictor = ({ rankings, venues, onPredict }) => {
     <div className="terminal-card bg-bg1/40 border-white/5 space-y-8">
       <div className="flex justify-between items-center">
         <h3 className="text-[10px] font-mono font-bold text-white/40 tracking-[0.2em] uppercase flex items-center gap-2">
-          <Swords size={12} className="text-amber" /> Conflux Match Simulator
+          <Swords size={12} className="text-amber" /> Tactical Matchup Predictor
         </h3>
+        
+        {prediction?.market_context?.is_upset_alert && (
+          <motion.div 
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            className="flex items-center gap-2 px-3 py-1 rounded-full bg-red/20 border border-red/40 text-red text-[10px] font-bold uppercase tracking-widest animate-pulse"
+          >
+            <AlertTriangle size={12} />
+            Upset Alert: {prediction.market_context.divergence_driver} Divergence
+          </motion.div>
+        )}
+
         <div className="flex items-center gap-2 text-[9px] font-mono text-white/20">
           <MapPin size={10} />
           <select 
@@ -42,6 +68,25 @@ const MatchPredictor = ({ rankings, venues, onPredict }) => {
             {venues.map(v => <option key={v.venue} value={v.venue} className="bg-bg1">{v.city} ({v.venue})</option>)}
           </select>
         </div>
+      </div>
+
+      {/* Signal Weight Sensitivity Sliders */}
+      <div className="grid grid-cols-2 md:grid-cols-5 gap-4 p-4 rounded-xl bg-white/[0.02] border border-white/5">
+        {Object.entries(weights).map(([key, val]) => (
+          <div key={key} className="space-y-2">
+            <div className="flex justify-between items-center">
+              <label className="text-[8px] font-mono text-white/40 uppercase tracking-widest">{key}</label>
+              <span className="text-[8px] font-mono text-amber">{(val * 100).toFixed(0)}%</span>
+            </div>
+            <input 
+              type="range" 
+              min="0" max="1" step="0.05" 
+              value={val} 
+              onChange={(e) => handleWeightChange(key, e.target.value)}
+              className="w-full h-1 bg-white/10 rounded-lg appearance-none cursor-pointer accent-amber"
+            />
+          </div>
+        ))}
       </div>
 
       <div className="flex flex-col lg:grid lg:grid-cols-11 gap-6 lg:gap-4 items-center">
@@ -115,7 +160,7 @@ const MatchPredictor = ({ rankings, venues, onPredict }) => {
           `}
         >
           {simulating ? <div className="w-4 h-4 border-2 border-bg/20 border-t-bg rounded-full animate-spin" /> : <Zap size={14} />}
-          {simulating ? 'Processing...' : 'Run Simulation'}
+          {simulating ? 'Synthesizing...' : 'Run Simulation'}
         </button>
       </div>
 
@@ -128,9 +173,21 @@ const MatchPredictor = ({ rankings, venues, onPredict }) => {
             className="pt-8 border-t border-white/5"
           >
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 lg:gap-6">
-              <ProbCard label="WIN" team={team1} prob={prediction.win_prob} color="text-teal" />
+              <ProbCard 
+                label="CONFLUX WIN" 
+                team={team1} 
+                prob={prediction.win_prob} 
+                marketProb={prediction.market_context?.team1_prob}
+                color="text-teal" 
+              />
               <ProbCard label="DRAW" team="NEUTRAL" prob={prediction.draw_prob} color="text-white/40" />
-              <ProbCard label="WIN" team={team2} prob={prediction.loss_prob} color="text-blue" />
+              <ProbCard 
+                label="CONFLUX WIN" 
+                team={team2} 
+                prob={prediction.loss_prob} 
+                marketProb={prediction.market_context?.team2_prob}
+                color="text-blue" 
+              />
             </div>
             
             <div className="mt-8 grid grid-cols-1 gap-4">

@@ -1,10 +1,10 @@
 import React from "react";
 import { motion } from "framer-motion";
-import { CloudRain, Thermometer, Wind } from "lucide-react";
+import { CloudRain } from "lucide-react";
 
 const VenueRiskGrid = ({ venues }) => {
   return (
-    <div className="terminal-card bg-bg1/40 border-white/5 h-full">
+    <div className="terminal-card bg-bg1/40 border-white/5">
       <div className="flex justify-between items-center mb-6">
         <h3 className="text-[10px] font-mono font-bold text-white/40 tracking-[0.2em] uppercase flex items-center gap-2">
           <CloudRain size={12} className="text-red" /> Venue Stress Map

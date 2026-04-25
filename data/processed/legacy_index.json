@@ -1,0 +1,357 @@
+{
+  "Argentina": {
+    "best_finish": "Final",
+    "wc_appearances": 9,
+    "total_wc_games": 47
+  },
+  "Italy": {
+    "best_finish": "Final",
+    "wc_appearances": 7,
+    "total_wc_games": 36
+  },
+  "Russia": {
+    "best_finish": "Quarter-Final",
+    "wc_appearances": 5,
+    "total_wc_games": 17
+  },
+  "United Arab Emirates": {
+    "best_finish": "Group Stage",
+    "wc_appearances": 1,
+    "total_wc_games": 3
+  },
+  "Brazil": {
+    "best_finish": "Final",
+    "wc_appearances": 9,
+    "total_wc_games": 52
+  },
+  "Germany": {
+    "best_finish": "Final",
+    "wc_appearances": 9,
+    "total_wc_games": 51
+  },
+  "United States": {
+    "best_finish": "Quarter-Final",
+    "wc_appearances": 8,
+    "total_wc_games": 30
+  },
+  "Costa Rica": {
+    "best_finish": "Quarter-Final",
+    "wc_appearances": 6,
+    "total_wc_games": 21
+  },
+  "England": {
+    "best_finish": "Final",
+    "wc_appearances": 8,
+    "total_wc_games": 40
+  },
+  "Belgium": {
+    "best_finish": "Final",
+    "wc_appearances": 7,
+    "total_wc_games": 30
+  },
+  "Netherlands": {
+    "best_finish": "Final",
+    "wc_appearances": 7,
+    "total_wc_games": 39
+  },
+  "Uruguay": {
+    "best_finish": "Final",
+    "wc_appearances": 6,
+    "total_wc_games": 26
+  },
+  "Cameroon": {
+    "best_finish": "Quarter-Final",
+    "wc_appearances": 7,
+    "total_wc_games": 23
+  },
+  "Yugoslavia": {
+    "best_finish": "Quarter-Final",
+    "wc_appearances": 1,
+    "total_wc_games": 5
+  },
+  "Austria": {
+    "best_finish": "Group Stage",
+    "wc_appearances": 2,
+    "total_wc_games": 6
+  },
+  "Sweden": {
+    "best_finish": "Final",
+    "wc_appearances": 5,
+    "total_wc_games": 23
+  },
+  "Republic of Ireland": {
+    "best_finish": "Quarter-Final",
+    "wc_appearances": 3,
+    "total_wc_games": 13
+  },
+  "South Korea": {
+    "best_finish": "Final",
+    "wc_appearances": 9,
+    "total_wc_games": 33
+  },
+  "Czechoslovakia": {
+    "best_finish": "Quarter-Final",
+    "wc_appearances": 1,
+    "total_wc_games": 5
+  },
+  "Spain": {
+    "best_finish": "Final",
+    "wc_appearances": 9,
+    "total_wc_games": 39
+  },
+  "Colombia": {
+    "best_finish": "Quarter-Final",
+    "wc_appearances": 5,
+    "total_wc_games": 19
+  },
+  "Norway": {
+    "best_finish": "Round of 16",
+    "wc_appearances": 2,
+    "total_wc_games": 7
+  },
+  "Nigeria": {
+    "best_finish": "Round of 16",
+    "wc_appearances": 6,
+    "total_wc_games": 21
+  },
+  "Romania": {
+    "best_finish": "Quarter-Final",
+    "wc_appearances": 3,
+    "total_wc_games": 13
+  },
+  "Mexico": {
+    "best_finish": "Round of 16",
+    "wc_appearances": 8,
+    "total_wc_games": 31
+  },
+  "Saudi Arabia": {
+    "best_finish": "Round of 16",
+    "wc_appearances": 6,
+    "total_wc_games": 19
+  },
+  "Switzerland": {
+    "best_finish": "Round of 16",
+    "wc_appearances": 6,
+    "total_wc_games": 23
+  },
+  "Bulgaria": {
+    "best_finish": "Final",
+    "wc_appearances": 2,
+    "total_wc_games": 10
+  },
+  "Bolivia": {
+    "best_finish": "Group Stage",
+    "wc_appearances": 1,
+    "total_wc_games": 3
+  },
+  "Morocco": {
+    "best_finish": "Final",
+    "wc_appearances": 4,
+    "total_wc_games": 16
+  },
+  "Greece": {
+    "best_finish": "Round of 16",
+    "wc_appearances": 3,
+    "total_wc_games": 10
+  },
+  "France": {
+    "best_finish": "Final",
+    "wc_appearances": 7,
+    "total_wc_games": 39
+  },
+  "Paraguay": {
+    "best_finish": "Quarter-Final",
+    "wc_appearances": 4,
+    "total_wc_games": 16
+  },
+  "Jamaica": {
+    "best_finish": "Group Stage",
+    "wc_appearances": 1,
+    "total_wc_games": 3
+  },
+  "Serbia": {
+    "best_finish": "Round of 16",
+    "wc_appearances": 5,
+    "total_wc_games": 16
+  },
+  "Scotland": {
+    "best_finish": "Group Stage",
+    "wc_appearances": 2,
+    "total_wc_games": 6
+  },
+  "Chile": {
+    "best_finish": "Round of 16",
+    "wc_appearances": 3,
+    "total_wc_games": 12
+  },
+  "South Africa": {
+    "best_finish": "Group Stage",
+    "wc_appearances": 3,
+    "total_wc_games": 9
+  },
+  "Japan": {
+    "best_finish": "Round of 16",
+    "wc_appearances": 7,
+    "total_wc_games": 25
+  },
+  "Croatia": {
+    "best_finish": "Final",
+    "wc_appearances": 6,
+    "total_wc_games": 30
+  },
+  "China PR": {
+    "best_finish": "Group Stage",
+    "wc_appearances": 1,
+    "total_wc_games": 3
+  },
+  "Denmark": {
+    "best_finish": "Quarter-Final",
+    "wc_appearances": 5,
+    "total_wc_games": 19
+  },
+  "Portugal": {
+    "best_finish": "Final",
+    "wc_appearances": 6,
+    "total_wc_games": 26
+  },
+  "Tunisia": {
+    "best_finish": "Group Stage",
+    "wc_appearances": 5,
+    "total_wc_games": 15
+  },
+  "Senegal": {
+    "best_finish": "Quarter-Final",
+    "wc_appearances": 3,
+    "total_wc_games": 12
+  },
+  "Slovenia": {
+    "best_finish": "Group Stage",
+    "wc_appearances": 2,
+    "total_wc_games": 6
+  },
+  "Turkey": {
+    "best_finish": "Final",
+    "wc_appearances": 1,
+    "total_wc_games": 7
+  },
+  "Ecuador": {
+    "best_finish": "Round of 16",
+    "wc_appearances": 4,
+    "total_wc_games": 13
+  },
+  "Poland": {
+    "best_finish": "Round of 16",
+    "wc_appearances": 4,
+    "total_wc_games": 13
+  },
+  "Trinidad and Tobago": {
+    "best_finish": "Group Stage",
+    "wc_appearances": 1,
+    "total_wc_games": 3
+  },
+  "Angola": {
+    "best_finish": "Group Stage",
+    "wc_appearances": 1,
+    "total_wc_games": 3
+  },
+  "Australia": {
+    "best_finish": "Round of 16",
+    "wc_appearances": 5,
+    "total_wc_games": 17
+  },
+  "Czech Republic": {
+    "best_finish": "Group Stage",
+    "wc_appearances": 1,
+    "total_wc_games": 3
+  },
+  "Togo": {
+    "best_finish": "Group Stage",
+    "wc_appearances": 1,
+    "total_wc_games": 3
+  },
+  "Iran": {
+    "best_finish": "Group Stage",
+    "wc_appearances": 5,
+    "total_wc_games": 15
+  },
+  "Ivory Coast": {
+    "best_finish": "Group Stage",
+    "wc_appearances": 3,
+    "total_wc_games": 9
+  },
+  "Ghana": {
+    "best_finish": "Quarter-Final",
+    "wc_appearances": 4,
+    "total_wc_games": 15
+  },
+  "Ukraine": {
+    "best_finish": "Quarter-Final",
+    "wc_appearances": 1,
+    "total_wc_games": 5
+  },
+  "Algeria": {
+    "best_finish": "Round of 16",
+    "wc_appearances": 2,
+    "total_wc_games": 7
+  },
+  "New Zealand": {
+    "best_finish": "Group Stage",
+    "wc_appearances": 1,
+    "total_wc_games": 3
+  },
+  "Honduras": {
+    "best_finish": "Group Stage",
+    "wc_appearances": 2,
+    "total_wc_games": 6
+  },
+  "Slovakia": {
+    "best_finish": "Round of 16",
+    "wc_appearances": 1,
+    "total_wc_games": 4
+  },
+  "North Korea": {
+    "best_finish": "Group Stage",
+    "wc_appearances": 1,
+    "total_wc_games": 3
+  },
+  "Bosnia and Herzegovina": {
+    "best_finish": "Group Stage",
+    "wc_appearances": 1,
+    "total_wc_games": 3
+  },
+  "Egypt": {
+    "best_finish": "Group Stage",
+    "wc_appearances": 2,
+    "total_wc_games": 6
+  },
+  "Peru": {
+    "best_finish": "Group Stage",
+    "wc_appearances": 1,
+    "total_wc_games": 3
+  },
+  "Iceland": {
+    "best_finish": "Group Stage",
+    "wc_appearances": 1,
+    "total_wc_games": 3
+  },
+  "Panama": {
+    "best_finish": "Group Stage",
+    "wc_appearances": 1,
+    "total_wc_games": 3
+  },
+  "Qatar": {
+    "best_finish": "Group Stage",
+    "wc_appearances": 1,
+    "total_wc_games": 3
+  },
+  "Wales": {
+    "best_finish": "Group Stage",
+    "wc_appearances": 1,
+    "total_wc_games": 3
+  },
+  "Canada": {
+    "best_finish": "Group Stage",
+    "wc_appearances": 1,
+    "total_wc_games": 3
+  }
+}

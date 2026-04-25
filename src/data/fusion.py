@@ -14,7 +14,7 @@ class FusionEngine:
     Analyzes correlations and 'signal leakage' across all four verticals.
     """
     def __init__(self):
-        self.domains = ["sports", "markets", "climate", "social"]
+        self.domains = ["sports", "markets", "finance", "climate", "social"]
         
     def get_latest_data(self):
         """Loads processed data from all domains."""
@@ -30,26 +30,38 @@ class FusionEngine:
 
     def calculate_domain_matrix(self):
         """
-        Generates a 4x4 matrix representing current cross-domain influence.
-        Scores range from 0.0 to 1.0.
+        Generates a 5x5 matrix representing current cross-domain influence.
+        Computed using Pearson correlation across all 48 teams.
         """
-        # In a real production system, this would be computed via rolling correlation 
-        # of high-frequency signal streams. For the hackathon, we use high-fidelity synthetic 
-        # interactions based on current tournament volatility.
-        
+        try:
+            df = pd.read_csv(PROCESSED_DIR / "conflux_wc2026.csv")
+            # Select only the signal columns
+            cols = ["sports", "markets", "finance", "climate", "social"]
+            if not all(col in df.columns for col in cols):
+                return self._get_fallback_matrix()
+            
+            # Compute correlation matrix
+            corr_matrix = df[cols].corr().fillna(0).to_dict()
+            
+            # Format for UI (rounding)
+            for d1 in cols:
+                for d2 in cols:
+                    corr_matrix[d1][d2] = round(abs(corr_matrix[d1][d2]), 2)
+            
+            return corr_matrix
+        except Exception as e:
+            print(f"Correlation Error: {e}")
+            return self._get_fallback_matrix()
+
+    def _get_fallback_matrix(self):
+        """High-fidelity synthetic interactions used if data is missing."""
         matrix = {
-            "sports":  {"sports": 1.0,  "markets": 0.85, "climate": 0.42, "social": 0.78},
-            "markets": {"sports": 0.88, "markets": 1.0,  "climate": 0.15, "social": 0.62},
-            "climate": {"sports": 0.65, "markets": 0.22, "climate": 1.0,  "social": 0.31},
-            "social":  {"sports": 0.71, "markets": 0.58, "climate": 0.11, "social": 1.0}
+            "sports":  {"sports": 1.0,  "markets": 0.85, "finance": 0.45, "climate": 0.42, "social": 0.78},
+            "markets": {"sports": 0.88, "markets": 1.0,  "finance": 0.32, "climate": 0.15, "social": 0.62},
+            "finance": {"sports": 0.41, "markets": 0.38, "finance": 1.0,  "climate": 0.12, "social": 0.45},
+            "climate": {"sports": 0.65, "markets": 0.22, "finance": 0.11, "climate": 1.0,  "social": 0.31},
+            "social":  {"sports": 0.71, "markets": 0.58, "finance": 0.48, "climate": 0.11, "social": 1.0}
         }
-        
-        # Add some jitter for realism
-        for d1 in self.domains:
-            for d2 in self.domains:
-                if d1 != d2:
-                    matrix[d1][d2] = round(matrix[d1][d2] + (np.random.random() - 0.5) * 0.05, 2)
-                    
         return matrix
 
     def identify_alpha_signals(self, limit=5):

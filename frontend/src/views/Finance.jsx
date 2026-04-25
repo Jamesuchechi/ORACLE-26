@@ -17,19 +17,29 @@ const FinanceView = () => {
   const [selectedTeam, setSelectedTeam] = useState(null);
 
   useEffect(() => {
-    axios.get('/v1/finance/dashboard')
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 10000);
+
+    axios.get('/v1/finance/dashboard', { signal: controller.signal })
       .then(res => {
         setData(res.data);
         if (res.data.highlights?.length > 0) {
           setSelectedTeam(res.data.highlights[0].team);
         }
         setLoading(false);
+        clearTimeout(timeoutId);
       })
       .catch(err => {
+        if (axios.isCancel(err)) return; // Ignore intentional aborts on unmount
         console.error(err);
-        setError(err.code === 'ECONNABORTED' ? 'Connection Timeout' : 'Macro Engine Offline');
+        setError(err.name === 'AbortError' ? 'Macro Engine Timeout (10s)' : 'Macro Engine Offline');
         setLoading(false);
       });
+
+    return () => {
+      controller.abort();
+      clearTimeout(timeoutId);
+    };
   }, []);
 
   if (loading) return <div className="p-12 text-center font-mono text-white/20 animate-pulse uppercase tracking-widest text-xs">Syncing Macro-Economic Signals...</div>;

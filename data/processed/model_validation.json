@@ -1,0 +1,38 @@
+{
+    "sample_size": 128,
+    "elo_accuracy": 0.2812,
+    "conflux_accuracy": 0.375,
+    "accuracy_lift": 0.0938,
+    "brier_score_elo": 0.2284,
+    "brier_score_conflux": 0.2231,
+    "upsets_detected_conflux": 0,
+    "total_upsets": 0,
+    "upset_detection_rate": NaN,
+    "calibration": [
+        {
+            "tier": "Very Low",
+            "range": "0%-20%",
+            "sample_size": 3,
+            "avg_predicted": 0.1837,
+            "actual_win_rate": 0.0,
+            "reliability_score": 0.8163
+        },
+        {
+            "tier": "Low",
+            "range": "20%-40%",
+            "sample_size": 81,
+            "avg_predicted": 0.3189,
+            "actual_win_rate": 0.3086,
+            "reliability_score": 0.9898
+        },
+        {
+            "tier": "Moderate",
+            "range": "40%-60%",
+            "sample_size": 44,
+            "avg_predicted": 0.4421,
+            "actual_win_rate": 0.6364,
+            "reliability_score": 0.8058
+        }
+    ],
+    "timestamp": "2026-04-25T21:59:32.997226"
+}

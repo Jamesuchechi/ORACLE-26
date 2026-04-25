@@ -1,9 +1,9 @@
 topic,category,market_proxy,trend_score,momentum_score,reddit_signal,tipping_score,is_tipping,social_signal,interpretation
 solar_energy,technology,TAN,0.9,0.5,0.4,0.66,False,0.66,Building momentum: solar_energy scores 66% on the CONFLUX cultural moment detector.
-pickleball,sports,,0.43,1.0,0.4,0.6235,False,0.6235,Building momentum: pickleball scores 62% on the CONFLUX cultural moment detector.
+pickleball,sports,,0.6822,0.5,0.4,0.562,False,0.562,Building momentum: pickleball scores 56% on the CONFLUX cultural moment detector.
 plant_based_food,food,BYND,0.68,0.5,0.4,0.561,False,0.561,Building momentum: plant_based_food scores 56% on the CONFLUX cultural moment detector.
 ai_agents,technology,BOTZ,0.39,0.5,0.4,0.4305,False,0.4305,Building momentum: ai_agents scores 43% on the CONFLUX cultural moment detector.
-ev_adoption,automotive,DRIV,0.76,0.0,0.4,0.422,False,0.422,Building momentum: ev_adoption scores 42% on the CONFLUX cultural moment detector.
 weight_loss_drugs,health,NVO,0.36,0.5,0.4,0.417,False,0.417,Building momentum: weight_loss_drugs scores 42% on the CONFLUX cultural moment detector.
-quantum_computing,technology,QTUM,0.56,0.0,0.4,0.332,False,0.332,Building momentum: quantum_computing scores 33% on the CONFLUX cultural moment detector.
-space_tourism,technology,SPCE,0.06,0.402,0.4,0.2477,False,0.2477,Building momentum: space_tourism scores 25% on the CONFLUX cultural moment detector.
+quantum_computing,technology,QTUM,0.011,0.5,0.4,0.2599,False,0.2599,Building momentum: quantum_computing scores 26% on the CONFLUX cultural moment detector.
+space_tourism,technology,SPCE,0.011,0.5,0.4,0.2599,False,0.2599,Building momentum: space_tourism scores 26% on the CONFLUX cultural moment detector.
+ev_adoption,automotive,DRIV,0.011,0.5,0.4,0.2599,False,0.2599,Building momentum: ev_adoption scores 26% on the CONFLUX cultural moment detector.

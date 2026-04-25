@@ -14,27 +14,42 @@ const ClimateView = () => {
   const [loadingImpact, setLoadingImpact] = useState(false);
 
   useEffect(() => {
-    axios.get('/v1/predict/climate/venues')
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 10000);
+
+    axios.get('/v1/predict/climate/venues', { signal: controller.signal })
       .then(res => {
         setData({ venue_risks: res.data });
         if (res.data.length > 0) handleVenueSelect(res.data[0]);
         setLoading(false);
+        clearTimeout(timeoutId);
       })
       .catch(err => {
+        if (axios.isCancel(err)) return;
         console.error(err);
-        setError(err.code === 'ECONNABORTED' ? 'Satellite Link Timeout' : 'Atmospheric Engine Offline');
+        setError(err.name === 'AbortError' ? 'Satellite Link Timeout (10s)' : 'Atmospheric Engine Offline');
         setLoading(false);
       });
+
+    return () => {
+      controller.abort();
+      clearTimeout(timeoutId);
+    };
   }, []);
 
   const handleVenueSelect = async (venue) => {
     setSelectedVenue(venue);
     setLoadingImpact(true);
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 8000); // Shorter for detail view
+    
     try {
-      const res = await axios.get(`/v1/climate/venue/${venue.venue}/impact?team=Argentina`);
+      const res = await axios.get(`/v1/climate/venue/${venue.venue}/impact?team=Argentina`, { signal: controller.signal });
       setImpactData(res.data);
       setLoadingImpact(false);
+      clearTimeout(timeoutId);
     } catch (err) {
+      if (axios.isCancel(err)) return;
       console.error(err);
       setLoadingImpact(false);
     }

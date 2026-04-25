@@ -106,11 +106,19 @@ export const useIntelligence = () => {
     setWeights(prev => ({ ...prev, [key]: val }));
   };
 
-  const predictMatch = async (team1, team2, venue) => {
+  const predictMatch = async (team1, team2, venue, customWeights = null) => {
     try {
+      const activeWeights = customWeights || weights;
+      // Ensure weights are prefixed with w_ for the API
+      const weightedParams = {};
+      Object.entries(activeWeights).forEach(([k, v]) => {
+        const key = k.startsWith('w_') ? k : `w_${k}`;
+        weightedParams[key] = v.toString();
+      });
+
       const params = new URLSearchParams({
         team1, team2, venue,
-        ...Object.entries(weights).reduce((acc, [k, v]) => ({ ...acc, [k]: v.toString() }), {})
+        ...weightedParams
       });
       const response = await axios.get(`/v1/predict/wc2026/match?${params}`);
       return response.data;

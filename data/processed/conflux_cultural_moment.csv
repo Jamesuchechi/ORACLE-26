@@ -1,9 +1,9 @@
 topic,category,market_proxy,tipping_score,is_tipping,conflux_score,interpretation
-solar_energy,technology,TAN,0.72,True,0.599,TIPPING POINT DETECTED: solar_energy scores 72% on the CONFLUX cultural moment detector.
-ev_adoption,automotive,DRIV,0.637,False,0.56165,Building momentum: ev_adoption scores 64% on the CONFLUX cultural moment detector.
-plant_based_food,food,BYND,0.581,False,0.5364500000000001,Building momentum: plant_based_food scores 58% on the CONFLUX cultural moment detector.
-quantum_computing,technology,QTUM,0.567,False,0.53015,Building momentum: quantum_computing scores 57% on the CONFLUX cultural moment detector.
-pickleball,sports,,0.4985,False,0.499325,Building momentum: pickleball scores 50% on the CONFLUX cultural moment detector.
-ai_agents,technology,BOTZ,0.4905,False,0.495725,Building momentum: ai_agents scores 49% on the CONFLUX cultural moment detector.
-weight_loss_drugs,health,NVO,0.447,False,0.47615,Building momentum: weight_loss_drugs scores 45% on the CONFLUX cultural moment detector.
-space_tourism,technology,SPCE,0.342,False,0.42890000000000006,Building momentum: space_tourism scores 34% on the CONFLUX cultural moment detector.
+solar_energy,technology,TAN,0.66,False,0.5720000000000001,Building momentum: solar_energy scores 66% on the CONFLUX cultural moment detector.
+pickleball,sports,,0.562,False,0.5279,Building momentum: pickleball scores 56% on the CONFLUX cultural moment detector.
+plant_based_food,food,BYND,0.561,False,0.52745,Building momentum: plant_based_food scores 56% on the CONFLUX cultural moment detector.
+ai_agents,technology,BOTZ,0.4305,False,0.46872500000000006,Building momentum: ai_agents scores 43% on the CONFLUX cultural moment detector.
+weight_loss_drugs,health,NVO,0.417,False,0.46265,Building momentum: weight_loss_drugs scores 42% on the CONFLUX cultural moment detector.
+quantum_computing,technology,QTUM,0.2599,False,0.39195500000000005,Building momentum: quantum_computing scores 26% on the CONFLUX cultural moment detector.
+space_tourism,technology,SPCE,0.2599,False,0.39195500000000005,Building momentum: space_tourism scores 26% on the CONFLUX cultural moment detector.
+ev_adoption,automotive,DRIV,0.2599,False,0.39195500000000005,Building momentum: ev_adoption scores 26% on the CONFLUX cultural moment detector.

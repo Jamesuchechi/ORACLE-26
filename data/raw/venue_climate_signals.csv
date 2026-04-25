@@ -4,14 +4,14 @@ Estadio Akron,Guadalajara,29.7,75.4,1566,0.12,0.07,0.8184,synthetic-latitude-heu
 Estadio BBVA,Monterrey,27.7,71.5,540,0.07,0.03,0.9021,synthetic-latitude-heuristic
 Empower Field,"Denver, CO",22.1,60.2,1609,0.03,0.07,0.9021,synthetic-latitude-heuristic
 AT&T Stadium,"Arlington, TX",24.9,65.8,185,0.07,0.0,0.93,synthetic-latitude-heuristic
-Hard Rock Stadium,"Miami Gardens, FL",27.6,71.2,2,0.07,0.0,0.93,synthetic-latitude-heuristic
 NRG Stadium,"Houston, TX",26.1,68.3,15,0.07,0.0,0.93,synthetic-latitude-heuristic
-Levi's Stadium,"Santa Clara, CA",23.0,62.1,15,0.03,0.0,0.97,synthetic-latitude-heuristic
-Lincoln Financial Field,"Philadelphia, PA",22.0,60.1,8,0.03,0.0,0.97,synthetic-latitude-heuristic
-Gillette Stadium,"Foxborough, MA",21.2,58.3,30,0.03,0.0,0.97,synthetic-latitude-heuristic
+Hard Rock Stadium,"Miami Gardens, FL",27.6,71.2,2,0.07,0.0,0.93,synthetic-latitude-heuristic
 SoFi Stadium,"Inglewood, CA",24.4,64.8,30,0.03,0.0,0.97,synthetic-latitude-heuristic
+Gillette Stadium,"Foxborough, MA",21.2,58.3,30,0.03,0.0,0.97,synthetic-latitude-heuristic
 MetLife Stadium,"East Rutherford, NJ",21.7,59.3,0,0.03,0.0,0.97,synthetic-latitude-heuristic
+Levi's Stadium,"Santa Clara, CA",23.0,62.1,15,0.03,0.0,0.97,synthetic-latitude-heuristic
 Arrowhead Stadium,"Kansas City, MO",22.4,60.8,290,0.03,0.0,0.97,synthetic-latitude-heuristic
-Stade Olympique,"Montreal, QC",19.8,55.6,30,0.03,0.0,0.97,synthetic-latitude-heuristic
-BMO Field,"Toronto, ON",20.5,57.1,76,0.03,0.0,0.97,synthetic-latitude-heuristic
 BC Place,"Vancouver, BC",18.3,52.6,5,0.03,0.0,0.97,synthetic-latitude-heuristic
+BMO Field,"Toronto, ON",20.5,57.1,76,0.03,0.0,0.97,synthetic-latitude-heuristic
+Lincoln Financial Field,"Philadelphia, PA",22.0,60.1,8,0.03,0.0,0.97,synthetic-latitude-heuristic
+Stade Olympique,"Montreal, QC",19.8,55.6,30,0.03,0.0,0.97,synthetic-latitude-heuristic
