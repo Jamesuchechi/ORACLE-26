@@ -1,0 +1,1129 @@
+team1,team2,h2h_matches,h2h_win_rate_team1,h2h_draws
+Mexico,South Korea,3,0.833,1
+Mexico,Czechia,0,0.5,0
+Mexico,South Africa,0,0.5,0
+Mexico,USA,14,0.464,3
+Mexico,Australia,1,0.5,1
+Mexico,Paraguay,5,0.6,0
+Mexico,Turkey,1,1.0,0
+Mexico,Canada,6,0.667,2
+Mexico,Switzerland,1,0.0,0
+Mexico,Qatar,1,0.0,0
+Mexico,Bosnia,0,0.5,0
+Mexico,France,0,0.5,0
+Mexico,Morocco,0,0.5,0
+Mexico,Japan,2,0.75,1
+Mexico,Haiti,2,1.0,0
+Mexico,Spain,0,0.5,0
+Mexico,Nigeria,2,1.0,0
+Mexico,Serbia,0,0.5,0
+Mexico,New Caledonia,0,0.5,0
+Mexico,England,0,0.5,0
+Mexico,Senegal,0,0.5,0
+Mexico,DR Congo,0,0.5,0
+Mexico,Uzbekistan,1,0.5,1
+Mexico,Brazil,2,0.0,0
+Mexico,Colombia,3,0.0,0
+Mexico,Belgium,2,0.5,2
+Mexico,Saudi Arabia,2,1.0,0
+Mexico,Argentina,4,0.0,0
+Mexico,Ecuador,5,0.5,3
+Mexico,Croatia,2,0.0,0
+Mexico,Algeria,1,0.5,1
+Mexico,Portugal,3,0.333,2
+Mexico,Egypt,0,0.5,0
+Mexico,Iran,0,0.5,0
+Mexico,Suriname,3,1.0,0
+Mexico,Germany,3,0.5,1
+Mexico,Cameroon,1,0.5,1
+Mexico,Uruguay,5,0.3,1
+Mexico,Curacao,1,1.0,0
+Mexico,Netherlands,1,1.0,0
+Mexico,Tunisia,0,0.5,0
+Mexico,Chile,4,0.375,1
+Mexico,Iraq,1,1.0,0
+Mexico,Norway,0,0.5,0
+Mexico,Scotland,1,1.0,0
+Mexico,Austria,0,0.5,0
+Mexico,Jordan,0,0.5,0
+South Korea,Czechia,1,1.0,0
+South Korea,South Africa,0,0.5,0
+South Korea,USA,1,1.0,0
+South Korea,Australia,3,0.833,1
+South Korea,Paraguay,2,0.75,1
+South Korea,Turkey,0,0.5,0
+South Korea,Canada,1,1.0,0
+South Korea,Switzerland,0,0.5,0
+South Korea,Qatar,4,0.5,0
+South Korea,Bosnia,0,0.5,0
+South Korea,France,0,0.5,0
+South Korea,Morocco,1,0.0,0
+South Korea,Japan,4,0.5,0
+South Korea,Haiti,0,0.5,0
+South Korea,Spain,1,0.0,0
+South Korea,Nigeria,0,0.5,0
+South Korea,Serbia,1,0.5,1
+South Korea,New Caledonia,0,0.5,0
+South Korea,England,0,0.5,0
+South Korea,Senegal,1,0.0,0
+South Korea,DR Congo,0,0.5,0
+South Korea,Uzbekistan,3,0.833,1
+South Korea,Brazil,4,0.0,0
+South Korea,Colombia,3,0.833,1
+South Korea,Belgium,0,0.5,0
+South Korea,Saudi Arabia,3,0.667,2
+South Korea,Argentina,0,0.5,0
+South Korea,Ecuador,0,0.5,0
+South Korea,Croatia,0,0.5,0
+South Korea,Algeria,0,0.5,0
+South Korea,Portugal,1,1.0,0
+South Korea,Egypt,1,1.0,0
+South Korea,Iran,5,0.5,3
+South Korea,Suriname,0,0.5,0
+South Korea,Germany,1,1.0,0
+South Korea,Cameroon,1,1.0,0
+South Korea,Uruguay,3,0.5,1
+South Korea,Curacao,0,0.5,0
+South Korea,Netherlands,0,0.5,0
+South Korea,Tunisia,1,1.0,0
+South Korea,Chile,2,0.75,1
+South Korea,Iraq,6,0.833,2
+South Korea,Norway,0,0.5,0
+South Korea,Scotland,0,0.5,0
+South Korea,Austria,1,0.0,0
+South Korea,Jordan,4,0.5,2
+Czechia,South Africa,0,0.5,0
+Czechia,USA,0,0.5,0
+Czechia,Australia,1,0.0,0
+Czechia,Paraguay,0,0.5,0
+Czechia,Turkey,3,0.0,0
+Czechia,Canada,0,0.5,0
+Czechia,Switzerland,2,0.5,0
+Czechia,Qatar,1,1.0,0
+Czechia,Bosnia,0,0.5,0
+Czechia,France,0,0.5,0
+Czechia,Morocco,0,0.5,0
+Czechia,Japan,0,0.5,0
+Czechia,Haiti,0,0.5,0
+Czechia,Spain,3,0.167,1
+Czechia,Nigeria,1,1.0,0
+Czechia,Serbia,0,0.5,0
+Czechia,New Caledonia,0,0.5,0
+Czechia,England,3,0.333,0
+Czechia,Senegal,0,0.5,0
+Czechia,DR Congo,0,0.5,0
+Czechia,Uzbekistan,0,0.5,0
+Czechia,Brazil,1,0.0,0
+Czechia,Colombia,0,0.5,0
+Czechia,Belgium,3,0.167,1
+Czechia,Saudi Arabia,1,0.5,1
+Czechia,Argentina,0,0.5,0
+Czechia,Ecuador,0,0.5,0
+Czechia,Croatia,4,0.375,3
+Czechia,Algeria,0,0.5,0
+Czechia,Portugal,3,0.0,0
+Czechia,Egypt,0,0.5,0
+Czechia,Iran,0,0.5,0
+Czechia,Suriname,0,0.5,0
+Czechia,Germany,3,0.0,0
+Czechia,Cameroon,0,0.5,0
+Czechia,Uruguay,1,0.0,0
+Czechia,Curacao,0,0.5,0
+Czechia,Netherlands,1,1.0,0
+Czechia,Tunisia,0,0.5,0
+Czechia,Chile,0,0.5,0
+Czechia,Iraq,0,0.5,0
+Czechia,Norway,3,0.833,1
+Czechia,Scotland,3,0.333,0
+Czechia,Austria,0,0.5,0
+Czechia,Jordan,0,0.5,0
+South Africa,USA,0,0.5,0
+South Africa,Australia,0,0.5,0
+South Africa,Paraguay,1,0.5,1
+South Africa,Turkey,0,0.5,0
+South Africa,Canada,0,0.5,0
+South Africa,Switzerland,0,0.5,0
+South Africa,Qatar,0,0.5,0
+South Africa,Bosnia,0,0.5,0
+South Africa,France,1,0.0,0
+South Africa,Morocco,4,0.5,0
+South Africa,Japan,0,0.5,0
+South Africa,Haiti,0,0.5,0
+South Africa,Spain,0,0.5,0
+South Africa,Nigeria,6,0.5,4
+South Africa,Serbia,0,0.5,0
+South Africa,New Caledonia,0,0.5,0
+South Africa,England,0,0.5,0
+South Africa,Senegal,3,0.167,1
+South Africa,DR Congo,2,0.75,1
+South Africa,Uzbekistan,0,0.5,0
+South Africa,Brazil,0,0.5,0
+South Africa,Colombia,0,0.5,0
+South Africa,Belgium,0,0.5,0
+South Africa,Saudi Arabia,0,0.5,0
+South Africa,Argentina,0,0.5,0
+South Africa,Ecuador,0,0.5,0
+South Africa,Croatia,0,0.5,0
+South Africa,Algeria,1,0.5,1
+South Africa,Portugal,0,0.5,0
+South Africa,Egypt,3,0.667,0
+South Africa,Iran,0,0.5,0
+South Africa,Suriname,0,0.5,0
+South Africa,Germany,0,0.5,0
+South Africa,Cameroon,1,0.0,0
+South Africa,Uruguay,0,0.5,0
+South Africa,Curacao,0,0.5,0
+South Africa,Netherlands,0,0.5,0
+South Africa,Tunisia,1,0.5,1
+South Africa,Chile,0,0.5,0
+South Africa,Iraq,0,0.5,0
+South Africa,Norway,0,0.5,0
+South Africa,Scotland,0,0.5,0
+South Africa,Austria,0,0.5,0
+South Africa,Jordan,0,0.5,0
+USA,Australia,1,1.0,0
+USA,Paraguay,3,1.0,0
+USA,Turkey,1,0.0,0
+USA,Canada,9,0.444,2
+USA,Switzerland,2,0.0,0
+USA,Qatar,1,1.0,0
+USA,Bosnia,0,0.5,0
+USA,France,1,0.5,1
+USA,Morocco,1,1.0,0
+USA,Japan,2,0.5,0
+USA,Haiti,2,1.0,0
+USA,Spain,0,0.5,0
+USA,Nigeria,0,0.5,0
+USA,Serbia,2,0.25,1
+USA,New Caledonia,0,0.5,0
+USA,England,2,0.25,1
+USA,Senegal,0,0.5,0
+USA,DR Congo,0,0.5,0
+USA,Uzbekistan,1,1.0,0
+USA,Brazil,2,0.25,1
+USA,Colombia,5,0.1,1
+USA,Belgium,1,0.0,0
+USA,Saudi Arabia,2,0.75,1
+USA,Argentina,1,0.0,0
+USA,Ecuador,3,0.833,1
+USA,Croatia,0,0.5,0
+USA,Algeria,0,0.5,0
+USA,Portugal,2,0.25,1
+USA,Egypt,0,0.5,0
+USA,Iran,1,1.0,0
+USA,Suriname,0,0.5,0
+USA,Germany,1,0.0,0
+USA,Cameroon,0,0.5,0
+USA,Uruguay,4,0.5,2
+USA,Curacao,1,1.0,0
+USA,Netherlands,1,0.0,0
+USA,Tunisia,0,0.5,0
+USA,Chile,1,0.5,1
+USA,Iraq,0,0.5,0
+USA,Norway,0,0.5,0
+USA,Scotland,0,0.5,0
+USA,Austria,0,0.5,0
+USA,Jordan,0,0.5,0
+Australia,Paraguay,0,0.5,0
+Australia,Turkey,0,0.5,0
+Australia,Canada,1,1.0,0
+Australia,Switzerland,0,0.5,0
+Australia,Qatar,0,0.5,0
+Australia,Bosnia,0,0.5,0
+Australia,France,2,0.0,0
+Australia,Morocco,0,0.5,0
+Australia,Japan,6,0.333,2
+Australia,Haiti,0,0.5,0
+Australia,Spain,0,0.5,0
+Australia,Nigeria,0,0.5,0
+Australia,Serbia,0,0.5,0
+Australia,New Caledonia,0,0.5,0
+Australia,England,2,0.0,0
+Australia,Senegal,0,0.5,0
+Australia,DR Congo,0,0.5,0
+Australia,Uzbekistan,2,0.5,2
+Australia,Brazil,1,0.0,0
+Australia,Colombia,2,0.25,1
+Australia,Belgium,0,0.5,0
+Australia,Saudi Arabia,6,0.583,3
+Australia,Argentina,2,0.0,0
+Australia,Ecuador,2,0.5,0
+Australia,Croatia,0,0.5,0
+Australia,Algeria,0,0.5,0
+Australia,Portugal,0,0.5,0
+Australia,Egypt,0,0.5,0
+Australia,Iran,0,0.5,0
+Australia,Suriname,0,0.5,0
+Australia,Germany,1,0.0,0
+Australia,Cameroon,2,0.75,1
+Australia,Uruguay,0,0.5,0
+Australia,Curacao,1,1.0,0
+Australia,Netherlands,0,0.5,0
+Australia,Tunisia,1,1.0,0
+Australia,Chile,1,0.5,1
+Australia,Iraq,2,0.75,1
+Australia,Norway,1,0.0,0
+Australia,Scotland,0,0.5,0
+Australia,Austria,0,0.5,0
+Australia,Jordan,4,0.75,0
+Paraguay,Turkey,0,0.5,0
+Paraguay,Canada,0,0.5,0
+Paraguay,Switzerland,0,0.5,0
+Paraguay,Qatar,1,0.5,1
+Paraguay,Bosnia,0,0.5,0
+Paraguay,France,1,0.0,0
+Paraguay,Morocco,2,0.25,1
+Paraguay,Japan,4,0.125,1
+Paraguay,Haiti,0,0.5,0
+Paraguay,Spain,0,0.5,0
+Paraguay,Nigeria,0,0.5,0
+Paraguay,Serbia,1,0.0,0
+Paraguay,New Caledonia,0,0.5,0
+Paraguay,England,0,0.5,0
+Paraguay,Senegal,0,0.5,0
+Paraguay,DR Congo,0,0.5,0
+Paraguay,Uzbekistan,0,0.5,0
+Paraguay,Brazil,7,0.214,1
+Paraguay,Colombia,10,0.25,3
+Paraguay,Belgium,0,0.5,0
+Paraguay,Saudi Arabia,1,0.5,1
+Paraguay,Argentina,7,0.5,3
+Paraguay,Ecuador,5,0.6,2
+Paraguay,Croatia,0,0.5,0
+Paraguay,Algeria,0,0.5,0
+Paraguay,Portugal,0,0.5,0
+Paraguay,Egypt,0,0.5,0
+Paraguay,Iran,0,0.5,0
+Paraguay,Suriname,0,0.5,0
+Paraguay,Germany,0,0.5,0
+Paraguay,Cameroon,0,0.5,0
+Paraguay,Uruguay,7,0.286,2
+Paraguay,Curacao,0,0.5,0
+Paraguay,Netherlands,0,0.5,0
+Paraguay,Tunisia,0,0.5,0
+Paraguay,Chile,9,0.5,1
+Paraguay,Iraq,0,0.5,0
+Paraguay,Norway,0,0.5,0
+Paraguay,Scotland,0,0.5,0
+Paraguay,Austria,0,0.5,0
+Paraguay,Jordan,1,1.0,0
+Turkey,Canada,0,0.5,0
+Turkey,Switzerland,1,0.0,0
+Turkey,Qatar,0,0.5,0
+Turkey,Bosnia,0,0.5,0
+Turkey,France,2,0.75,1
+Turkey,Morocco,0,0.5,0
+Turkey,Japan,1,0.0,0
+Turkey,Haiti,0,0.5,0
+Turkey,Spain,3,0.167,1
+Turkey,Nigeria,0,0.5,0
+Turkey,Serbia,2,0.5,2
+Turkey,New Caledonia,0,0.5,0
+Turkey,England,1,0.0,0
+Turkey,Senegal,0,0.5,0
+Turkey,DR Congo,0,0.5,0
+Turkey,Uzbekistan,1,1.0,0
+Turkey,Brazil,0,0.5,0
+Turkey,Colombia,0,0.5,0
+Turkey,Belgium,0,0.5,0
+Turkey,Saudi Arabia,0,0.5,0
+Turkey,Argentina,0,0.5,0
+Turkey,Ecuador,0,0.5,0
+Turkey,Croatia,6,0.5,2
+Turkey,Algeria,0,0.5,0
+Turkey,Portugal,2,0.0,0
+Turkey,Egypt,0,0.5,0
+Turkey,Iran,1,1.0,0
+Turkey,Suriname,0,0.5,0
+Turkey,Germany,2,0.75,1
+Turkey,Cameroon,0,0.5,0
+Turkey,Uruguay,0,0.5,0
+Turkey,Curacao,0,0.5,0
+Turkey,Netherlands,3,0.333,0
+Turkey,Tunisia,1,0.5,1
+Turkey,Chile,0,0.5,0
+Turkey,Iraq,0,0.5,0
+Turkey,Norway,2,0.75,1
+Turkey,Scotland,1,1.0,0
+Turkey,Austria,2,0.5,0
+Turkey,Jordan,0,0.5,0
+Canada,Switzerland,0,0.5,0
+Canada,Qatar,1,1.0,0
+Canada,Bosnia,0,0.5,0
+Canada,France,1,0.5,1
+Canada,Morocco,2,0.0,0
+Canada,Japan,2,0.5,0
+Canada,Haiti,4,0.75,0
+Canada,Spain,0,0.5,0
+Canada,Nigeria,0,0.5,0
+Canada,Serbia,0,0.5,0
+Canada,New Caledonia,0,0.5,0
+Canada,England,0,0.5,0
+Canada,Senegal,0,0.5,0
+Canada,DR Congo,0,0.5,0
+Canada,Uzbekistan,1,1.0,0
+Canada,Brazil,0,0.5,0
+Canada,Colombia,1,0.5,1
+Canada,Belgium,1,0.0,0
+Canada,Saudi Arabia,0,0.5,0
+Canada,Argentina,2,0.0,0
+Canada,Ecuador,1,0.5,1
+Canada,Croatia,1,0.0,0
+Canada,Algeria,0,0.5,0
+Canada,Portugal,0,0.5,0
+Canada,Egypt,0,0.5,0
+Canada,Iran,0,0.5,0
+Canada,Suriname,3,1.0,0
+Canada,Germany,0,0.5,0
+Canada,Cameroon,0,0.5,0
+Canada,Uruguay,2,0.25,1
+Canada,Curacao,4,0.875,1
+Canada,Netherlands,1,0.0,0
+Canada,Tunisia,1,0.5,1
+Canada,Chile,1,0.5,1
+Canada,Iraq,0,0.5,0
+Canada,Norway,0,0.5,0
+Canada,Scotland,1,0.5,1
+Canada,Austria,0,0.5,0
+Canada,Jordan,0,0.5,0
+Switzerland,Qatar,1,0.0,0
+Switzerland,Bosnia,0,0.5,0
+Switzerland,France,2,0.5,2
+Switzerland,Morocco,0,0.5,0
+Switzerland,Japan,1,1.0,0
+Switzerland,Haiti,0,0.5,0
+Switzerland,Spain,8,0.312,3
+Switzerland,Nigeria,0,0.5,0
+Switzerland,Serbia,4,0.625,1
+Switzerland,New Caledonia,0,0.5,0
+Switzerland,England,4,0.25,2
+Switzerland,Senegal,0,0.5,0
+Switzerland,DR Congo,0,0.5,0
+Switzerland,Uzbekistan,0,0.5,0
+Switzerland,Brazil,2,0.25,1
+Switzerland,Colombia,0,0.5,0
+Switzerland,Belgium,4,0.25,0
+Switzerland,Saudi Arabia,0,0.5,0
+Switzerland,Argentina,0,0.5,0
+Switzerland,Ecuador,0,0.5,0
+Switzerland,Croatia,1,0.0,0
+Switzerland,Algeria,0,0.5,0
+Switzerland,Portugal,6,0.333,0
+Switzerland,Egypt,0,0.5,0
+Switzerland,Iran,0,0.5,0
+Switzerland,Suriname,0,0.5,0
+Switzerland,Germany,4,0.375,3
+Switzerland,Cameroon,1,1.0,0
+Switzerland,Uruguay,0,0.5,0
+Switzerland,Curacao,0,0.5,0
+Switzerland,Netherlands,0,0.5,0
+Switzerland,Tunisia,0,0.5,0
+Switzerland,Chile,0,0.5,0
+Switzerland,Iraq,0,0.5,0
+Switzerland,Norway,1,0.5,1
+Switzerland,Scotland,1,0.5,1
+Switzerland,Austria,1,0.5,1
+Switzerland,Jordan,0,0.5,0
+Qatar,Bosnia,0,0.5,0
+Qatar,France,0,0.5,0
+Qatar,Morocco,0,0.5,0
+Qatar,Japan,1,1.0,0
+Qatar,Haiti,1,0.0,0
+Qatar,Spain,0,0.5,0
+Qatar,Nigeria,0,0.5,0
+Qatar,Serbia,3,0.333,0
+Qatar,New Caledonia,0,0.5,0
+Qatar,England,0,0.5,0
+Qatar,Senegal,1,0.0,0
+Qatar,DR Congo,0,0.5,0
+Qatar,Uzbekistan,6,0.25,1
+Qatar,Brazil,1,0.0,0
+Qatar,Colombia,1,0.0,0
+Qatar,Belgium,0,0.5,0
+Qatar,Saudi Arabia,2,0.5,0
+Qatar,Argentina,1,0.0,0
+Qatar,Ecuador,2,0.5,0
+Qatar,Croatia,0,0.5,0
+Qatar,Algeria,2,0.0,0
+Qatar,Portugal,2,0.0,0
+Qatar,Egypt,1,0.5,1
+Qatar,Iran,6,0.333,0
+Qatar,Suriname,0,0.5,0
+Qatar,Germany,0,0.5,0
+Qatar,Cameroon,0,0.5,0
+Qatar,Uruguay,0,0.5,0
+Qatar,Curacao,1,0.0,0
+Qatar,Netherlands,1,0.0,0
+Qatar,Tunisia,1,0.0,0
+Qatar,Chile,1,0.5,1
+Qatar,Iraq,8,0.562,1
+Qatar,Norway,0,0.5,0
+Qatar,Scotland,0,0.5,0
+Qatar,Austria,0,0.5,0
+Qatar,Jordan,4,0.75,0
+Bosnia,France,0,0.5,0
+Bosnia,Morocco,0,0.5,0
+Bosnia,Japan,0,0.5,0
+Bosnia,Haiti,0,0.5,0
+Bosnia,Spain,0,0.5,0
+Bosnia,Nigeria,0,0.5,0
+Bosnia,Serbia,0,0.5,0
+Bosnia,New Caledonia,0,0.5,0
+Bosnia,England,0,0.5,0
+Bosnia,Senegal,0,0.5,0
+Bosnia,DR Congo,0,0.5,0
+Bosnia,Uzbekistan,0,0.5,0
+Bosnia,Brazil,0,0.5,0
+Bosnia,Colombia,0,0.5,0
+Bosnia,Belgium,0,0.5,0
+Bosnia,Saudi Arabia,0,0.5,0
+Bosnia,Argentina,0,0.5,0
+Bosnia,Ecuador,0,0.5,0
+Bosnia,Croatia,0,0.5,0
+Bosnia,Algeria,0,0.5,0
+Bosnia,Portugal,0,0.5,0
+Bosnia,Egypt,0,0.5,0
+Bosnia,Iran,0,0.5,0
+Bosnia,Suriname,0,0.5,0
+Bosnia,Germany,0,0.5,0
+Bosnia,Cameroon,0,0.5,0
+Bosnia,Uruguay,0,0.5,0
+Bosnia,Curacao,0,0.5,0
+Bosnia,Netherlands,0,0.5,0
+Bosnia,Tunisia,0,0.5,0
+Bosnia,Chile,0,0.5,0
+Bosnia,Iraq,0,0.5,0
+Bosnia,Norway,0,0.5,0
+Bosnia,Scotland,0,0.5,0
+Bosnia,Austria,0,0.5,0
+Bosnia,Jordan,0,0.5,0
+France,Morocco,1,1.0,0
+France,Japan,0,0.5,0
+France,Haiti,0,0.5,0
+France,Spain,4,0.25,0
+France,Nigeria,0,0.5,0
+France,Serbia,0,0.5,0
+France,New Caledonia,0,0.5,0
+France,England,2,1.0,0
+France,Senegal,0,0.5,0
+France,DR Congo,0,0.5,0
+France,Uzbekistan,0,0.5,0
+France,Brazil,1,1.0,0
+France,Colombia,2,0.5,0
+France,Belgium,5,1.0,0
+France,Saudi Arabia,0,0.5,0
+France,Argentina,2,0.75,1
+France,Ecuador,0,0.5,0
+France,Croatia,7,0.643,1
+France,Algeria,0,0.5,0
+France,Portugal,5,0.5,3
+France,Egypt,0,0.5,0
+France,Iran,0,0.5,0
+France,Suriname,0,0.5,0
+France,Germany,8,0.625,2
+France,Cameroon,1,1.0,0
+France,Uruguay,2,1.0,0
+France,Curacao,0,0.5,0
+France,Netherlands,7,0.786,1
+France,Tunisia,1,0.0,0
+France,Chile,1,1.0,0
+France,Iraq,0,0.5,0
+France,Norway,0,0.5,0
+France,Scotland,2,1.0,0
+France,Austria,3,0.833,1
+France,Jordan,0,0.5,0
+Morocco,Japan,0,0.5,0
+Morocco,Haiti,0,0.5,0
+Morocco,Spain,2,0.5,2
+Morocco,Nigeria,1,0.5,1
+Morocco,Serbia,1,1.0,0
+Morocco,New Caledonia,0,0.5,0
+Morocco,England,0,0.5,0
+Morocco,Senegal,2,1.0,0
+Morocco,DR Congo,5,0.5,3
+Morocco,Uzbekistan,1,1.0,0
+Morocco,Brazil,1,1.0,0
+Morocco,Colombia,0,0.5,0
+Morocco,Belgium,1,1.0,0
+Morocco,Saudi Arabia,2,1.0,0
+Morocco,Argentina,1,0.0,0
+Morocco,Ecuador,1,0.5,1
+Morocco,Croatia,2,0.25,1
+Morocco,Algeria,1,0.5,1
+Morocco,Portugal,2,0.5,0
+Morocco,Egypt,2,0.0,0
+Morocco,Iran,1,0.0,0
+Morocco,Suriname,0,0.5,0
+Morocco,Germany,0,0.5,0
+Morocco,Cameroon,3,0.667,0
+Morocco,Uruguay,0,0.5,0
+Morocco,Curacao,0,0.5,0
+Morocco,Netherlands,1,0.0,0
+Morocco,Tunisia,3,1.0,0
+Morocco,Chile,1,1.0,0
+Morocco,Iraq,0,0.5,0
+Morocco,Norway,0,0.5,0
+Morocco,Scotland,0,0.5,0
+Morocco,Austria,0,0.5,0
+Morocco,Jordan,2,1.0,0
+Japan,Haiti,1,0.5,1
+Japan,Spain,1,1.0,0
+Japan,Nigeria,0,0.5,0
+Japan,Serbia,1,1.0,0
+Japan,New Caledonia,0,0.5,0
+Japan,England,1,1.0,0
+Japan,Senegal,1,0.5,1
+Japan,DR Congo,0,0.5,0
+Japan,Uzbekistan,1,1.0,0
+Japan,Brazil,3,0.333,0
+Japan,Colombia,3,0.333,0
+Japan,Belgium,2,0.0,0
+Japan,Saudi Arabia,7,0.643,1
+Japan,Argentina,0,0.5,0
+Japan,Ecuador,2,0.5,2
+Japan,Croatia,1,0.5,1
+Japan,Algeria,0,0.5,0
+Japan,Portugal,0,0.5,0
+Japan,Egypt,0,0.5,0
+Japan,Iran,2,0.5,0
+Japan,Suriname,0,0.5,0
+Japan,Germany,2,1.0,0
+Japan,Cameroon,1,0.5,1
+Japan,Uruguay,3,0.667,2
+Japan,Curacao,0,0.5,0
+Japan,Netherlands,0,0.5,0
+Japan,Tunisia,1,0.0,0
+Japan,Chile,1,0.0,0
+Japan,Iraq,3,0.5,1
+Japan,Norway,0,0.5,0
+Japan,Scotland,1,1.0,0
+Japan,Austria,0,0.5,0
+Japan,Jordan,1,1.0,0
+Haiti,Spain,0,0.5,0
+Haiti,Nigeria,0,0.5,0
+Haiti,Serbia,0,0.5,0
+Haiti,New Caledonia,0,0.5,0
+Haiti,England,0,0.5,0
+Haiti,Senegal,0,0.5,0
+Haiti,DR Congo,0,0.5,0
+Haiti,Uzbekistan,0,0.5,0
+Haiti,Brazil,1,0.0,0
+Haiti,Colombia,0,0.5,0
+Haiti,Belgium,0,0.5,0
+Haiti,Saudi Arabia,1,0.0,0
+Haiti,Argentina,1,0.0,0
+Haiti,Ecuador,1,0.0,0
+Haiti,Croatia,0,0.5,0
+Haiti,Algeria,0,0.5,0
+Haiti,Portugal,0,0.5,0
+Haiti,Egypt,0,0.5,0
+Haiti,Iran,0,0.5,0
+Haiti,Suriname,2,0.75,1
+Haiti,Germany,0,0.5,0
+Haiti,Cameroon,0,0.5,0
+Haiti,Uruguay,0,0.5,0
+Haiti,Curacao,3,0.167,1
+Haiti,Netherlands,0,0.5,0
+Haiti,Tunisia,1,0.0,0
+Haiti,Chile,1,0.0,0
+Haiti,Iraq,0,0.5,0
+Haiti,Norway,0,0.5,0
+Haiti,Scotland,0,0.5,0
+Haiti,Austria,0,0.5,0
+Haiti,Jordan,1,1.0,0
+Spain,Nigeria,0,0.5,0
+Spain,Serbia,3,0.833,1
+Spain,New Caledonia,0,0.5,0
+Spain,England,4,0.625,1
+Spain,Senegal,0,0.5,0
+Spain,DR Congo,0,0.5,0
+Spain,Uzbekistan,0,0.5,0
+Spain,Brazil,1,0.5,1
+Spain,Colombia,2,0.25,1
+Spain,Belgium,1,1.0,0
+Spain,Saudi Arabia,0,0.5,0
+Spain,Argentina,1,1.0,0
+Spain,Ecuador,0,0.5,0
+Spain,Croatia,6,0.583,1
+Spain,Algeria,0,0.5,0
+Spain,Portugal,6,0.583,5
+Spain,Egypt,1,0.5,1
+Spain,Iran,1,1.0,0
+Spain,Suriname,0,0.5,0
+Spain,Germany,5,0.7,3
+Spain,Cameroon,0,0.5,0
+Spain,Uruguay,0,0.5,0
+Spain,Curacao,0,0.5,0
+Spain,Netherlands,3,0.5,3
+Spain,Tunisia,1,1.0,0
+Spain,Chile,0,0.5,0
+Spain,Iraq,0,0.5,0
+Spain,Norway,4,0.875,1
+Spain,Scotland,2,0.5,0
+Spain,Austria,0,0.5,0
+Spain,Jordan,1,1.0,0
+Nigeria,Serbia,1,0.0,0
+Nigeria,New Caledonia,0,0.5,0
+Nigeria,England,1,0.0,0
+Nigeria,Senegal,2,0.25,1
+Nigeria,DR Congo,2,0.5,2
+Nigeria,Uzbekistan,0,0.5,0
+Nigeria,Brazil,1,0.5,1
+Nigeria,Colombia,0,0.5,0
+Nigeria,Belgium,0,0.5,0
+Nigeria,Saudi Arabia,1,0.5,1
+Nigeria,Argentina,2,0.5,0
+Nigeria,Ecuador,1,0.0,0
+Nigeria,Croatia,1,0.0,0
+Nigeria,Algeria,6,0.333,0
+Nigeria,Portugal,1,0.0,0
+Nigeria,Egypt,3,0.833,1
+Nigeria,Iran,1,1.0,0
+Nigeria,Suriname,0,0.5,0
+Nigeria,Germany,0,0.5,0
+Nigeria,Cameroon,6,0.667,2
+Nigeria,Uruguay,0,0.5,0
+Nigeria,Curacao,0,0.5,0
+Nigeria,Netherlands,0,0.5,0
+Nigeria,Tunisia,4,0.625,1
+Nigeria,Chile,0,0.5,0
+Nigeria,Iraq,0,0.5,0
+Nigeria,Norway,0,0.5,0
+Nigeria,Scotland,0,0.5,0
+Nigeria,Austria,0,0.5,0
+Nigeria,Jordan,1,0.5,1
+Serbia,New Caledonia,0,0.5,0
+Serbia,England,3,0.0,0
+Serbia,Senegal,0,0.5,0
+Serbia,DR Congo,0,0.5,0
+Serbia,Uzbekistan,0,0.5,0
+Serbia,Brazil,2,0.0,0
+Serbia,Colombia,0,0.5,0
+Serbia,Belgium,1,0.0,0
+Serbia,Saudi Arabia,1,1.0,0
+Serbia,Argentina,0,0.5,0
+Serbia,Ecuador,0,0.5,0
+Serbia,Croatia,0,0.5,0
+Serbia,Algeria,0,0.5,0
+Serbia,Portugal,4,0.5,2
+Serbia,Egypt,0,0.5,0
+Serbia,Iran,0,0.5,0
+Serbia,Suriname,0,0.5,0
+Serbia,Germany,1,0.5,1
+Serbia,Cameroon,1,0.5,1
+Serbia,Uruguay,0,0.5,0
+Serbia,Curacao,0,0.5,0
+Serbia,Netherlands,0,0.5,0
+Serbia,Tunisia,0,0.5,0
+Serbia,Chile,1,0.0,0
+Serbia,Iraq,0,0.5,0
+Serbia,Norway,3,0.667,0
+Serbia,Scotland,1,0.5,1
+Serbia,Austria,5,0.5,1
+Serbia,Jordan,1,1.0,0
+New Caledonia,England,0,0.5,0
+New Caledonia,Senegal,0,0.5,0
+New Caledonia,DR Congo,0,0.5,0
+New Caledonia,Uzbekistan,0,0.5,0
+New Caledonia,Brazil,0,0.5,0
+New Caledonia,Colombia,0,0.5,0
+New Caledonia,Belgium,0,0.5,0
+New Caledonia,Saudi Arabia,0,0.5,0
+New Caledonia,Argentina,0,0.5,0
+New Caledonia,Ecuador,0,0.5,0
+New Caledonia,Croatia,0,0.5,0
+New Caledonia,Algeria,0,0.5,0
+New Caledonia,Portugal,0,0.5,0
+New Caledonia,Egypt,0,0.5,0
+New Caledonia,Iran,0,0.5,0
+New Caledonia,Suriname,0,0.5,0
+New Caledonia,Germany,0,0.5,0
+New Caledonia,Cameroon,0,0.5,0
+New Caledonia,Uruguay,0,0.5,0
+New Caledonia,Curacao,0,0.5,0
+New Caledonia,Netherlands,0,0.5,0
+New Caledonia,Tunisia,0,0.5,0
+New Caledonia,Chile,0,0.5,0
+New Caledonia,Iraq,0,0.5,0
+New Caledonia,Norway,0,0.5,0
+New Caledonia,Scotland,0,0.5,0
+New Caledonia,Austria,0,0.5,0
+New Caledonia,Jordan,0,0.5,0
+England,Senegal,2,0.5,0
+England,DR Congo,0,0.5,0
+England,Uzbekistan,0,0.5,0
+England,Brazil,2,0.25,1
+England,Colombia,1,0.5,1
+England,Belgium,5,0.3,1
+England,Saudi Arabia,0,0.5,0
+England,Argentina,0,0.5,0
+England,Ecuador,0,0.5,0
+England,Croatia,4,0.625,1
+England,Algeria,0,0.5,0
+England,Portugal,1,1.0,0
+England,Egypt,0,0.5,0
+England,Iran,1,1.0,0
+England,Suriname,0,0.5,0
+England,Germany,5,0.5,3
+England,Cameroon,0,0.5,0
+England,Uruguay,1,0.5,1
+England,Curacao,0,0.5,0
+England,Netherlands,3,0.667,0
+England,Tunisia,1,1.0,0
+England,Chile,0,0.5,0
+England,Iraq,0,0.5,0
+England,Norway,0,0.5,0
+England,Scotland,4,0.75,2
+England,Austria,1,1.0,0
+England,Jordan,0,0.5,0
+Senegal,DR Congo,3,0.667,2
+Senegal,Uzbekistan,1,0.5,1
+Senegal,Brazil,3,0.5,1
+Senegal,Colombia,1,0.0,0
+Senegal,Belgium,0,0.5,0
+Senegal,Saudi Arabia,0,0.5,0
+Senegal,Argentina,0,0.5,0
+Senegal,Ecuador,1,1.0,0
+Senegal,Croatia,1,0.0,0
+Senegal,Algeria,4,0.125,1
+Senegal,Portugal,0,0.5,0
+Senegal,Egypt,4,0.625,1
+Senegal,Iran,1,0.5,1
+Senegal,Suriname,0,0.5,0
+Senegal,Germany,0,0.5,0
+Senegal,Cameroon,3,0.833,1
+Senegal,Uruguay,0,0.5,0
+Senegal,Curacao,0,0.5,0
+Senegal,Netherlands,1,0.0,0
+Senegal,Tunisia,2,1.0,0
+Senegal,Chile,0,0.5,0
+Senegal,Iraq,0,0.5,0
+Senegal,Norway,0,0.5,0
+Senegal,Scotland,0,0.5,0
+Senegal,Austria,0,0.5,0
+Senegal,Jordan,0,0.5,0
+DR Congo,Uzbekistan,0,0.5,0
+DR Congo,Brazil,0,0.5,0
+DR Congo,Colombia,0,0.5,0
+DR Congo,Belgium,0,0.5,0
+DR Congo,Saudi Arabia,0,0.5,0
+DR Congo,Argentina,0,0.5,0
+DR Congo,Ecuador,0,0.5,0
+DR Congo,Croatia,0,0.5,0
+DR Congo,Algeria,2,0.25,1
+DR Congo,Portugal,0,0.5,0
+DR Congo,Egypt,2,0.25,1
+DR Congo,Iran,0,0.5,0
+DR Congo,Suriname,0,0.5,0
+DR Congo,Germany,0,0.5,0
+DR Congo,Cameroon,2,0.5,0
+DR Congo,Uruguay,0,0.5,0
+DR Congo,Curacao,0,0.5,0
+DR Congo,Netherlands,0,0.5,0
+DR Congo,Tunisia,3,0.167,1
+DR Congo,Chile,0,0.5,0
+DR Congo,Iraq,0,0.5,0
+DR Congo,Norway,0,0.5,0
+DR Congo,Scotland,0,0.5,0
+DR Congo,Austria,0,0.5,0
+DR Congo,Jordan,0,0.5,0
+Uzbekistan,Brazil,0,0.5,0
+Uzbekistan,Colombia,0,0.5,0
+Uzbekistan,Belgium,0,0.5,0
+Uzbekistan,Saudi Arabia,2,0.0,0
+Uzbekistan,Argentina,0,0.5,0
+Uzbekistan,Ecuador,0,0.5,0
+Uzbekistan,Croatia,0,0.5,0
+Uzbekistan,Algeria,0,0.5,0
+Uzbekistan,Portugal,0,0.5,0
+Uzbekistan,Egypt,1,1.0,0
+Uzbekistan,Iran,11,0.227,5
+Uzbekistan,Suriname,0,0.5,0
+Uzbekistan,Germany,0,0.5,0
+Uzbekistan,Cameroon,1,1.0,0
+Uzbekistan,Uruguay,2,0.0,0
+Uzbekistan,Curacao,0,0.5,0
+Uzbekistan,Netherlands,0,0.5,0
+Uzbekistan,Tunisia,0,0.5,0
+Uzbekistan,Chile,0,0.5,0
+Uzbekistan,Iraq,4,0.375,1
+Uzbekistan,Norway,0,0.5,0
+Uzbekistan,Scotland,0,0.5,0
+Uzbekistan,Austria,0,0.5,0
+Uzbekistan,Jordan,4,0.625,1
+Brazil,Colombia,10,0.7,4
+Brazil,Belgium,1,0.0,0
+Brazil,Saudi Arabia,1,1.0,0
+Brazil,Argentina,9,0.389,1
+Brazil,Ecuador,8,0.75,4
+Brazil,Croatia,3,0.833,1
+Brazil,Algeria,0,0.5,0
+Brazil,Portugal,0,0.5,0
+Brazil,Egypt,0,0.5,0
+Brazil,Iran,0,0.5,0
+Brazil,Suriname,0,0.5,0
+Brazil,Germany,1,1.0,0
+Brazil,Cameroon,2,0.5,0
+Brazil,Uruguay,7,0.714,2
+Brazil,Curacao,0,0.5,0
+Brazil,Netherlands,0,0.5,0
+Brazil,Tunisia,2,0.75,1
+Brazil,Chile,6,1.0,0
+Brazil,Iraq,0,0.5,0
+Brazil,Norway,0,0.5,0
+Brazil,Scotland,0,0.5,0
+Brazil,Austria,1,1.0,0
+Brazil,Jordan,0,0.5,0
+Colombia,Belgium,0,0.5,0
+Colombia,Saudi Arabia,1,1.0,0
+Colombia,Argentina,9,0.444,4
+Colombia,Ecuador,7,0.571,2
+Colombia,Croatia,1,0.0,0
+Colombia,Algeria,1,0.0,0
+Colombia,Portugal,0,0.5,0
+Colombia,Egypt,1,0.5,1
+Colombia,Iran,0,0.5,0
+Colombia,Suriname,0,0.5,0
+Colombia,Germany,1,1.0,0
+Colombia,Cameroon,1,1.0,0
+Colombia,Uruguay,7,0.429,4
+Colombia,Curacao,0,0.5,0
+Colombia,Netherlands,0,0.5,0
+Colombia,Tunisia,0,0.5,0
+Colombia,Chile,8,0.562,5
+Colombia,Iraq,1,1.0,0
+Colombia,Norway,0,0.5,0
+Colombia,Scotland,0,0.5,0
+Colombia,Austria,0,0.5,0
+Colombia,Jordan,0,0.5,0
+Belgium,Saudi Arabia,1,1.0,0
+Belgium,Argentina,0,0.5,0
+Belgium,Ecuador,0,0.5,0
+Belgium,Croatia,2,0.75,1
+Belgium,Algeria,0,0.5,0
+Belgium,Portugal,2,0.75,1
+Belgium,Egypt,2,0.5,0
+Belgium,Iran,0,0.5,0
+Belgium,Suriname,0,0.5,0
+Belgium,Germany,1,1.0,0
+Belgium,Cameroon,0,0.5,0
+Belgium,Uruguay,0,0.5,0
+Belgium,Curacao,0,0.5,0
+Belgium,Netherlands,4,0.25,2
+Belgium,Tunisia,1,1.0,0
+Belgium,Chile,0,0.5,0
+Belgium,Iraq,0,0.5,0
+Belgium,Norway,1,1.0,0
+Belgium,Scotland,3,1.0,0
+Belgium,Austria,2,0.75,1
+Belgium,Jordan,0,0.5,0
+Saudi Arabia,Argentina,1,1.0,0
+Saudi Arabia,Ecuador,1,0.5,1
+Saudi Arabia,Croatia,1,0.0,0
+Saudi Arabia,Algeria,2,0.5,0
+Saudi Arabia,Portugal,1,0.0,0
+Saudi Arabia,Egypt,2,0.5,0
+Saudi Arabia,Iran,0,0.5,0
+Saudi Arabia,Suriname,0,0.5,0
+Saudi Arabia,Germany,1,0.0,0
+Saudi Arabia,Cameroon,0,0.5,0
+Saudi Arabia,Uruguay,1,0.0,0
+Saudi Arabia,Curacao,0,0.5,0
+Saudi Arabia,Netherlands,0,0.5,0
+Saudi Arabia,Tunisia,0,0.5,0
+Saudi Arabia,Chile,0,0.5,0
+Saudi Arabia,Iraq,7,0.571,2
+Saudi Arabia,Norway,0,0.5,0
+Saudi Arabia,Scotland,0,0.5,0
+Saudi Arabia,Austria,0,0.5,0
+Saudi Arabia,Jordan,7,0.357,1
+Argentina,Ecuador,9,0.778,2
+Argentina,Croatia,2,0.5,0
+Argentina,Algeria,0,0.5,0
+Argentina,Portugal,0,0.5,0
+Argentina,Egypt,0,0.5,0
+Argentina,Iran,0,0.5,0
+Argentina,Suriname,0,0.5,0
+Argentina,Germany,1,0.5,1
+Argentina,Cameroon,0,0.5,0
+Argentina,Uruguay,8,0.75,2
+Argentina,Curacao,1,1.0,0
+Argentina,Netherlands,1,0.5,1
+Argentina,Tunisia,0,0.5,0
+Argentina,Chile,11,0.818,4
+Argentina,Iraq,1,1.0,0
+Argentina,Norway,0,0.5,0
+Argentina,Scotland,0,0.5,0
+Argentina,Austria,0,0.5,0
+Argentina,Jordan,0,0.5,0
+Ecuador,Croatia,0,0.5,0
+Ecuador,Algeria,0,0.5,0
+Ecuador,Portugal,0,0.5,0
+Ecuador,Egypt,0,0.5,0
+Ecuador,Iran,0,0.5,0
+Ecuador,Suriname,0,0.5,0
+Ecuador,Germany,0,0.5,0
+Ecuador,Cameroon,0,0.5,0
+Ecuador,Uruguay,6,0.417,1
+Ecuador,Curacao,0,0.5,0
+Ecuador,Netherlands,2,0.5,2
+Ecuador,Tunisia,0,0.5,0
+Ecuador,Chile,7,0.571,2
+Ecuador,Iraq,1,0.5,1
+Ecuador,Norway,0,0.5,0
+Ecuador,Scotland,0,0.5,0
+Ecuador,Austria,0,0.5,0
+Ecuador,Jordan,0,0.5,0
+Croatia,Algeria,0,0.5,0
+Croatia,Portugal,7,0.286,2
+Croatia,Egypt,1,1.0,0
+Croatia,Iran,0,0.5,0
+Croatia,Suriname,0,0.5,0
+Croatia,Germany,0,0.5,0
+Croatia,Cameroon,0,0.5,0
+Croatia,Uruguay,0,0.5,0
+Croatia,Curacao,0,0.5,0
+Croatia,Netherlands,1,1.0,0
+Croatia,Tunisia,2,0.25,1
+Croatia,Chile,1,0.5,1
+Croatia,Iraq,0,0.5,0
+Croatia,Norway,0,0.5,0
+Croatia,Scotland,3,0.667,0
+Croatia,Austria,2,0.5,0
+Croatia,Jordan,1,1.0,0
+Algeria,Portugal,1,0.0,0
+Algeria,Egypt,2,0.5,2
+Algeria,Iran,2,0.5,0
+Algeria,Suriname,0,0.5,0
+Algeria,Germany,0,0.5,0
+Algeria,Cameroon,4,0.375,1
+Algeria,Uruguay,1,0.5,1
+Algeria,Curacao,0,0.5,0
+Algeria,Netherlands,0,0.5,0
+Algeria,Tunisia,5,0.7,1
+Algeria,Chile,0,0.5,0
+Algeria,Iraq,1,1.0,0
+Algeria,Norway,0,0.5,0
+Algeria,Scotland,0,0.5,0
+Algeria,Austria,0,0.5,0
+Algeria,Jordan,0,0.5,0
+Portugal,Egypt,1,1.0,0
+Portugal,Iran,1,0.5,1
+Portugal,Suriname,0,0.5,0
+Portugal,Germany,2,0.5,0
+Portugal,Cameroon,0,0.5,0
+Portugal,Uruguay,2,0.5,0
+Portugal,Curacao,0,0.5,0
+Portugal,Netherlands,2,0.5,0
+Portugal,Tunisia,1,0.5,1
+Portugal,Chile,1,0.5,1
+Portugal,Iraq,0,0.5,0
+Portugal,Norway,1,1.0,0
+Portugal,Scotland,3,0.833,1
+Portugal,Austria,1,0.5,1
+Portugal,Jordan,0,0.5,0
+Egypt,Iran,0,0.5,0
+Egypt,Suriname,0,0.5,0
+Egypt,Germany,0,0.5,0
+Egypt,Cameroon,2,0.25,1
+Egypt,Uruguay,1,0.0,0
+Egypt,Curacao,0,0.5,0
+Egypt,Netherlands,0,0.5,0
+Egypt,Tunisia,5,0.4,0
+Egypt,Chile,0,0.5,0
+Egypt,Iraq,0,0.5,0
+Egypt,Norway,0,0.5,0
+Egypt,Scotland,0,0.5,0
+Egypt,Austria,0,0.5,0
+Egypt,Jordan,2,0.5,0
+Iran,Suriname,0,0.5,0
+Iran,Germany,0,0.5,0
+Iran,Cameroon,0,0.5,0
+Iran,Uruguay,1,1.0,0
+Iran,Curacao,0,0.5,0
+Iran,Netherlands,0,0.5,0
+Iran,Tunisia,2,0.0,0
+Iran,Chile,0,0.5,0
+Iran,Iraq,6,0.583,1
+Iran,Norway,0,0.5,0
+Iran,Scotland,0,0.5,0
+Iran,Austria,0,0.5,0
+Iran,Jordan,0,0.5,0
+Suriname,Germany,0,0.5,0
+Suriname,Cameroon,0,0.5,0
+Suriname,Uruguay,0,0.5,0
+Suriname,Curacao,0,0.5,0
+Suriname,Netherlands,0,0.5,0
+Suriname,Tunisia,0,0.5,0
+Suriname,Chile,0,0.5,0
+Suriname,Iraq,0,0.5,0
+Suriname,Norway,0,0.5,0
+Suriname,Scotland,0,0.5,0
+Suriname,Austria,0,0.5,0
+Suriname,Jordan,0,0.5,0
+Germany,Cameroon,1,1.0,0
+Germany,Uruguay,0,0.5,0
+Germany,Curacao,0,0.5,0
+Germany,Netherlands,8,0.562,3
+Germany,Tunisia,0,0.5,0
+Germany,Chile,2,0.75,1
+Germany,Iraq,0,0.5,0
+Germany,Norway,2,1.0,0
+Germany,Scotland,1,1.0,0
+Germany,Austria,2,0.0,0
+Germany,Jordan,0,0.5,0
+Cameroon,Uruguay,0,0.5,0
+Cameroon,Curacao,0,0.5,0
+Cameroon,Netherlands,0,0.5,0
+Cameroon,Tunisia,2,0.75,1
+Cameroon,Chile,1,0.0,0
+Cameroon,Iraq,0,0.5,0
+Cameroon,Norway,0,0.5,0
+Cameroon,Scotland,0,0.5,0
+Cameroon,Austria,0,0.5,0
+Cameroon,Jordan,0,0.5,0
+Uruguay,Curacao,0,0.5,0
+Uruguay,Netherlands,0,0.5,0
+Uruguay,Tunisia,0,0.5,0
+Uruguay,Chile,7,0.714,2
+Uruguay,Iraq,0,0.5,0
+Uruguay,Norway,0,0.5,0
+Uruguay,Scotland,0,0.5,0
+Uruguay,Austria,1,0.0,0
+Uruguay,Jordan,0,0.5,0
+Curacao,Netherlands,0,0.5,0
+Curacao,Tunisia,0,0.5,0
+Curacao,Chile,0,0.5,0
+Curacao,Iraq,0,0.5,0
+Curacao,Norway,0,0.5,0
+Curacao,Scotland,0,0.5,0
+Curacao,Austria,0,0.5,0
+Curacao,Jordan,0,0.5,0
+Netherlands,Tunisia,0,0.5,0
+Netherlands,Chile,0,0.5,0
+Netherlands,Iraq,0,0.5,0
+Netherlands,Norway,3,0.833,1
+Netherlands,Scotland,3,0.833,1
+Netherlands,Austria,3,0.667,0
+Netherlands,Jordan,0,0.5,0
+Tunisia,Chile,1,1.0,0
+Tunisia,Iraq,1,1.0,0
+Tunisia,Norway,0,0.5,0
+Tunisia,Scotland,0,0.5,0
+Tunisia,Austria,0,0.5,0
+Tunisia,Jordan,1,1.0,0
+Chile,Iraq,0,0.5,0
+Chile,Norway,0,0.5,0
+Chile,Scotland,0,0.5,0
+Chile,Austria,0,0.5,0
+Chile,Jordan,0,0.5,0
+Iraq,Norway,0,0.5,0
+Iraq,Scotland,0,0.5,0
+Iraq,Austria,0,0.5,0
+Iraq,Jordan,7,0.5,3
+Norway,Scotland,2,0.25,1
+Norway,Austria,4,0.375,1
+Norway,Jordan,1,1.0,0
+Scotland,Austria,3,0.667,2
+Scotland,Jordan,0,0.5,0
+Austria,Jordan,0,0.5,0

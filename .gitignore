@@ -29,17 +29,17 @@ share/python-wheels/
 MANIFEST
 
 # Data
-data/raw/*
-!data/raw/.gitkeep
-data/processed/*
-!data/processed/.gitkeep
-data/signals/*
-!data/signals/.gitkeep
+#data/raw/*
+#!data/raw/.gitkeep
+# data/processed/*
+# !data/processed/.gitkeep
+#data/signals/*
+#!data/signals/.gitkeep
 
 # Models
-models/*.pkl
-models/*.json
-!models/.gitkeep
+# models/*.pkl
+# models/*.json
+# !models/.gitkeep
 
 # IDEs
 .vscode/

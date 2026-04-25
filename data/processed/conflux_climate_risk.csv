@@ -1,0 +1,8 @@
+region,risk_type,avg_temp_c,raw_risk,conflux_risk,confidence,interpretation
+india,heat_stress,29.8,0.4392,0.58966,low,CONFLUX score 0.59 — moderate outlook driven primarily by climate signal (0.44). Notable divergence: Climate signal diverges from consensus (20% gap).
+sahel,drought,27.8,0.328,0.5229400000000001,low,CONFLUX score 0.52 — neutral outlook driven primarily by climate signal (0.33). Notable divergence: Climate signal strongly lags composite by 29%.
+florida,hurricane,26.9,0.3208,0.51862,low,CONFLUX score 0.52 — neutral outlook driven primarily by climate signal (0.32). Notable divergence: Climate signal strongly lags composite by 29%.
+texas,heat_grid,25.6,0.2408,0.47062000000000004,low,CONFLUX score 0.47 — neutral outlook driven primarily by finance signal (0.76). Notable divergence: Finance signal diverges from consensus (16% gap).
+california,wildfire,23.3,0.1576,0.42069999999999996,low,CONFLUX score 0.42 — adverse outlook driven primarily by finance signal (0.76). Notable divergence: Finance signal diverges from consensus (17% gap).
+uk,flooding,17.0,0.0412,0.35086,low,CONFLUX score 0.35 — adverse outlook driven primarily by finance signal (0.76). Notable divergence: Finance signal diverges from consensus (20% gap).
+australia,wildfire,11.9,0.04,0.35014,low,CONFLUX score 0.35 — adverse outlook driven primarily by finance signal (0.76). Notable divergence: Finance signal diverges from consensus (20% gap).

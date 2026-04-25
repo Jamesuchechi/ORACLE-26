@@ -6,13 +6,13 @@
 
 ## Prerequisites
 
-| Requirement | Version | Notes |
-|------------|---------|-------|
-| Python | 3.10+ | 3.11 recommended |
-| pip | 23.0+ | `pip install --upgrade pip` |
-| Git | Any | For cloning & version control |
-| Zerve Account | — | Sign up at zerve.ai (Antigravity Pro) |
-| Internet access | — | Required for all API data pulls |
+| Requirement     | Version | Notes                                 |
+| --------------- | ------- | ------------------------------------- |
+| Python          | 3.10+   | 3.11 recommended                      |
+| pip             | 23.0+   | `pip install --upgrade pip`           |
+| Git             | Any     | For cloning & version control         |
+| Zerve Account   | —       | Sign up at zerve.ai (Antigravity Pro) |
+| Internet access | —       | Required for all API data pulls       |
 
 ---
 
@@ -85,6 +85,7 @@ python-dateutil>=2.8.2
 ORACLE-26 uses several free APIs. Get your keys here:
 
 ### 3.1 FRED (Federal Reserve Economic Data)
+
 - Sign up: https://fred.stlouisfed.org/docs/api/api_key.html
 - Free tier: 120 requests/min, unlimited calls
 - Add to `.env`:
@@ -93,6 +94,7 @@ ORACLE-26 uses several free APIs. Get your keys here:
   ```
 
 ### 3.2 Alpha Vantage (Forex/Stock Data)
+
 - Sign up: https://www.alphavantage.co/support/#api-key
 - Free tier: 25 requests/day (sufficient for our use)
 - Add to `.env`:
@@ -101,6 +103,7 @@ ORACLE-26 uses several free APIs. Get your keys here:
   ```
 
 ### 3.3 Reddit API (Social Sentiment)
+
 - Sign up: https://www.reddit.com/prefs/apps → create "script" app
 - Free tier: 60 requests/min
 - Add to `.env`:
@@ -111,11 +114,13 @@ ORACLE-26 uses several free APIs. Get your keys here:
   ```
 
 ### 3.4 Polymarket (Prediction Markets)
+
 - No API key required for public endpoints
 - Docs: https://docs.polymarket.com
 - Rate limit: 10 req/s (we use well under this)
 
 ### 3.5 Kalshi (Prediction Markets)
+
 - Sign up: https://kalshi.com/sign-up
 - Free demo account works for read-only market data
 - Add to `.env`:
@@ -125,11 +130,13 @@ ORACLE-26 uses several free APIs. Get your keys here:
   ```
 
 ### 3.6 Open-Meteo (Climate Data)
+
 - **No API key required** — completely free and open
 - Docs: https://open-meteo.com/en/docs
 - Rate limit: 10,000 req/day (generous)
 
 ### 3.7 Google Trends (pytrends)
+
 - **No API key required** — uses unofficial Google Trends API
 - Note: Use respectful delays (60s between requests) to avoid blocks
 
@@ -145,6 +152,7 @@ cp .env.example .env
 ```
 
 **.env.example:**
+
 ```env
 # FRED Economic Data
 FRED_API_KEY=
@@ -257,6 +265,7 @@ oracle-26/
 ## 6. Running Locally
 
 ### Step 1: Collect all data
+
 ```bash
 python src/data/sports.py       # ~2 min, pulls FBref + historical results
 python src/data/markets.py      # ~30 sec, pulls Polymarket + Kalshi
@@ -266,6 +275,7 @@ python src/data/social.py       # ~3 min, pulls Google Trends + Reddit
 ```
 
 ### Step 2: Run pipeline
+
 ```bash
 # Or run everything at once:
 python pipeline.py --all
@@ -278,6 +288,7 @@ python pipeline.py --phase simulate
 ```
 
 ### Step 3: Launch local API
+
 ```bash
 uvicorn src.api.main:app --reload --port 8000
 
@@ -285,36 +296,41 @@ uvicorn src.api.main:app --reload --port 8000
 curl "http://localhost:8000/predict?team1=Brazil&team2=Germany"
 ```
 
-
 ---
 
 ## 7. Deploying to Zerve
 
 ### Step 1: Upload project to Zerve
+
 1. Log in to zerve.ai with your Antigravity Pro account
 2. Create a new project: **"ORACLE-26"**
 3. Upload the `src/` directory and `notebooks/` directory
 4. Upload `requirements.txt`
 
 ### Step 2: Set environment variables in Zerve
+
 In your Zerve project settings, add all keys from your `.env` file.
 
 ### Step 3: Run notebooks in order
+
 Run notebooks `01` through `08` in sequence inside Zerve. Each notebook saves its outputs for the next one to pick up.
 
 ### Step 4: Deploy the API
+
 1. In Zerve, navigate to your API deployment section
 2. Point it to `src/api/main.py`
 3. Click **Deploy**
 4. Copy the public endpoint URL → add to README as `ZERVE_API_ENDPOINT`
 
 ### Step 5: Deploy the Frontend
+
 1. Go to Vercel (or similar)
 2. Connect your repo
 3. Set `VITE_API_URL` to your Zerve/Render API endpoint
 4. Deploy
 
 ### Step 6: Verify everything is live
+
 ```bash
 # Test live API
 curl "https://YOUR_ZERVE_ENDPOINT/predict?team1=Argentina&team2=France"
@@ -328,20 +344,21 @@ curl "https://YOUR_ZERVE_ENDPOINT/predict?team1=Argentina&team2=France"
 
 Once deployed, ORACLE-26 refreshes data on this schedule:
 
-| Signal | Refresh Frequency | Trigger |
-|--------|------------------|---------|
-| Sports (Elo/form) | Every 48 hours | Scheduled |
-| Market odds | Every 6 hours | Scheduled |
-| Economic indicators | Weekly | Scheduled |
-| Weather forecasts | Every 24 hours | Scheduled |
-| Google Trends | Every 24 hours | Scheduled |
-| Reddit sentiment | Every 12 hours | Scheduled |
+| Signal              | Refresh Frequency | Trigger   |
+| ------------------- | ----------------- | --------- |
+| Sports (Elo/form)   | Every 48 hours    | Scheduled |
+| Market odds         | Every 6 hours     | Scheduled |
+| Economic indicators | Weekly            | Scheduled |
+| Weather forecasts   | Every 24 hours    | Scheduled |
+| Google Trends       | Every 24 hours    | Scheduled |
+| Reddit sentiment    | Every 12 hours    | Scheduled |
 
 ---
 
 ## 9. Troubleshooting
 
 ### `soccerdata` rate limit / blocked by FBref
+
 ```python
 # Add delay between requests
 import time
@@ -349,6 +366,7 @@ time.sleep(5)  # 5 seconds between requests
 ```
 
 ### Google Trends returns empty data
+
 ```python
 # Use longer timeframe and add retry
 from pytrends.exceptions import TooManyRequestsError
@@ -361,6 +379,7 @@ except TooManyRequestsError:
 ```
 
 ### FRED API key not found
+
 ```bash
 # Make sure .env is loaded
 from dotenv import load_dotenv
@@ -370,6 +389,7 @@ print(os.getenv("FRED_API_KEY"))  # Should not be None
 ```
 
 ### Open-Meteo returns no forecast for June dates
+
 ```python
 # Use historical climate averages instead
 # Open-Meteo's /climate endpoint works for historical normals
@@ -377,6 +397,7 @@ url = "https://climate-api.open-meteo.com/v1/climate"
 ```
 
 ### Zerve deployment timeout
+
 - Ensure model training runs are cached/saved as `.pkl` files
 - On Zerve, load the model from file rather than retraining on each request
 
@@ -399,4 +420,4 @@ Running into issues? Open a GitHub issue or reach out via the ZerveHack Discord.
 
 ---
 
-*ORACLE-26 — Built in 5 days. Powered by 5 signals. For the biggest tournament on Earth.*
+_ORACLE-26 — Built in 5 days. Powered by 5 signals. For the biggest tournament on Earth._
