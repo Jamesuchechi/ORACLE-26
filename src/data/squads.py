@@ -577,8 +577,7 @@ class SquadEngine:
                 })
             
         return sorted(squad, key=lambda x: x["market_value_eur"], reverse=True)
-            
-        return sorted(squad, key=lambda x: x["market_value_eur"], reverse=True)
+
 
     def build_all_squads(self):
         """Save all squads to a single JSON for the API."""

@@ -54,13 +54,19 @@ The API will be available at `http://localhost:8000`.
 ### World Cup 2026
 - `GET /v1/predict/wc2026/rankings`: Get current Conflux rankings for all 48 teams.
 - `GET /v1/predict/wc2026/match?team1=Brazil&team2=Germany`: Run a live match simulation.
+- `GET /v1/team/{team_name}/squad`: Get full squad and valuation for a nation.
 
 ### Market Intelligence
 - `GET /v1/predict/market/alpha`: Get market mispricing (alpha) signals.
+- `GET /v1/alpha/opportunities`: Surface the top 3 'Alpha' opportunities.
 
 ### Climate & Social
 - `GET /v1/predict/climate/risk`: Get regional climate risk intelligence.
-- `GET /v1/predict/cultural/moments`: Get trending cultural moment scores.
+- `GET /v1/social/trends`: Get trending cultural moment scores.
+
+### Agentic Intelligence
+- `GET /v1/analyst/briefing`: Generate a multi-signal executive briefing.
+- `POST /v1/analyst/chat`: Conversational interface with the ORACLE-26 Analyst.
 
 ### System
 - `GET /health`: Check API and pipeline status.

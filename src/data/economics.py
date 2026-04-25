@@ -93,20 +93,25 @@ class EconomicSignalEngine:
         if inflation is None:
             inflation = self._tier_inflation(team)
 
+        # Null-safe final check
+        gdp_val = float(gdp_growth) if gdp_growth is not None else 0.0
+        inf_val = float(inflation) if inflation is not None else 0.0
+
         # Stability score:
         # High GDP growth (2-4%) = good, Negative = bad
         # Low inflation (1-3%) = good, High inflation = bad
-        gdp_score = float(np.clip((gdp_growth + 2) / 8, 0, 1))
-        inf_score = float(np.clip(1 - (inflation - 1) / 20, 0, 1))
+        gdp_score = float(np.clip((gdp_val + 2) / 8, 0, 1))
+        inf_score = float(np.clip(1 - (inf_val - 1) / 20, 0, 1))
         econ_signal = gdp_score * 0.55 + inf_score * 0.45
 
         return {
             "team":        team,
             "iso3":        iso3 or "UNK",
-            "gdp_growth":  round(gdp_growth, 2),
-            "inflation":   round(inflation, 2),
+            "gdp_growth":  round(gdp_val, 2),
+            "inflation":   round(inf_val, 2),
             "econ_signal": round(float(np.clip(econ_signal, 0, 1)), 4),
         }
+
 
     def _tier_gdp(self, team: str) -> float:
         high_income = {"USA","Germany","France","England","Spain","Portugal",

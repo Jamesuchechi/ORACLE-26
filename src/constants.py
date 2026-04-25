@@ -30,10 +30,35 @@ WC2026_GROUPS = {
     "L": ["England",   "Croatia",      "Ghana",       "Panama"],
 }
 
+# Regional assignment for groups to venues
+GROUP_TO_VENUES = {
+    "A": ["Estadio Azteca", "Estadio BBVA", "Estadio Akron"],
+    "B": ["BC Place", "BMO Field", "Stade Olympique"],
+    "C": ["NRG Stadium", "AT&T Stadium", "Hard Rock Stadium"],
+    "D": ["MetLife Stadium", "Lincoln Financial Field", "Gillette Stadium"],
+    "E": ["SoFi Stadium", "Levi's Stadium", "Empower Field"],
+    "F": ["Arrowhead Stadium", "NRG Stadium", "AT&T Stadium"],
+    "G": ["Hard Rock Stadium", "MetLife Stadium", "Lincoln Financial Field"],
+    "H": ["BC Place", "SoFi Stadium", "Levi's Stadium"],
+    "I": ["Estadio Azteca", "Estadio BBVA", "Estadio Akron"],
+    "J": ["NRG Stadium", "AT&T Stadium", "Arrowhead Stadium"],
+    "K": ["Gillette Stadium", "MetLife Stadium", "BMO Field"],
+    "L": ["SoFi Stadium", "Levi's Stadium", "BC Place"],
+}
+
+
 ALL_WC_TEAMS   = [t for teams in WC2026_GROUPS.values() for t in teams]
 ALL_TEAMS      = ALL_WC_TEAMS
 
 TEAM_TO_GROUP  = {t: g for g, teams in WC2026_GROUPS.items() for t in teams}
+
+# Mapping: Display Name -> Name in international_results.csv (and others)
+TEAM_TO_RESULTS_NAME = {
+    "USA":    "United States",
+    "Czechia":"Czech Republic",
+    "Bosnia": "Bosnia and Herzegovina",
+}
+
 
 WC2026_VENUES = {
     "MetLife Stadium":         {"city": "East Rutherford, NJ", "lat": 40.8135,  "lon": -74.0745,  "country": "USA",    "altitude_m": 0},

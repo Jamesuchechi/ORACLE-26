@@ -10,24 +10,28 @@ import {
 } from 'recharts';
 import { getFlagUrl } from '../utils/flags';
 
+import axios from 'axios';
+
 const TeamDetail = ({ team, onClose }) => {
   const [squadData, setSquadData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [selectedPlayer, setSelectedPlayer] = useState(null);
   const [activeTab, setActiveTab] = useState('squad');
 
   useEffect(() => {
     const fetchSquad = async () => {
       try {
-        const resp = await fetch(`http://localhost:8000/v1/team/${team.subject}/squad`);
-        const data = await resp.json();
-        setSquadData(data);
+        const resp = await axios.get(`/v1/team/${team.subject}/squad`);
+        setSquadData(resp.data);
       } catch (err) {
         console.error("Failed to fetch squad:", err);
+        setError("Squad Intel Link Severed");
       } finally {
         setLoading(false);
       }
     };
+
 
     if (team) fetchSquad();
   }, [team]);
@@ -77,7 +81,7 @@ const TeamDetail = ({ team, onClose }) => {
             >
               <div className="grid grid-cols-2 gap-4">
                 <StatBox label="Conflux Score" value={team.conflux_score.toFixed(3)} color="text-amber" icon={<Activity size={14}/>} />
-                <StatBox label="Squad Valuation" value={loading ? "..." : `€${(squadData?.total_valuation / 1000000).toFixed(0)}M`} color="text-teal" icon={<DollarSign size={14}/>} />
+                <StatBox label="Squad Valuation" value={loading ? "..." : (squadData?.total_valuation ? `€${(squadData.total_valuation / 1000000).toFixed(0)}M` : 'N/A')} color="text-teal" icon={<DollarSign size={14}/>} />
               </div>
 
               {/* Roster Explorer */}
@@ -92,10 +96,14 @@ const TeamDetail = ({ team, onClose }) => {
                 </div>
                 
                 {loading ? (
-                   <div className="space-y-3">
-                     {[1,2,3,4,5,6].map(i => <div key={i} className="h-16 bg-white/5 rounded-xl animate-pulse border border-white/5" />)}
-                   </div>
-                ) : (
+                <div className="p-12 text-center font-mono text-white/20 animate-pulse uppercase tracking-widest text-[10px]">
+                  Intercepting Squad Communications...
+                </div>
+              ) : error ? (
+                <div className="p-12 text-center text-red font-mono uppercase text-[10px]">
+                  {error}
+                </div>
+              ) : (
                   <div className="space-y-3">
                     {squadData?.squad.map((player, idx) => (
                       <motion.div 

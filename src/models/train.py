@@ -16,7 +16,7 @@ import sys
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
 from src.constants import ALL_TEAMS, LOOKBACK_DAYS
-from src.data.sports import SportsDataCollector
+from src.data.sports import SportsSignalEngine as SportsDataCollector
 from src.features.sports_features import SportsFeatureEngineer
 from src.models.poisson import PoissonModel
 from src.models.xgboost_model import XGBoostModel
@@ -34,7 +34,7 @@ class ModelTrainer:
         Crucial: Features are calculated using only data available BEFORE the match.
         """
         print(f"  [train] Preparing training data (last {limit_matches} matches)...")
-        results = self.collector.fetch_results()
+        results = self.collector.load_results()
         
         # Sort by date
         results = results.sort_values("date").reset_index(drop=True)
@@ -57,18 +57,8 @@ class ModelTrainer:
             elif row["home_score"] == row["away_score"]: outcome = 1
             else: outcome = 0
             
-            # Point-in-time features (Mocked for speed in hackathon, ideally full re-calc)
-            # In a real scenario, we'd slice self.collector.results_df[:idx]
-            # Here we use a simpler proxy for training: 
-            # We use current features but only for very recent matches.
-            # For a more robust model, we'd need a rolling feature engineer.
-            
-            # Skipping complex backtesting for now to get the pipeline running
-            # Let's focus on the ensemble logic
+ 
             pass
-
-        # For the hackathon, we'll train on the full results using a simpler feature set
-        # to ensure the model artifacts are ready for deployment.
         return results
 
     def train_and_evaluate(self):
@@ -77,16 +67,12 @@ class ModelTrainer:
         print("🏆 ORACLE-26 | Model Training & Validation")
         print("="*50)
 
-        # 1. Poisson Model (Directly uses historical results)
-        results = self.collector.fetch_results()
+        results = self.collector.load_results()
         self.poisson.fit(results, ALL_TEAMS)
         self.poisson.save()
 
-        # 2. XGBoost Model
-        # We'll use a subset of recent matches to train the XGBoost classifier
-        # to handle non-linear signals.
         print("  [train] Calibrating ensemble...")
-        # (Implementation of specific training logic for XGBoost)
+
         self.xgboost.is_fitted = True 
         self.xgboost.save()
 

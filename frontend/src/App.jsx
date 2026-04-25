@@ -119,10 +119,20 @@ const Shell = ({ children, briefing, currentView, onViewChange }) => (
           <p className="text-[9px] font-mono text-white/20 tracking-[0.3em] uppercase mb-6 flex items-center gap-2">
             <Cpu size={10} /> Core Modules
           </p>
-          <div className="space-y-1.5">
-            <NavItem icon={<Cpu size={14}/>} label="Fusion Hub" />
-            <NavItem icon={<Zap size={14}/>} label="Alpha Discovery" />
-          </div>
+            <NavItem 
+              icon={<Cpu size={14}/>} 
+              label="Fusion Hub" 
+              active={currentView === 'fusion'}
+              badge="CORE" 
+              onClick={() => onViewChange('fusion')}
+            />
+            <NavItem 
+              icon={<Zap size={14}/>} 
+              label="Alpha Discovery" 
+              active={currentView === 'alpha'}
+              badge="NEW" 
+              onClick={() => onViewChange('alpha')}
+            />
         </div>
         
         <div className="mt-auto px-6">
@@ -186,6 +196,8 @@ import FinanceView from './views/Finance';
 import ClimateView from './views/Climate';
 import SocialView from './views/Social';
 import TeamDetail from './views/TeamDetail';
+import FusionView from './views/Fusion';
+import AlphaView from './views/Alpha';
 
 // Main App Component
 const App = () => {
@@ -229,6 +241,10 @@ const App = () => {
         return <ClimateView venues={venues} />;
       case 'social':
         return <SocialView />;
+      case 'fusion':
+        return <FusionView />;
+      case 'alpha':
+        return <AlphaView />;
       default:
         return <DashboardView rankings={rankings} loading={loading} venues={venues} />;
     }
@@ -242,6 +258,8 @@ const App = () => {
       case 'finance': return { v: 'III', title: 'Finance & Economics', desc: 'Macro-economic indicators and financial signals integrated into the conflux engine.' };
       case 'climate': return { v: 'IV', title: 'Climate & Energy', desc: 'Regional climate risk assessment and venue-specific environmental stressors.' };
       case 'social': return { v: 'V', title: 'Social & Cultural Trends', desc: 'Identifying cultural tipping points and social momentum signals.' };
+      case 'fusion': return { v: 'CORE', title: 'Fusion Hub', desc: 'Central cross-domain intelligence synchronization matrix.' };
+      case 'alpha': return { v: 'SIGMA', title: 'Alpha Discovery', desc: 'Surfacing high-conviction market divergences and strategic arbitrage opportunities.' };
       default: return { v: 'I', title: 'Intelligence Terminal', desc: 'Select a vertical to begin analysis.' };
     }
   };
@@ -290,7 +308,10 @@ const App = () => {
             </div>
             <div>
               <p className="text-[9px] text-white/20 uppercase tracking-[0.2em]">Countdown</p>
-              <p className="text-xl font-mono font-bold tracking-tighter">782 <span className="text-xs text-white/10 font-normal">DAYS</span></p>
+              <p className="text-xl font-mono font-bold tracking-tighter">
+                {Math.max(0, Math.ceil((new Date('2026-06-11') - new Date()) / 86400000))} 
+                <span className="text-xs text-white/10 font-normal ml-1">DAYS</span>
+              </p>
             </div>
           </div>
         </motion.div>

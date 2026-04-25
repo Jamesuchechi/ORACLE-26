@@ -38,12 +38,13 @@ const AlphaRadarBrief = ({ alpha }) => (
       Alpha Radar
     </h3>
     <div className="space-y-2">
-      {alpha?.value.slice(0, 3).map(item => (
+      {alpha?.value?.slice(0, 3).map(item => (
         <div key={item.subject} className="flex justify-between items-center text-xs">
           <span>{item.subject}</span>
           <span className="text-teal font-mono">+{ (item.alpha_gap * 100).toFixed(1) }%</span>
         </div>
       ))}
+      {!alpha?.value && <div className="text-[10px] text-white/20 italic">Scanning opportunities...</div>}
     </div>
   </div>
 );

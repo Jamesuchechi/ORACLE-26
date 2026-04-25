@@ -10,6 +10,7 @@ import requests
 import pandas as pd
 import numpy as np
 import time
+import concurrent.futures
 from pathlib import Path
 from typing import Optional
 
@@ -103,7 +104,6 @@ class ClimateSignalEngine:
             return {"venue": venue_name, "climate_signal": 0.7}
 
         climate = self.fetch_venue_climate(info["lat"], info["lon"], venue_name)
-        time.sleep(0.3)  # Rate limiting
 
         heat_ok  = self.compute_heat_stress_penalty(climate["avg_temp_c"], climate["avg_humidity"])
         alt_ok   = self.compute_altitude_penalty(info.get("altitude_m", 0))
@@ -124,10 +124,16 @@ class ClimateSignalEngine:
         }
 
     def build_venue_signals(self) -> pd.DataFrame:
-        """Build climate signal table for all WC2026 venues."""
-        print("  [climate] Building venue climate signals...")
-        rows = [self.venue_climate_signal(v) for v in WC2026_VENUES.keys()]
-        df   = pd.DataFrame(rows).sort_values("climate_signal")
+        """Build climate signal table for all WC2026 venues in parallel."""
+        print("  [climate] Building venue climate signals in parallel...")
+        
+        rows = []
+        with concurrent.futures.ThreadPoolExecutor(max_workers=5) as executor:
+            future_to_venue = {executor.submit(self.venue_climate_signal, v): v for v in WC2026_VENUES.keys()}
+            for future in concurrent.futures.as_completed(future_to_venue):
+                rows.append(future.result())
+
+        df = pd.DataFrame(rows).sort_values("climate_signal")
         df.to_csv(RAW_DIR / "venue_climate_signals.csv", index=False)
         print(f"  [climate] Saved {len(df)} venue signals")
         return df
@@ -192,10 +198,16 @@ class ClimateSignalEngine:
         }
 
     def build_regional_risks(self) -> pd.DataFrame:
-        """Build climate risk table for all tracked regions."""
-        print("  [climate] Building regional risk signals...")
-        rows = [self.compute_regional_risk(r) for r in TRACKED_CLIMATE_REGIONS.keys()]
-        df   = pd.DataFrame(rows).sort_values("climate_risk_signal", ascending=False)
+        """Build climate risk table for all tracked regions in parallel."""
+        print("  [climate] Building regional risk signals in parallel...")
+        
+        rows = []
+        with concurrent.futures.ThreadPoolExecutor(max_workers=5) as executor:
+            future_to_region = {executor.submit(self.compute_regional_risk, r): r for r in TRACKED_CLIMATE_REGIONS.keys()}
+            for future in concurrent.futures.as_completed(future_to_region):
+                rows.append(future.result())
+
+        df = pd.DataFrame(rows).sort_values("climate_risk_signal", ascending=False)
         df.to_csv(RAW_DIR / "regional_climate_risks.csv", index=False)
         return df
 

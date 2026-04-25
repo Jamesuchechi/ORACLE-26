@@ -12,8 +12,13 @@ Covers all four verticals:
 """
 
 import os
+import json
 import requests
+import concurrent.futures
+from datetime import datetime
+
 import pandas as pd
+
 import numpy as np
 from pathlib import Path
 from dotenv import load_dotenv
@@ -53,6 +58,23 @@ class MarketSignalEngine:
         self.kalshi_pass  = os.getenv("KALSHI_PASSWORD")
         self._kalshi_token: Optional[str] = None
         self._api_base = "https://trading-api.kalshi.com/trade-api/v2"
+        self.market_cache_path = RAW_DIR / "market_search_cache.json"
+        self._search_cache = self._load_search_cache()
+
+    def _load_search_cache(self) -> dict:
+        if self.market_cache_path.exists():
+            try:
+                with open(self.market_cache_path, "r") as f:
+                    return json.load(f)
+            except: return {}
+        return {}
+
+    def _save_search_cache(self):
+        try:
+            with open(self.market_cache_path, "w") as f:
+                json.dump(self._search_cache, f)
+        except: pass
+
 
     def _get_kalshi_token(self):
         if self._kalshi_token: return self._kalshi_token
@@ -111,24 +133,92 @@ class MarketSignalEngine:
             print(f"  [markets] Polymarket failed for {slug}: {e}")
             return None
 
+    def fetch_metaculus_event(self, question_id: str) -> Optional[MarketSignal]:
+        """Fetch community prediction from Metaculus."""
+        try:
+            url = f"https://www.metaculus.com/api2/questions/{question_id}/"
+            resp = requests.get(url, timeout=8)
+            data = resp.json()
+            # Get latest community prediction
+            prob = data.get("community_prediction", {}).get("full", {}).get("q2")
+            if prob is None:
+                # Fallback to timeseries if present
+                ts = data.get("prediction_timeseries", [])
+                if ts: prob = ts[-1].get("community_prediction")
+            
+            if prob is not None:
+                return MarketSignal(
+                    event_id=question_id, source="metaculus",
+                    implied_prob=float(prob),
+                    volume_usd=None
+                )
+        except: pass
+        return None
+
+    def search_metaculus_for_team(self, team: str) -> Optional[MarketSignal]:
+        """Search Metaculus for a team-specific winner probability or use cached ID."""
+        cache_key = f"metaculus_id_{team.lower()}"
+        qid = self._search_cache.get(cache_key)
+        
+        if not qid:
+            # Try to search if not in cache
+            try:
+                query = f"2026 World Cup winner {team}"
+                url = f"https://www.metaculus.com/api2/questions/?search={query}"
+                resp = requests.get(url, timeout=5)
+                results = resp.json().get("results", [])
+                for res in results:
+                    title = res.get("title", "").lower()
+                    if team.lower() in title and "2026" in title:
+                        qid = res.get("id")
+                        self._search_cache[cache_key] = qid
+                        self._save_search_cache()
+                        break
+            except: pass
+            
+        if qid:
+            return self.fetch_metaculus_event(str(qid))
+        return None
+
+
+
     def scan_wc_markets(self) -> pd.DataFrame:
-        """Scan Polymarket for WC2026 team winner odds."""
-        print("  [markets] Scanning WC2026 Polymarket odds...")
+        """Scan Polymarket (and Metaculus fallback) for WC2026 team winner odds."""
+        print("  [markets] Scanning WC2026 market signals...")
         rows = []
+        real_count = 0
+        
         for team in ALL_WC_TEAMS:
+            # 1. Try Polymarket
             slug = f"fifa-world-cup-2026-winner-{team.lower().replace(' ', '-')}"
             sig  = self.fetch_polymarket_event(slug)
-            prob = sig.implied_prob if sig else self._fallback_market_prob(team)
+            
+            # 2. Try Metaculus if Polymarket fails
+            if not sig:
+                sig = self.search_metaculus_for_team(team)
+
+
+            if sig:
+                prob = sig.implied_prob
+                source = sig.source
+                real_count += 1
+            else:
+                prob = self._fallback_market_prob(team)
+                source = "fallback"
+
             rows.append({
                 "team":            team,
                 "market_prob":     round(prob, 4),
-                "market_signal":   round(prob, 4),   # normalized [0,1] by nature
-                "source":          sig.source if sig else "fallback",
+                "market_signal":   round(prob, 4),
+                "source":          source,
                 "volume_usd":      sig.volume_usd if sig else None,
             })
+            
         df = pd.DataFrame(rows)
         df.to_csv(RAW_DIR / "market_signals_wc.csv", index=False)
+        print(f"  [markets] ✓ WC2026 signal scan complete: {real_count}/{len(ALL_WC_TEAMS)} teams matched real market data.")
         return df
+
 
     # ──────────────────────────────────────────────
     # General Event Markets (Vertical II)
@@ -148,24 +238,42 @@ class MarketSignalEngine:
                 sig = self.fetch_kalshi_event(event_id)
                 
             if sig:
+                # Calculate synthetic model prob and alpha for general events
+                # In a real scenario, this would come from our cross-domain models
+                model_prob = sig.implied_prob + (np.random.random() - 0.5) * 0.15
+                model_prob = float(np.clip(model_prob, 0.01, 0.99))
+                alpha = model_prob - sig.implied_prob
+                
                 rows.append({
                     "event_id":    event_id,
                     "description": meta["description"],
                     "type":        meta["type"],
                     "implied_prob":sig.implied_prob,
+                    "model_prob":  model_prob,
+                    "alpha":       alpha,
+                    "status":      "DIVERGENT" if abs(alpha) > 0.08 else "ALIGNED",
                     "source":      sig.source,
                     "volume_usd":  sig.volume_usd,
                 })
             else:
                 # Fallback to synthetic logic if API fails
+                implied_prob = 0.50 + (np.random.random() - 0.5) * 0.1
+                model_prob = implied_prob + (np.random.random() - 0.5) * 0.15
+                model_prob = float(np.clip(model_prob, 0.01, 0.99))
+                alpha = model_prob - implied_prob
+                
                 rows.append({
                     "event_id":    event_id,
                     "description": meta["description"],
                     "type":        meta["type"],
-                    "implied_prob": 0.50 + (np.random.random() - 0.5) * 0.1,  # realistic jitter
-                    "source":      "fallback",
-                    "volume_usd":  None,
+                    "implied_prob": implied_prob,
+                    "model_prob":   model_prob,
+                    "alpha":        alpha,
+                    "status":       "DIVERGENT" if abs(alpha) > 0.08 else "ALIGNED",
+                    "source":       "fallback",
+                    "volume_usd":   None,
                 })
+
 
         df = pd.DataFrame(rows)
         df.to_csv(RAW_DIR / "market_signals_events.csv", index=False)

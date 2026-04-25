@@ -26,8 +26,9 @@ import sys
 sys.path.insert(0, str(Path(__file__).resolve().parents[0]))
 
 from src.constants import (
-    ALL_WC_TEAMS, TEAM_TO_GROUP, SIGNAL_WEIGHTS,
+    ALL_WC_TEAMS, TEAM_TO_GROUP, SIGNAL_WEIGHTS, GROUP_TO_VENUES,
     TRACKED_MARKET_EVENTS, TRACKED_CLIMATE_REGIONS, TRACKED_CULTURAL_TOPICS,
+
     CURATED_ELO
 )
 from src.data.sports    import SportsSignalEngine
@@ -114,6 +115,10 @@ class ConfluxPipeline:
             e_row = self._get_row(self.economic_signals,  "team", team)
             c_row = self._get_row(self.climate_signals,   "venue", None)  # venue-level, handled at match time
             soc_row = self._get_row(self.social_signals,  "team", team)
+            
+            # Compute team-level climate signal based on assigned group venues
+            climate_val = self._get_team_climate_signal(team)
+
 
             # Market signal: normalize across all teams
             all_mkt = self.market_signals["market_signal"].tolist() if self.market_signals is not None else []
@@ -128,7 +133,8 @@ class ConfluxPipeline:
                 sports    = float(s_row.get("sports_signal", 0.5) if s_row else 0.5),
                 markets   = float(m_norm),
                 finance   = float(e_row.get("econ_signal",   0.5) if e_row else 0.5),
-                climate   = 0.75,  # Team-level default; venue-specific at match time
+                climate   = float(climate_val),
+
                 social    = float(soc_row.get("social_signal", 0.5) if soc_row else 0.5),
             )
             signal_vectors.append(sv)
@@ -313,6 +319,24 @@ class ConfluxPipeline:
             return None
         rows = df[df[col] == val]
         return rows.iloc[0].to_dict() if not rows.empty else None
+
+    def _get_team_climate_signal(self, team: str) -> float:
+        """Map each team to their group's likely venues and average the climate signals."""
+        group = TEAM_TO_GROUP.get(team)
+        if not group or group not in GROUP_TO_VENUES or self.climate_signals is None:
+            return 0.75
+            
+        venues = GROUP_TO_VENUES[group]
+        signals = []
+        
+        for v in venues:
+            # Look up signal for this venue
+            v_match = self.climate_signals[self.climate_signals["venue"] == v]
+            if not v_match.empty:
+                signals.append(v_match["climate_signal"].iloc[0])
+        
+        return float(np.mean(signals)) if signals else 0.75
+
 
     # ──────────────────────────────────────────────────────────────
     # Run All

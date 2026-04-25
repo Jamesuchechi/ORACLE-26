@@ -9,9 +9,11 @@ Tracks public attention and cultural momentum via:
 
 import os
 import time
+import json
 import numpy as np
 import pandas as pd
 from pathlib import Path
+
 from dotenv import load_dotenv
 from typing import Optional
 
@@ -52,30 +54,81 @@ class SocialSignalEngine:
         except:
             self.reddit = None
             self._reddit_available = False
+            
+        self.cache_path = RAW_DIR / "trends_cache.json"
+        self._cache = self._load_cache()
+
+    def _load_cache(self) -> dict:
+        if self.cache_path.exists():
+            try:
+                with open(self.cache_path, "r") as f:
+                    return json.load(f)
+            except: return {}
+        return {}
+
+    def _save_cache(self):
+        try:
+            with open(self.cache_path, "w") as f:
+                json.dump(self._cache, f)
+        except: pass
+
 
     # ──────────────────────────────────────────────
     # Google Trends
     # ──────────────────────────────────────────────
 
     def fetch_trends_batch(self, terms: list, timeframe: str = "today 3-m") -> dict:
-        """Fetch Google Trends for up to 5 terms at once."""
+        """Fetch Google Trends for up to 5 terms with caching and backoff."""
+        now = time.time()
+        results = {}
+        missing = []
+
+        # 1. Check Cache
+        for t in terms:
+            entry = self._cache.get(t)
+            if entry and (now - entry.get("ts", 0)) < 86400:  # 24h TTL
+                results[t] = entry["val"]
+            else:
+                missing.append(t)
+
+        if not missing:
+            return results
+
         if not self._trends_available or not self.pytrends:
             return {t: self._synthetic_trend(t) for t in terms}
 
+        # 2. Fetch Missing with Exponential Backoff
+        max_retries = 3
+        delay = 30
+        
         try:
-            self.pytrends.build_payload(terms[:5], timeframe=timeframe)
-            df = self.pytrends.interest_over_time()
-            result = {}
-            for term in terms[:5]:
-                if term in df.columns:
-                    result[term] = float(df[term].mean())
-                else:
-                    result[term] = self._synthetic_trend(term)
-            return result
+            for attempt in range(max_retries):
+                try:
+                    self.pytrends.build_payload(missing[:5], timeframe=timeframe)
+                    df = self.pytrends.interest_over_time()
+                    
+                    for term in missing[:5]:
+                        val = float(df[term].mean()) if term in df.columns else self._synthetic_trend(term)
+                        results[term] = val
+                        # Update cache
+                        self._cache[term] = {"val": val, "ts": now}
+                    
+                    self._save_cache()
+                    return results
+                except Exception as e:
+                    if "429" in str(e) and attempt < max_retries - 1:
+                        print(f"  [social] Rate limited (429). Retrying in {delay}s...")
+                        time.sleep(delay)
+                        delay *= 2
+                    else:
+                        raise e
         except Exception as e:
-            print(f"  [social] Trends failed for {terms}: {e}")
-            time.sleep(30)
-            return {t: self._synthetic_trend(t) for t in terms}
+            print(f"  [social] Trends failed for {missing}: {e}")
+            # Final fallback
+            for t in missing:
+                results[t] = self._synthetic_trend(t)
+            return results
+
 
     def _synthetic_trend(self, term: str) -> float:
         """Deterministic synthetic trend based on term hash (for reproducibility)."""

@@ -215,20 +215,19 @@ class ConfluxFusionEngine:
         # delta in [-1, 1], adjustment in [-0.15, +0.15]
         adjustment = np.tanh(delta * 3) * 0.15
 
-        # Adjust win probability
-        raw_win  = sports_win_prob  + adjustment
-        raw_loss = sports_draw_prob - adjustment   # symmetrical
-        raw_draw = 1 - raw_win - max(0, raw_loss)
+        base_win  = sports_win_prob
+        base_draw = sports_draw_prob
+        base_loss = 1.0 - base_win - base_draw
 
-        # Normalize to sum = 1
-        total  = raw_win + raw_draw + max(0, raw_loss)
-        win_p  = max(0.02, raw_win  / total)
-        draw_p = max(0.05, raw_draw / total)
-        loss_p = max(0.02, max(0, raw_loss) / total)
+        # Apply delta adjustment to win/loss symmetrically
+        win_p  = float(np.clip(base_win + adjustment, 0.02, 0.95))
+        loss_p = float(np.clip(base_loss - adjustment, 0.02, 0.95))
+        draw_p = float(np.clip(1.0 - win_p - loss_p, 0.05, 0.40))
 
-        # Re-normalize after floors
-        s     = win_p + draw_p + loss_p
-        win_p /= s; draw_p /= s; loss_p /= s
+        # Re-normalize to ensure sum is exactly 1.0
+        total  = win_p + draw_p + loss_p
+        win_p /= total; draw_p /= total; loss_p /= total
+
 
         # Divergence signals (cross-vertical surprises)
         divergences = self._detect_match_divergences(sv1, sv2)

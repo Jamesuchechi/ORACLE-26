@@ -24,7 +24,13 @@ from src.data.social import SocialSignalEngine
 from src.data.squads import SquadEngine
 from src.features.fusion import ConfluxFusionEngine, SignalVector
 
+def random_variation(seed_str):
+    import random
+    random.seed(seed_str)
+    return random.random()
+
 def bootstrap():
+
     print("\n" + "◈" * 50)
     print("◈ CONFLUX — MARCH 2026 SIGNAL SYNCHRONIZATION")
     print("◈" * 50)
@@ -115,7 +121,7 @@ def bootstrap():
     # 7. Market Calibration (Alpha Discovery)
     print("\n◈ Discovering Market Alpha...")
     # Alpha = conflux_score - market_signal
-    final_df["alpha_gap"] = final_df["conflux_score"] - final_df["markets"]
+    final_df["alpha_gap"] = final_df["sports"] - final_df["markets"]
     final_df.to_csv("data/processed/conflux_market_calib.csv", index=False)
     print(f"  [alpha] ✓ Detected {len(final_df[abs(final_df['alpha_gap']) > 0.1])} significant mispricing events.")
 
@@ -123,10 +129,7 @@ def bootstrap():
     print("◈ BOOTSTRAP COMPLETE — March 2026 Intelligence Live")
     print("◈" * 50)
 
-def random_variation(seed_str):
-    import random
-    random.seed(seed_str)
-    return random.random()
 
 if __name__ == "__main__":
     bootstrap()
+
