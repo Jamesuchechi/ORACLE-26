@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 
-axios.defaults.baseURL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+axios.defaults.baseURL = import.meta.env.VITE_API_URL || (import.meta.env.DEV ? 'http://localhost:8000' : 'https://conflux-o98t.onrender.com');
 axios.defaults.timeout = 60000; // 60s timeout
 axios.defaults.headers.common['X-API-Key'] = 'conflux_dev_2026';
 

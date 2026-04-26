@@ -108,21 +108,25 @@ fusion_engine = ConfluxFusionEngine()
 # ─────────────────────────────────────────────────────────────
 
 def run_pipeline_refresh():
-    """Background task to re-run signal bootstrap every 24h."""
-    import subprocess
-    import sys
+    """Background task to re-run signal bootstrap every 24h with retry logic."""
     from time import sleep
+    try:
+        from src.data.bootstrap_signals import bootstrap
+    except Exception as e:
+        print(f"◈ CRON ERROR: Could not import bootstrap engine: {e}")
+        return
     
     while True:
         try:
             print("◈ CRON: Starting 24h Intelligence Pipeline Refresh...")
-            subprocess.run([sys.executable, "src/scripts/bootstrap_signals.py"], check=True)
+            bootstrap()
             print("◈ CRON: Pipeline refresh successful.")
+            # Sleep for 24 hours on success
+            sleep(24 * 3600)
         except Exception as e:
-            print(f"◈ CRON ERROR: Pipeline refresh failed: {e}")
-        
-        # Sleep for 24 hours
-        sleep(24 * 3600)
+            print(f"◈ CRON ERROR: Pipeline refresh failed: {e}. Retrying in 5 minutes...")
+            # Retry after 5 minutes on failure
+            sleep(300)
 
 @app.on_event("startup")
 async def startup_event():
