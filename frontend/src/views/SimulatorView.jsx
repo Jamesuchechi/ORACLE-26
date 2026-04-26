@@ -29,7 +29,7 @@ const SimulatorView = () => {
   if (loading) return <div className="p-12 text-center font-mono text-muted animate-pulse uppercase tracking-widest text-xs">Simulating 1,000 Tournament Permutations...</div>;
   if (error) return <div className="p-12 text-center text-red font-mono text-xs uppercase">{error}</div>;
 
-  const groups = Object.entries(data.groups).sort();
+  const groups = Object.entries(data?.groups || {}).sort();
 
   return (
     <div className="space-y-10 pb-20">

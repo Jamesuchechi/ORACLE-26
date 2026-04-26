@@ -107,7 +107,7 @@ const ProphecyView = () => {
               </div>
               
               <div className="divide-y divide-white/5">
-                {data?.teams.map((t, idx) => (
+                {(data?.teams || []).map((t, idx) => (
                   <motion.div 
                     key={t.team}
                     initial={{ opacity: 0, x: -10 }}
@@ -143,29 +143,29 @@ const ProphecyView = () => {
                 <div>
                   <p className="text-[9px] font-mono text-muted uppercase mb-2">Most Resilient Subject</p>
                   <div className="flex items-center gap-3 p-3 rounded bg-teal/5 border border-teal/20">
-                    <img src={getFlagUrl(data?.summary.top_gainer.team)} className="w-6 h-4 rounded-sm" />
-                    <p className="text-xs font-bold">{data?.summary.top_gainer.team}</p>
-                    <span className="ml-auto text-[10px] font-mono text-teal">+{ (data?.summary.top_gainer.delta * 100).toFixed(1) }pp</span>
+                    <img src={getFlagUrl(data?.summary?.top_gainer?.team)} className="w-6 h-4 rounded-sm" />
+                    <p className="text-xs font-bold">{data?.summary?.top_gainer?.team || '...'}</p>
+                    <span className="ml-auto text-[10px] font-mono text-teal">+{ ((data?.summary?.top_gainer?.delta || 0) * 100).toFixed(1) }pp</span>
                   </div>
                 </div>
                 
                 <div>
                   <p className="text-[9px] font-mono text-muted uppercase mb-2">Most Vulnerable Subject</p>
                   <div className="flex items-center gap-3 p-3 rounded bg-red/5 border border-red/20">
-                    <img src={getFlagUrl(data?.summary.top_loser.team)} className="w-6 h-4 rounded-sm" />
-                    <p className="text-xs font-bold">{data?.summary.top_loser.team}</p>
-                    <span className="ml-auto text-[10px] font-mono text-red">{ (data?.summary.top_loser.delta * 100).toFixed(1) }pp</span>
+                    <img src={getFlagUrl(data?.summary?.top_loser?.team)} className="w-6 h-4 rounded-sm" />
+                    <p className="text-xs font-bold">{data?.summary?.top_loser?.team || '...'}</p>
+                    <span className="ml-auto text-[10px] font-mono text-red">{ ((data?.summary?.top_loser?.delta || 0) * 100).toFixed(1) }pp</span>
                   </div>
                 </div>
 
                 <div className="pt-6 border-t border-border">
                   <div className="flex justify-between items-center mb-2">
                     <span className="text-[9px] font-mono text-muted uppercase">Global Volatility</span>
-                    <span className="text-xs font-bold text-amber">{(data?.summary.volatility * 100).toFixed(2)}%</span>
+                    <span className="text-xs font-bold text-amber">{((data?.summary?.volatility || 0) * 100).toFixed(2)}%</span>
                   </div>
                   <div className="h-1 bg-foreground/20 rounded-full overflow-hidden">
                     <motion.div 
-                      animate={{ width: `${Math.min(100, data?.summary.volatility * 1000)}%` }}
+                      animate={{ width: `${Math.min(100, (data?.summary?.volatility || 0) * 1000)}%` }}
                       className="h-full bg-amber shadow-[0_0_10px_rgba(245,158,11,0.5)]"
                     />
                   </div>

@@ -81,7 +81,7 @@ const TeamDetail = ({ team, onClose }) => {
               className="p-4 lg:p-6 space-y-6 lg:space-y-8"
             >
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <StatBox label="Conflux Score" value={team.conflux_score.toFixed(3)} color="text-amber" icon={<Activity size={14}/>} />
+                <StatBox label="Conflux Score" value={team?.conflux_score?.toFixed(3) ?? '0.000'} color="text-amber" icon={<Activity size={14}/>} />
                 <StatBox label="Squad Valuation" value={loading ? "..." : (squadData?.total_valuation ? `€${(squadData.total_valuation / 1000000).toFixed(0)}M` : 'N/A')} color="text-teal" icon={<DollarSign size={14}/>} />
               </div>
 
@@ -92,7 +92,7 @@ const TeamDetail = ({ team, onClose }) => {
                     <Shield size={12} className="text-amber" /> Tactical Roster Explorer
                   </h3>
                   <div className="text-[9px] font-mono text-muted uppercase tracking-widest">
-                    {squadData?.squad.length || 0} Assets Detected
+                    {(squadData?.squad ?? []).length || 0} Assets Detected
                   </div>
                 </div>
                 
@@ -106,9 +106,9 @@ const TeamDetail = ({ team, onClose }) => {
                 </div>
               ) : (
                   <div className="space-y-3">
-                    {squadData?.squad.map((player, idx) => (
+                    {(squadData?.squad ?? []).map((player, idx) => (
                       <motion.div 
-                        key={`${player.name}-${idx}`} 
+                        key={`${player?.name ?? 'player'}-${idx}`} 
                         initial={{ opacity: 0, x: 10 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ delay: idx * 0.05 }}
@@ -118,19 +118,19 @@ const TeamDetail = ({ team, onClose }) => {
                         <div className="absolute inset-y-0 left-0 w-1 bg-amber scale-y-0 group-hover:scale-y-100 transition-transform origin-top" />
                         <div className="flex items-center gap-4 w-full">
                           <img 
-                            src={player.image_url || `https://api.dicebear.com/7.x/avataaars/svg?seed=${player.name}`} 
-                            alt={player.name} 
+                            src={player?.image_url || `https://api.dicebear.com/7.x/avataaars/svg?seed=${player?.name ?? 'unknown'}`} 
+                            alt={player?.name ?? 'player'} 
                             className="w-10 h-10 lg:w-12 lg:h-12 rounded-xl bg-bg1 border border-border group-hover:border-amber/50 transition-colors"
                           />
                           <div className="flex-1">
                             <div className="flex items-center gap-2">
-                              <h4 className="text-sm font-bold text-foreground group-hover:text-foreground transition-colors truncate">{player.name}</h4>
-                              {player.is_star && <Star size={10} className="fill-amber text-amber" />}
+                              <h4 className="text-sm font-bold text-foreground group-hover:text-foreground transition-colors truncate">{player?.name ?? 'Unknown'}</h4>
+                              {player?.is_star && <Star size={10} className="fill-amber text-amber" />}
                             </div>
-                            <p className="text-[10px] font-mono text-foreground/30 uppercase tracking-wider truncate">{player.position} • {player.club}</p>
+                            <p className="text-[10px] font-mono text-foreground/30 uppercase tracking-wider truncate">{player?.position ?? 'N/A'} • {player?.club ?? 'N/A'}</p>
                           </div>
                           <div className="text-right sm:hidden">
-                            <p className="text-xs font-mono font-bold text-foreground">€{(player.market_value_eur / 1000000).toFixed(1)}M</p>
+                            <p className="text-xs font-mono font-bold text-foreground">€{((player?.market_value_eur ?? 0) / 1000000).toFixed(1)}M</p>
                           </div>
                         </div>
 
@@ -138,15 +138,15 @@ const TeamDetail = ({ team, onClose }) => {
                           <div className="flex-1 h-1 bg-foreground/20 rounded-full overflow-hidden">
                             <motion.div 
                               initial={{ width: 0 }}
-                              animate={{ width: `${(player.conflux_influence || 0) * 100}%` }}
+                              animate={{ width: `${(player?.conflux_influence || 0) * 100}%` }}
                               className="h-full bg-amber/40" 
                             />
                           </div>
-                          <span className="text-[9px] font-mono text-muted">{((player.conflux_influence || 0) * 100).toFixed(0)}%</span>
+                          <span className="text-[9px] font-mono text-muted">{((player?.conflux_influence || 0) * 100).toFixed(0)}%</span>
                         </div>
 
                         <div className="hidden sm:block text-right">
-                          <p className="text-xs font-mono font-bold text-foreground tracking-tighter whitespace-nowrap">€{(player.market_value_eur / 1000000).toFixed(1)}M</p>
+                          <p className="text-xs font-mono font-bold text-foreground tracking-tighter whitespace-nowrap">€{((player?.market_value_eur ?? 0) / 1000000).toFixed(1)}M</p>
                           <div className="flex items-center justify-end gap-1 mt-1">
                              <TrendingUp size={10} className="text-teal" />
                              <span className="text-[8px] font-mono text-teal">+1.2%</span>

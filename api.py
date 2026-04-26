@@ -148,7 +148,7 @@ async def startup_event():
     refresh_thread.start()
     print("◈ SYSTEM: 24h Background Data Refresh scheduled.")
 
-@app.get("/", tags=["System"])
+@app.api_route("/", methods=["GET", "HEAD"], tags=["System"])
 async def root():
     return {
         "app": "ORACLE-26 Conflux Intelligence Terminal",

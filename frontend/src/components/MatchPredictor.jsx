@@ -202,7 +202,7 @@ const MatchPredictor = ({ rankings, venues, onPredict }) => {
                </div>
 
                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                  {Object.entries(prediction.advantages).map(([key, team]) => (
+                  {Object.entries(prediction?.advantages || {}).map(([key, team]) => (
                     <div key={key} className="p-3 rounded-lg border border-border bg-[var(--card-bg)]">
                        <p className="text-[8px] font-mono text-muted uppercase mb-1">{key.replace('_', ' ')}</p>
                        <p className="text-[10px] font-bold text-teal flex items-center gap-2 truncate">
