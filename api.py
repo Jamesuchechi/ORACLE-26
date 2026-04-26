@@ -777,6 +777,7 @@ def get_model_validation():
 
 class ChatRequest(BaseModel):
     message: str
+    context: dict = {}
     history: list = []
     stream: bool = False
 
@@ -787,16 +788,17 @@ def analyst_chat(request: ChatRequest):
         if zerve_analyst is None:
             return {"response": "Link offline.", "timestamp": datetime.now().isoformat()}
             
-        context = zerve_analyst.build_cross_domain_context(request.message)
+        # Enhanced context building includes frontend-provided state (e.g. current page)
+        context = zerve_analyst.build_cross_domain_context(request.message, page_context=request.context)
         
         if request.stream:
             from fastapi.responses import StreamingResponse
             return StreamingResponse(
-                zerve_analyst.generate_insight_stream(context, request.message, request.history),
+                zerve_analyst.generate_insight_stream(context, request.message, request.history, page_context=request.context),
                 media_type="text/event-stream"
             )
         
-        insight = zerve_analyst.generate_insight(context, request.message, request.history)
+        insight = zerve_analyst.generate_insight(context, request.message, request.history, page_context=request.context)
         return {"response": insight, "timestamp": datetime.now().isoformat()}
     except Exception as e:
         print(f"Chat Error: {e}")

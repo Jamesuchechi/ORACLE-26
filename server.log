@@ -1,0 +1,65 @@
+/home/jamesuchechi/Projects/ORACLE-26/api.py:150: DeprecationWarning: 
+        on_event is deprecated, use lifespan event handlers instead.
+
+        Read more about it in the
+        [FastAPI docs for Lifespan Events](https://fastapi.tiangolo.com/advanced/events/).
+        
+  @app.on_event("startup")
+INFO:     Started server process [38767]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+◈ SYSTEM: 24h Background Data Refresh scheduled.
+◈ CRON: Starting 24h Intelligence Pipeline Refresh...
+
+◈◈◈◈◈◈◈◈◈◈◈◈◈◈◈◈◈◈◈◈◈◈◈◈◈◈◈◈◈◈◈◈◈◈◈◈◈◈◈◈◈◈◈◈◈◈◈◈◈◈
+◈ CONFLUX — MARCH 2026 SIGNAL SYNCHRONIZATION
+◈◈◈◈◈◈◈◈◈◈◈◈◈◈◈◈◈◈◈◈◈◈◈◈◈◈◈◈◈◈◈◈◈◈◈◈◈◈◈◈◈◈◈◈◈◈◈◈◈◈
+◈ CONFLUX | Generating March 2026 squads for 48 teams...
+  [squads] ✓ Saved data to data/processed/squad_data.json
+  [sports] Loaded 32,173 results from cache
+  [sports] Fetching Elo ratings...
+  [sports] Saved features for 48 teams → data/processed/sports_features.csv
+
+==================================================
+◈ CONFLUX | Climate Signal Collection
+==================================================
+  [climate] Building venue climate signals in parallel...
+  [climate] Open-Meteo failed for Lincoln Financial Field: HTTPSConnectionPool(host='climate-api.open-meteo.com', port=443): Read timed out. (read timeout=10)
+  [climate] Open-Meteo failed for Stade Olympique: HTTPSConnectionPool(host='climate-api.open-meteo.com', port=443): Read timed out. (read timeout=10)
+  [climate] Open-Meteo failed for BMO Field: HTTPSConnectionPool(host='climate-api.open-meteo.com', port=443): Read timed out. (read timeout=10)
+  [climate] Saved 16 venue signals
+  [climate] Building regional risk signals in parallel...
+  [climate] Open-Meteo failed for texas: HTTPSConnectionPool(host='climate-api.open-meteo.com', port=443): Max retries exceeded with url: /v1/climate?latitude=31.0&longitude=-100.0&start_date=2025-06-15&end_date=2025-07-15&models=ERA5&daily=temperature_2m_max,relative_humidity_2m_mean (Caused by NewConnectionError('<urllib3.connection.HTTPSConnection object at 0x720f2b193f80>: Failed to establish a new connection: [Errno 101] Network is unreachable'))
+  [climate] Open-Meteo failed for india: HTTPSConnectionPool(host='climate-api.open-meteo.com', port=443): Read timed out. (read timeout=10)
+  [climate] Open-Meteo failed for california: HTTPSConnectionPool(host='climate-api.open-meteo.com', port=443): Read timed out. (read timeout=10)
+  [climate] Open-Meteo failed for india: HTTPSConnectionPool(host='climate-api.open-meteo.com', port=443): Read timed out. (read timeout=10)
+  [economics] Scoring all 48 team nations...
+INFO:     127.0.0.1:58804 - "OPTIONS /v1/predict/wc2026/rankings?w_sports=0.4&w_markets=0.25&w_finance=0.15&w_climate=0.1&w_social=0.1 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58804 - "OPTIONS /v1/predict/market/alpha HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58810 - "OPTIONS /v1/analyst/briefing HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58804 - "OPTIONS /v1/predict/climate/venues HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58810 - "OPTIONS /v1/predict/wc2026/rankings?w_sports=0.4&w_markets=0.25&w_finance=0.15&w_climate=0.1&w_social=0.1 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58810 - "OPTIONS /v1/predict/market/alpha HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58848 - "OPTIONS /v1/analyst/briefing HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58804 - "GET /v1/predict/market/alpha HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58848 - "OPTIONS /v1/predict/climate/venues HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58804 - "GET /v1/predict/market/alpha HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58820 - "GET /v1/predict/wc2026/rankings?w_sports=0.4&w_markets=0.25&w_finance=0.15&w_climate=0.1&w_social=0.1 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58838 - "GET /v1/predict/climate/venues HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58810 - "GET /v1/predict/wc2026/rankings?w_sports=0.4&w_markets=0.25&w_finance=0.15&w_climate=0.1&w_social=0.1 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58804 - "GET /v1/predict/climate/venues HTTP/1.1" 200 OK
+INFO:     127.0.0.1:48142 - "OPTIONS /v1/predict/wc2026/tournament HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58830 - "GET /v1/analyst/briefing HTTP/1.1" 200 OK
+INFO:     127.0.0.1:48156 - "OPTIONS /v1/predict/wc2026/tournament HTTP/1.1" 200 OK
+INFO:     127.0.0.1:48142 - "GET /v1/predict/wc2026/tournament HTTP/1.1" 200 OK
+INFO:     127.0.0.1:48156 - "GET /v1/predict/wc2026/tournament HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58848 - "GET /v1/analyst/briefing HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34678 - "GET /v1/predict/market/alpha HTTP/1.1" 200 OK
+INFO:     127.0.0.1:43884 - "GET /v1/predict/market/alpha HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37254 - "GET /v1/predict/market/alpha HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53710 - "GET /v1/predict/market/alpha HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52070 - "GET /v1/predict/market/alpha HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50608 - "GET /v1/predict/market/alpha HTTP/1.1" 200 OK
+INFO:     127.0.0.1:44346 - "GET /v1/predict/market/alpha HTTP/1.1" 200 OK
+INFO:     127.0.0.1:41336 - "GET /v1/predict/market/alpha HTTP/1.1" 200 OK

@@ -4,10 +4,21 @@ import { Send, User, Bot, Sparkles, X, MessageSquare } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import axios from 'axios';
 
-const AnalystChat = ({ isOpen, onClose }) => {
-  const [messages, setMessages] = useState([
-    { role: 'bot', text: "Systems online. I am the Zerve Analyst. How can I assist with your tournament intelligence today?" }
-  ]);
+const AnalystChat = ({ isOpen, onClose, activePage }) => {
+  const [messages, setMessages] = useState([]);
+  
+  useEffect(() => {
+    if (messages.length === 0) {
+      const greetings = {
+        'bracket': "Neural link stable. I am the Zerve Analyst. Ready to dive into the **Tournament Bracket Simulation**. Which group should we dissect first?",
+        'fusion': "Fusion matrix synchronized. I'm here to help you interpret the **cross-domain interactions** between sports, markets, and climate.",
+        'alpha': "Alpha Radar active. I've spotted some significant **market mispricings**. Would you like to review the high-conviction value plays?",
+        'prophecy': "Prophecy Engine online. We are currently simulating **macro-signal shifts**. What global event shall we model next?"
+      };
+      const defaultGreeting = "Systems online. I am the Zerve Analyst. How can I assist with your tournament intelligence today?";
+      setMessages([{ role: 'bot', text: greetings[activePage] || defaultGreeting }]);
+    }
+  }, [activePage, messages.length]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
   const scrollRef = useRef(null);
@@ -40,6 +51,7 @@ const AnalystChat = ({ isOpen, onClose }) => {
         body: JSON.stringify({ 
           message: text, 
           history: history,
+          context: { activePage: activePage },
           stream: true 
         })
       });

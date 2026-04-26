@@ -550,7 +550,11 @@ const App = () => {
       theme={theme}
       onThemeToggle={handleThemeToggle}
     >
-      <AnalystChat isOpen={isChatOpen} onClose={() => setIsChatOpen(false)} />
+      <AnalystChat 
+        isOpen={isChatOpen} 
+        onClose={() => setIsChatOpen(false)} 
+        activePage={view}
+      />
 
       <AnimatePresence>
         {selectedTeam && (
