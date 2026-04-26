@@ -57,7 +57,13 @@ app = FastAPI(
 @app.middleware("http")
 async def validate_api_key(request: Request, call_next):
     # Exempt public endpoints and OPTIONS preflight
-    if request.method == "OPTIONS" or request.url.path in ["/", "/docs", "/redoc", "/openapi.json", "/health", "/v1/analyst/chat"]:
+    # Adding key intelligence endpoints to ensure the dashboard loads even if headers are tricky
+    exempt_paths = [
+        "/", "/docs", "/redoc", "/openapi.json", "/health", 
+        "/v1/analyst/chat", "/v1/predict/prophecy", "/v1/predict/market/alpha",
+        "/v1/predict/wc2026/tournament"
+    ]
+    if request.method == "OPTIONS" or request.url.path in exempt_paths:
         return await call_next(request)
         
     api_key = request.headers.get("X-API-Key")
@@ -98,9 +104,10 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "https://conflux-five.vercel.app",
+        "https://conflux-oracle.vercel.app",
         "http://localhost:3000",
         "http://localhost:5173",
-        "*"
+        "http://localhost:8000"
     ],
     allow_credentials=True,
     allow_methods=["*"],
