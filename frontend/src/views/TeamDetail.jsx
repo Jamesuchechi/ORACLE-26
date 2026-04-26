@@ -44,29 +44,29 @@ const TeamDetail = ({ team, onClose }) => {
       animate={{ opacity: 1, x: 0 }}
       exit={{ opacity: 0, x: '100%' }}
       transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-      className="fixed inset-y-0 right-0 w-full lg:w-[550px] bg-bg/95 backdrop-blur-3xl border-l border-white/10 z-[100] shadow-[0_0_80px_rgba(0,0,0,0.8)] flex flex-col overflow-hidden"
+      className="fixed inset-y-0 right-0 w-full lg:w-[550px] bg-bg/95 backdrop-blur-3xl border-l border-border z-[100] shadow-[0_0_80px_rgba(0,0,0,0.8)] flex flex-col overflow-hidden"
     >
       {/* Scanline Overlay */}
       <div className="absolute inset-0 pointer-events-none z-10 opacity-[0.03] bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.25)_50%)] bg-[length:100%_4px]" />
 
-      <div className="p-6 border-b border-white/5 flex items-center justify-between bg-bg1/50 backdrop-blur-md z-20">
+      <div className="p-6 border-b border-border flex items-center justify-between bg-bg1/50 backdrop-blur-md z-20">
         <div className="flex items-center gap-4">
           <motion.img 
             layoutId={`flag-${team.subject}`}
             src={getFlagUrl(team.subject)} 
             alt={team.subject} 
-            className="w-10 h-7 object-cover rounded-sm border border-white/10 shadow-lg"
+            className="w-10 h-7 object-cover rounded-sm border border-border shadow-lg"
           />
           <div>
-            <h2 className="text-xl font-bold tracking-tight text-white/90 uppercase">{team.subject}</h2>
+            <h2 className="text-xl font-bold tracking-tight text-foreground/90 uppercase">{team.subject}</h2>
             <p className="text-[10px] font-mono text-amber/60 uppercase tracking-[0.3em]">Intelligence Vertical I // Profile</p>
           </div>
         </div>
         <button 
           onClick={onClose}
-          className="w-10 h-10 rounded-full hover:bg-white/5 flex items-center justify-center transition-all hover:rotate-90"
+          className="w-10 h-10 rounded-full hover:bg-foreground/20 flex items-center justify-center transition-all hover:rotate-90"
         >
-          <X size={20} className="text-white/40" />
+          <X size={20} className="text-muted" />
         </button>
       </div>
 
@@ -88,16 +88,16 @@ const TeamDetail = ({ team, onClose }) => {
               {/* Roster Explorer */}
               <div>
                 <div className="flex items-center justify-between mb-6">
-                  <h3 className="text-[10px] font-mono font-bold text-white/40 tracking-[0.2em] uppercase flex items-center gap-2">
+                  <h3 className="text-[10px] font-mono font-bold text-muted tracking-[0.2em] uppercase flex items-center gap-2">
                     <Shield size={12} className="text-amber" /> Tactical Roster Explorer
                   </h3>
-                  <div className="text-[9px] font-mono text-white/20 uppercase tracking-widest">
+                  <div className="text-[9px] font-mono text-muted uppercase tracking-widest">
                     {squadData?.squad.length || 0} Assets Detected
                   </div>
                 </div>
                 
                 {loading ? (
-                <div className="p-12 text-center font-mono text-white/20 animate-pulse uppercase tracking-widest text-[10px]">
+                <div className="p-12 text-center font-mono text-muted animate-pulse uppercase tracking-widest text-[10px]">
                   Intercepting Squad Communications...
                 </div>
               ) : error ? (
@@ -113,40 +113,40 @@ const TeamDetail = ({ team, onClose }) => {
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ delay: idx * 0.05 }}
                         onClick={() => setSelectedPlayer(player)}
-                        className="group flex flex-col sm:flex-row items-start sm:items-center gap-4 p-4 rounded-xl bg-white/[0.02] border border-white/5 hover:border-amber/30 hover:bg-white/[0.04] transition-all cursor-pointer relative overflow-hidden"
+                        className="group flex flex-col sm:flex-row items-start sm:items-center gap-4 p-4 rounded-xl bg-[var(--card-bg)] border border-border hover:border-amber/30 hover:bg-[var(--card-bg)] transition-all cursor-pointer relative overflow-hidden"
                       >
                         <div className="absolute inset-y-0 left-0 w-1 bg-amber scale-y-0 group-hover:scale-y-100 transition-transform origin-top" />
                         <div className="flex items-center gap-4 w-full">
                           <img 
                             src={player.image_url || `https://api.dicebear.com/7.x/avataaars/svg?seed=${player.name}`} 
                             alt={player.name} 
-                            className="w-10 h-10 lg:w-12 lg:h-12 rounded-xl bg-bg1 border border-white/10 group-hover:border-amber/50 transition-colors"
+                            className="w-10 h-10 lg:w-12 lg:h-12 rounded-xl bg-bg1 border border-border group-hover:border-amber/50 transition-colors"
                           />
                           <div className="flex-1">
                             <div className="flex items-center gap-2">
-                              <h4 className="text-sm font-bold text-white/80 group-hover:text-white transition-colors truncate">{player.name}</h4>
+                              <h4 className="text-sm font-bold text-foreground group-hover:text-foreground transition-colors truncate">{player.name}</h4>
                               {player.is_star && <Star size={10} className="fill-amber text-amber" />}
                             </div>
-                            <p className="text-[10px] font-mono text-white/30 uppercase tracking-wider truncate">{player.position} • {player.club}</p>
+                            <p className="text-[10px] font-mono text-foreground/30 uppercase tracking-wider truncate">{player.position} • {player.club}</p>
                           </div>
                           <div className="text-right sm:hidden">
-                            <p className="text-xs font-mono font-bold text-white/80">€{(player.market_value_eur / 1000000).toFixed(1)}M</p>
+                            <p className="text-xs font-mono font-bold text-foreground">€{(player.market_value_eur / 1000000).toFixed(1)}M</p>
                           </div>
                         </div>
 
                         <div className="mt-1 sm:mt-0 w-full flex items-center gap-3">
-                          <div className="flex-1 h-1 bg-white/5 rounded-full overflow-hidden">
+                          <div className="flex-1 h-1 bg-foreground/20 rounded-full overflow-hidden">
                             <motion.div 
                               initial={{ width: 0 }}
                               animate={{ width: `${(player.conflux_influence || 0) * 100}%` }}
                               className="h-full bg-amber/40" 
                             />
                           </div>
-                          <span className="text-[9px] font-mono text-white/20">{((player.conflux_influence || 0) * 100).toFixed(0)}%</span>
+                          <span className="text-[9px] font-mono text-muted">{((player.conflux_influence || 0) * 100).toFixed(0)}%</span>
                         </div>
 
                         <div className="hidden sm:block text-right">
-                          <p className="text-xs font-mono font-bold text-white/80 tracking-tighter whitespace-nowrap">€{(player.market_value_eur / 1000000).toFixed(1)}M</p>
+                          <p className="text-xs font-mono font-bold text-foreground tracking-tighter whitespace-nowrap">€{(player.market_value_eur / 1000000).toFixed(1)}M</p>
                           <div className="flex items-center justify-end gap-1 mt-1">
                              <TrendingUp size={10} className="text-teal" />
                              <span className="text-[8px] font-mono text-teal">+1.2%</span>
@@ -191,7 +191,7 @@ const PlayerDetail = ({ player, team, onBack }) => {
     >
       <button 
         onClick={onBack}
-        className="flex items-center gap-2 text-[10px] font-mono text-white/40 hover:text-white transition-colors uppercase tracking-[0.2em]"
+        className="flex items-center gap-2 text-[10px] font-mono text-muted hover:text-foreground transition-colors uppercase tracking-[0.2em]"
       >
         <ArrowLeft size={14} /> Back to Roster
       </button>
@@ -201,9 +201,9 @@ const PlayerDetail = ({ player, team, onBack }) => {
           <img 
             src={player.image_url || `https://api.dicebear.com/7.x/avataaars/svg?seed=${player.name}`} 
             alt={player.name} 
-            className="w-24 h-24 lg:w-32 lg:h-32 rounded-3xl bg-bg1 border border-white/10 shadow-2xl"
+            className="w-24 h-24 lg:w-32 lg:h-32 rounded-3xl bg-bg1 border border-border shadow-2xl"
           />
-          <div className="absolute -bottom-2 -right-2 w-8 h-8 lg:w-10 lg:h-10 rounded-full bg-bg border border-white/10 flex items-center justify-center overflow-hidden">
+          <div className="absolute -bottom-2 -right-2 w-8 h-8 lg:w-10 lg:h-10 rounded-full bg-bg border border-border flex items-center justify-center overflow-hidden">
             <img src={getFlagUrl(team.subject)} alt={team.subject} className="w-full h-full object-cover" />
           </div>
         </div>
@@ -211,11 +211,11 @@ const PlayerDetail = ({ player, team, onBack }) => {
           <h3 className="text-2xl lg:text-3xl font-bold tracking-tighter mb-1 truncate max-w-[280px] sm:max-w-none">{player.name}</h3>
           <p className="text-xs lg:text-sm font-mono text-amber mb-4 uppercase tracking-widest">{player.position} // {player.club}</p>
           <div className="flex flex-wrap justify-center sm:justify-start gap-3 lg:gap-4">
-             <div className="px-3 py-1.5 rounded-lg bg-white/5 border border-white/5 flex items-center gap-2">
+             <div className="px-3 py-1.5 rounded-lg bg-foreground/20 border border-border flex items-center gap-2">
                 <BarChart2 size={12} className="text-teal" />
                 <span className="text-[10px] font-mono font-bold">€{(player.market_value_eur / 1000000).toFixed(1)}M</span>
              </div>
-             <div className="px-3 py-1.5 rounded-lg bg-white/5 border border-white/5 flex items-center gap-2">
+             <div className="px-3 py-1.5 rounded-lg bg-foreground/20 border border-border flex items-center gap-2">
                 <Activity size={12} className="text-amber" />
                 <span className="text-[10px] font-mono font-bold">{(player.conflux_influence * 100).toFixed(1)}% IMPACT</span>
              </div>
@@ -225,7 +225,7 @@ const PlayerDetail = ({ player, team, onBack }) => {
 
       {/* Valuation History Chart */}
       <div className="terminal-card">
-        <h4 className="text-[10px] font-mono font-bold text-white/30 tracking-[0.2em] uppercase mb-6 flex items-center gap-2">
+        <h4 className="text-[10px] font-mono font-bold text-foreground/30 tracking-[0.2em] uppercase mb-6 flex items-center gap-2">
           <TrendingUp size={12} className="text-teal" /> Market Valuation History (€)
         </h4>
         <div className="h-48 w-full">
@@ -269,8 +269,8 @@ const PlayerDetail = ({ player, team, onBack }) => {
 
       {/* Intelligence Insights */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <div className="p-4 lg:p-5 rounded-2xl bg-white/[0.02] border border-white/5">
-           <h5 className="text-[9px] font-mono text-white/20 uppercase tracking-[0.2em] mb-3 flex items-center gap-2">
+        <div className="p-4 lg:p-5 rounded-2xl bg-[var(--card-bg)] border border-border">
+           <h5 className="text-[9px] font-mono text-muted uppercase tracking-[0.2em] mb-3 flex items-center gap-2">
              <Info size={12} className="text-amber" /> Tactical Profile
            </h5>
            <ul className="space-y-3">
@@ -279,8 +279,8 @@ const PlayerDetail = ({ player, team, onBack }) => {
              <InsightItem label="Social Momentum" value="Rising" />
            </ul>
         </div>
-        <div className="p-4 lg:p-5 rounded-2xl bg-white/[0.02] border border-white/5">
-           <h5 className="text-[9px] font-mono text-white/20 uppercase tracking-[0.2em] mb-3 flex items-center gap-2">
+        <div className="p-4 lg:p-5 rounded-2xl bg-[var(--card-bg)] border border-border">
+           <h5 className="text-[9px] font-mono text-muted uppercase tracking-[0.2em] mb-3 flex items-center gap-2">
              <Shield size={12} className="text-teal" /> Conflux Matrix
            </h5>
            <ul className="space-y-3">
@@ -296,17 +296,17 @@ const PlayerDetail = ({ player, team, onBack }) => {
 
 const InsightItem = ({ label, value }) => (
   <li className="flex justify-between items-center">
-    <span className="text-[10px] font-mono text-white/40">{label}</span>
-    <span className="text-[10px] font-mono font-bold text-white/70">{value}</span>
+    <span className="text-[10px] font-mono text-muted">{label}</span>
+    <span className="text-[10px] font-mono font-bold text-foreground/70">{value}</span>
   </li>
 );
 
 const StatBox = ({ label, value, color, icon }) => (
-  <div className="p-5 rounded-2xl border border-white/10 bg-white/[0.02] relative overflow-hidden group">
-    <div className="absolute top-0 right-0 p-3 text-white/5 group-hover:text-white/10 transition-colors">
+  <div className="p-5 rounded-2xl border border-border bg-[var(--card-bg)] relative overflow-hidden group">
+    <div className="absolute top-0 right-0 p-3 text-foreground/5 group-hover:text-foreground/10 transition-colors">
       {icon}
     </div>
-    <p className="text-[10px] font-mono text-white/20 uppercase mb-2 tracking-widest">{label}</p>
+    <p className="text-[10px] font-mono text-muted uppercase mb-2 tracking-widest">{label}</p>
     <p className={`text-2xl font-mono font-bold tracking-tighter ${color}`}>{value}</p>
   </div>
 );

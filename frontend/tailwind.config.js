@@ -7,15 +7,18 @@ export default {
   theme: {
     extend: {
       colors: {
-        bg: "#0a0b0d",
-        bg1: "#0f1114",
-        bg2: "#141720",
-        bg3: "#1a1f2e",
-        amber: "#e8a030",
-        teal: "#2dd4a0",
-        red: "#e85d4a",
-        blue: "#5b9cf6",
-        coral: "#e87060",
+        bg: "var(--bg)",
+        bg1: "var(--bg1)",
+        bg2: "var(--bg2)",
+        bg3: "var(--bg3)",
+        amber: "rgb(var(--amber-rgb) / <alpha-value>)",
+        teal: "rgb(var(--teal-rgb) / <alpha-value>)",
+        red: "rgb(var(--red-rgb) / <alpha-value>)",
+        blue: "rgb(var(--blue-rgb) / <alpha-value>)",
+        coral: "rgb(var(--coral-rgb) / <alpha-value>)",
+        foreground: "rgb(var(--foreground-rgb) / <alpha-value>)",
+        muted: "rgb(var(--muted-rgb) / <alpha-value>)",
+        border: "var(--border)",
       },
       fontFamily: {
         mono: ['DM Mono', 'monospace'],

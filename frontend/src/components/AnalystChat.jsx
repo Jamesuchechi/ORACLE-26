@@ -18,23 +18,83 @@ const AnalystChat = ({ isOpen, onClose }) => {
     }
   }, [messages]);
 
-  const handleSend = async () => {
-    if (!input.trim() || loading) return;
+  const handleSend = async (overrideInput = null) => {
+    const text = overrideInput || input;
+    if (!text.trim() || loading) return;
     
-    const userMsg = { role: 'user', text: input };
+    const userMsg = { role: 'user', text: text };
+    const history = messages.slice(-5).map(m => ({ role: m.role === 'user' ? 'user' : 'assistant', content: m.text }));
+    
     setMessages(prev => [...prev, userMsg]);
     setInput('');
     setLoading(true);
 
     try {
-      const response = await axios.post('/v1/analyst/chat', { message: userMsg.text });
-      setMessages(prev => [...prev, { role: 'bot', text: response.data.response }]);
+      // Use fetch for streaming support
+      const response = await fetch(`${axios.defaults.baseURL}/v1/analyst/chat`, {
+        method: 'POST',
+        headers: { 
+          'Content-Type': 'application/json',
+          'X-API-Key': 'conflux_dev_2026'
+        },
+        body: JSON.stringify({ 
+          message: text, 
+          history: history,
+          stream: true 
+        })
+      });
+
+      if (!response.ok) throw new Error('Stream failed');
+
+      // Add a placeholder bot message for the stream
+      setMessages(prev => [...prev, { role: 'bot', text: '' }]);
+      
+      const reader = response.body.getReader();
+      const decoder = new TextDecoder();
+      let done = false;
+      let botText = '';
+
+      while (!done) {
+        const { value, done: readerDone } = await reader.read();
+        done = readerDone;
+        const chunk = decoder.decode(value, { stream: true });
+        botText += chunk;
+        
+        // Update the last message
+        setMessages(prev => {
+          const newMessages = [...prev];
+          let displayText = botText;
+          
+          // Fallback: If the response is a JSON object (common if backend hasn't restarted)
+          // we parse it to show only the 'response' field
+          if (botText.trim().startsWith('{')) {
+            try {
+              const parsed = JSON.parse(botText);
+              displayText = parsed.response || parsed.message || botText;
+            } catch (e) {
+              // Partial JSON, wait for more chunks or keep raw
+            }
+          }
+          
+          newMessages[newMessages.length - 1].text = displayText;
+          return newMessages;
+        });
+      }
     } catch (err) {
-      setMessages(prev => [...prev, { role: 'bot', text: "Communication link severed. Please check system status." }]);
+      console.error('Chat error:', err);
+      setMessages(prev => [...prev, { role: 'bot', text: "Communication link severed. Falling back to heuristic reasoning..." }]);
     } finally {
       setLoading(false);
     }
   };
+
+  const quickActions = [
+    { label: "Who will win WC2026?", query: "Analyze the top 3 contenders for the World Cup based on all signals." },
+    { label: "Top Upset Picks?", query: "Identify the top 3 teams currently most undervalued by markets." },
+    { label: "Market Alpha?", query: "Where is the biggest mispricing in prediction markets right now?" },
+    { label: "Climate Briefing", query: "Which venues pose the highest biometric risk for top teams?" },
+    { label: "Cultural Moments", query: "Which social trends are reaching a tipping point and how do they link to markets?" }
+  ];
 
   return (
     <AnimatePresence>
@@ -44,10 +104,10 @@ const AnalystChat = ({ isOpen, onClose }) => {
           animate={{ x: 0 }}
           exit={{ x: '100%' }}
           transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-          className="fixed right-0 top-0 h-screen w-96 bg-bg/95 backdrop-blur-xl border-l border-white/10 z-[100] flex flex-col shadow-2xl"
+          className="fixed right-0 top-0 h-screen w-96 bg-bg/95 backdrop-blur-xl border-l border-border z-[100] flex flex-col shadow-2xl"
         >
           {/* Header */}
-          <div className="p-6 border-b border-white/5 flex justify-between items-center bg-bg1/50">
+          <div className="p-6 border-b border-border flex justify-between items-center bg-bg1/50">
             <div className="flex items-center gap-3">
               <div className="w-8 h-8 rounded-lg bg-amber/10 flex items-center justify-center text-amber">
                 <Bot size={20} />
@@ -57,7 +117,7 @@ const AnalystChat = ({ isOpen, onClose }) => {
                 <p className="text-[9px] font-mono text-teal uppercase animate-pulse">Neural Link Active</p>
               </div>
             </div>
-            <button onClick={onClose} className="p-2 hover:bg-white/5 rounded-full transition-colors text-white/30 hover:text-white">
+            <button onClick={onClose} className="p-2 hover:bg-foreground/20 rounded-full transition-colors text-foreground/30 hover:text-foreground">
               <X size={20} />
             </button>
           </div>
@@ -72,14 +132,14 @@ const AnalystChat = ({ isOpen, onClose }) => {
                 className={`flex gap-3 ${msg.role === 'user' ? 'flex-row-reverse' : ''}`}
               >
                 <div className={`w-8 h-8 rounded flex items-center justify-center shrink-0 ${
-                  msg.role === 'user' ? 'bg-white/10 text-white/40' : 'bg-amber/10 text-amber'
+                  msg.role === 'user' ? 'bg-foreground/25 text-muted' : 'bg-amber/10 text-amber'
                 }`}>
                   {msg.role === 'user' ? <User size={14}/> : <Sparkles size={14}/>}
                 </div>
                 <div className={`p-4 rounded-2xl max-w-[85%] text-[12px] leading-[1.6] shadow-lg ${
                   msg.role === 'user' 
                     ? 'bg-amber text-bg font-medium rounded-tr-none' 
-                    : 'bg-white/[0.03] border border-white/5 backdrop-blur-md rounded-tl-none text-white/90'
+                    : 'bg-[var(--card-bg)] border border-border backdrop-blur-md rounded-tl-none text-foreground/90'
                 }`}>
                   <div className="prose prose-invert prose-xs max-w-none 
                     prose-p:leading-relaxed prose-p:mb-2 last:prose-p:mb-0
@@ -95,7 +155,7 @@ const AnalystChat = ({ isOpen, onClose }) => {
                 <div className="w-8 h-8 rounded bg-amber/10 flex items-center justify-center text-amber">
                   <Bot size={14}/>
                 </div>
-                <div className="flex gap-1 items-center p-3 rounded-xl bg-bg1 border border-white/5">
+                <div className="flex gap-1 items-center p-3 rounded-xl bg-bg1 border border-border">
                    <div className="w-1 h-1 bg-amber rounded-full animate-bounce" />
                    <div className="w-1 h-1 bg-amber rounded-full animate-bounce [animation-delay:0.2s]" />
                    <div className="w-1 h-1 bg-amber rounded-full animate-bounce [animation-delay:0.4s]" />
@@ -104,8 +164,22 @@ const AnalystChat = ({ isOpen, onClose }) => {
             )}
           </div>
 
+          {/* Quick Actions */}
+          <div className="px-6 py-2 overflow-x-auto scrollbar-hide flex gap-2 shrink-0 border-t border-border">
+            {quickActions.map(action => (
+              <button
+                key={action.label}
+                onClick={() => handleSend(action.query)}
+                disabled={loading}
+                className="whitespace-nowrap px-3 py-1.5 rounded-full bg-foreground/20 border border-border text-[9px] font-mono text-muted hover:text-foreground hover:bg-foreground/25 transition-all uppercase tracking-widest disabled:opacity-80 dark:opacity-50"
+              >
+                {action.label}
+              </button>
+            ))}
+          </div>
+
           {/* Input */}
-          <div className="p-6 border-t border-white/5 bg-bg1/50">
+          <div className="p-6 border-t border-border bg-bg1/50">
             <div className="relative">
               <input 
                 type="text"
@@ -113,17 +187,17 @@ const AnalystChat = ({ isOpen, onClose }) => {
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && handleSend()}
                 placeholder="Ask the Analyst anything..."
-                className="w-full bg-white/5 border border-white/10 rounded-lg py-3 px-4 text-[11px] focus:outline-none focus:border-amber/50 transition-all placeholder:text-white/10"
+                className="w-full bg-foreground/20 border border-border rounded-lg py-3 px-4 text-[11px] focus:outline-none focus:border-amber/50 transition-all placeholder:text-foreground/10"
               />
               <button 
                 onClick={handleSend}
                 disabled={!input.trim() || loading}
-                className="absolute right-2 top-1.5 p-1.5 bg-amber text-bg rounded-md hover:scale-105 active:scale-95 disabled:opacity-50 disabled:scale-100 transition-all"
+                className="absolute right-2 top-1.5 p-1.5 bg-amber text-bg rounded-md hover:scale-105 active:scale-95 disabled:opacity-80 dark:opacity-50 disabled:scale-100 transition-all"
               >
                 <Send size={16} />
               </button>
             </div>
-            <p className="mt-3 text-[9px] font-mono text-white/10 text-center uppercase tracking-widest">
+            <p className="mt-3 text-[9px] font-mono text-foreground/10 text-center uppercase tracking-widest">
               Secured Neural Uplink v4.0
             </p>
           </div>

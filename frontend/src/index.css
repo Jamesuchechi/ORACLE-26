@@ -2,26 +2,96 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --bg: #0a0b0d;
+  --bg1: #0f1114;
+  --bg2: #141720;
+  --bg3: #1a1f2e;
+  --amber-rgb: 232 160 48;
+  --teal-rgb: 45 212 160;
+  --red-rgb: 232 93 74;
+  --blue-rgb: 91 156 246;
+  --coral-rgb: 232 112 96;
+  --foreground-rgb: 255 255 255;
+  --muted-rgb: 255 255 255;
+  --amber: rgb(var(--amber-rgb));
+  --teal: rgb(var(--teal-rgb));
+  --red: rgb(var(--red-rgb));
+  --blue: rgb(var(--blue-rgb));
+  --coral: rgb(var(--coral-rgb));
+  --text: rgba(var(--foreground-rgb), 0.9);
+  --muted: rgba(var(--muted-rgb), 0.4);
+  --border: rgba(255, 255, 255, 0.1);
+  --card-bg: rgba(255, 255, 255, 0.03);
+}
+
+.light {
+  --bg: #f5f7fa;
+  --bg1: #ffffff;
+  --bg2: #f0f2f5;
+  --bg3: #e1e4e8;
+  --amber-rgb: 217 119 6;
+  --teal-rgb: 5 150 105;
+  --red-rgb: 220 38 38;
+  --blue-rgb: 37 99 235;
+  --coral-rgb: 219 39 119;
+  --foreground-rgb: 26 27 30;
+  --muted-rgb: 100 116 139;
+  --amber: rgb(var(--amber-rgb));
+  --teal: rgb(var(--teal-rgb));
+  --red: rgb(var(--red-rgb));
+  --blue: rgb(var(--blue-rgb));
+  --coral: rgb(var(--coral-rgb));
+  --text: rgb(var(--foreground-rgb));
+  --muted: rgb(var(--muted-rgb));
+  --border: rgba(0, 0, 0, 0.1);
+  --card-bg: rgba(255, 255, 255, 0.8);
+
+  /* Prose Light Mode Overrides */
+  --tw-prose-body: var(--text);
+  --tw-prose-headings: var(--text);
+  --tw-prose-lead: var(--muted);
+  --tw-prose-links: var(--amber);
+  --tw-prose-bold: var(--text);
+  --tw-prose-counters: var(--muted);
+  --tw-prose-bullets: var(--muted);
+  --tw-prose-hr: var(--border);
+  --tw-prose-quotes: var(--text);
+  --tw-prose-quote-borders: var(--border);
+  --tw-prose-captions: var(--muted);
+  --tw-prose-code: var(--text);
+  --tw-prose-pre-code: var(--text);
+  --tw-prose-pre-bg: var(--bg3);
+  --tw-prose-th-borders: var(--border);
+  --tw-prose-td-borders: var(--border);
+}
+
 @layer base {
   body {
-    @apply bg-bg text-white/90 font-sans selection:bg-amber/30 selection:text-amber overflow-hidden;
-    background: radial-gradient(circle at 50% 50%, #1a1a1a 0%, #0a0a0a 100%);
+    @apply bg-bg font-sans overflow-hidden transition-colors duration-300;
+    color: var(--text);
+    background: radial-gradient(circle at 50% 50%, var(--bg2) 0%, var(--bg) 100%);
+  }
+
+  ::selection {
+    background-color: rgba(232, 160, 48, 0.3);
+    color: var(--amber);
   }
 }
 
 @layer components {
   .terminal-card {
-    @apply bg-white/[0.03] border border-white/10 rounded-2xl p-6 backdrop-blur-2xl transition-all duration-300;
-    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+    @apply bg-[var(--card-bg)] border border-[var(--border)] rounded-2xl p-6 backdrop-blur-2xl transition-all duration-300;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
   }
   
   .terminal-card:hover {
-    @apply border-white/20 bg-white/[0.05];
+    @apply border-amber/30 bg-[var(--card-bg)] opacity-90;
     box-shadow: 0 0 20px rgba(245, 158, 11, 0.05);
   }
   
   .glass-panel {
-    @apply bg-white/[0.01] border border-white/5 backdrop-blur-3xl;
+    @apply bg-[var(--card-bg)] border border-[var(--border)] backdrop-blur-3xl;
   }
   
   .neon-text {

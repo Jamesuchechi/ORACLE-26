@@ -10,7 +10,7 @@ from fastapi.middleware.cors import CORSMiddleware
 import pandas as pd
 from pathlib import Path
 from typing import Optional, List
-from datetime import datetime
+from datetime import datetime, timedelta
 import numpy as np
 from pydantic import BaseModel
 from fastapi.responses import JSONResponse
@@ -29,10 +29,26 @@ except Exception as e:
 from src.features.fusion import ConfluxFusionEngine, SignalVector
 from src.constants import ALL_WC_TEAMS, WC2026_VENUES, SIGNAL_WEIGHTS
 
+DESCRIPTION = """
+**ORACLE-26** is a multi-domain intelligence engine built for the Zerve Hackathon. 
+It fuses independent signals across five verticals to detect predictive divergences.
+
+### ◈ Intelligence Verticals
+* **Vertical I: Sports** (Elo, Dixon-Coles, Form)
+* **Vertical II: Markets** (Polymarket Calibration, Alpha Discovery)
+* **Vertical III: Climate** (Venue Heat & Altitude Stress)
+* **Vertical IV: Social** (Cultural Tipping Points & Sentiment)
+* **Command Center**: Cross-domain Fusion & Divergence Alerts
+"""
+
 app = FastAPI(
-    title="◈ CONFLUX API",
-    description="Universal Multi-Signal Intelligence Engine",
-    version="1.0.0"
+    title="◈ ORACLE-26 Intelligence Terminal",
+    description=DESCRIPTION,
+    version="2.0.26",
+    contact={
+        "name": "Zerve AI Hackathon Submission",
+        "url": "https://zerve.ai",
+    }
 )
 
 # CORS
@@ -47,7 +63,7 @@ app.add_middleware(
 @app.middleware("http")
 async def validate_api_key(request: Request, call_next):
     # Exempt public endpoints and OPTIONS preflight
-    if request.method == "OPTIONS" or request.url.path in ["/docs", "/redoc", "/openapi.json", "/health", "/v1/analyst/chat"]:
+    if request.method == "OPTIONS" or request.url.path in ["/", "/docs", "/redoc", "/openapi.json", "/health", "/v1/analyst/chat"]:
         return await call_next(request)
         
     api_key = request.headers.get("X-API-Key")
@@ -88,11 +104,50 @@ RAW_DIR = Path("data/raw")
 fusion_engine = ConfluxFusionEngine()
 
 # ─────────────────────────────────────────────────────────────
+# BACKGROUND OPS: Data Refresh Schedule (24h)
+# ─────────────────────────────────────────────────────────────
+
+def run_pipeline_refresh():
+    """Background task to re-run signal bootstrap every 24h."""
+    import subprocess
+    import sys
+    from time import sleep
+    
+    while True:
+        try:
+            print("◈ CRON: Starting 24h Intelligence Pipeline Refresh...")
+            subprocess.run([sys.executable, "src/scripts/bootstrap_signals.py"], check=True)
+            print("◈ CRON: Pipeline refresh successful.")
+        except Exception as e:
+            print(f"◈ CRON ERROR: Pipeline refresh failed: {e}")
+        
+        # Sleep for 24 hours
+        sleep(24 * 3600)
+
+@app.on_event("startup")
+async def startup_event():
+    """Initialize background threads on API startup."""
+    import threading
+    refresh_thread = threading.Thread(target=run_pipeline_refresh, daemon=True)
+    refresh_thread.start()
+    print("◈ SYSTEM: 24h Background Data Refresh scheduled.")
+
+@app.get("/", tags=["System"])
+async def root():
+    return {
+        "app": "ORACLE-26 Conflux Intelligence Terminal",
+        "status": "operational",
+        "version": "1.0.0-hackathon",
+        "verticals": ["Sports", "Markets", "Finance", "Climate"],
+        "docs": "/docs"
+    }
+
+# ─────────────────────────────────────────────────────────────
 # VERTICAL I: WC2026
 # ─────────────────────────────────────────────────────────────
 
 @app.get("/v1/predict/wc2026/rankings", tags=["Vertical I: Sports"])
-async def get_wc_rankings(
+def get_wc_rankings(
     w_sports: float = 0.40,
     w_markets: float = 0.25,
     w_finance: float = 0.15,
@@ -130,7 +185,7 @@ async def get_wc_rankings(
     return final_df.replace({np.nan: None}).to_dict(orient="records")
 
 @app.get("/v1/predict/wc2026/match", tags=["Vertical I: Sports"])
-async def predict_match(
+def predict_match(
     team1: str = Query(..., description="Home/Team 1 name"),
     team2: str = Query(..., description="Away/Team 2 name"),
     venue: str = Query("MetLife Stadium", description="Venue name"),
@@ -213,7 +268,7 @@ async def predict_match(
     return result
 
 @app.get("/v1/team/{team_name}/squad", tags=["Vertical I: Sports"])
-async def get_team_squad(team_name: str):
+def get_team_squad(team_name: str):
     """Get the full squad and valuation for a specific team."""
     import json
     file_path = PROCESSED_DIR / "squad_data.json"
@@ -237,7 +292,7 @@ async def get_team_squad(team_name: str):
 # ─────────────────────────────────────────────────────────────
 
 @app.get("/v1/markets/dashboard", tags=["Vertical II: Markets"])
-async def get_markets_dashboard():
+def get_markets_dashboard():
     """Get aggregated prediction market signals and alpha detection."""
     try:
         from src.data.markets import MarketSignalEngine
@@ -297,7 +352,7 @@ async def get_market_alpha():
         return {"value": [], "hype": [], "full_list": []}
 
 @app.get("/v1/markets/{event_id}/depth", tags=["Vertical II: Markets"])
-async def get_market_depth(event_id: str):
+def get_market_depth(event_id: str):
     """Get AI-powered deep analysis for a specific market event."""
     try:
         from src.features.analyst import zerve_analyst
@@ -338,7 +393,7 @@ async def get_market_depth(event_id: str):
 # ─────────────────────────────────────────────────────────────
 
 @app.get("/v1/finance/dashboard", tags=["Vertical III: Finance"])
-async def get_finance_dashboard():
+def get_finance_dashboard():
     """Get macro-economic stability indicators for host nations and top contenders."""
     file_path = RAW_DIR / "economic_signals.csv"
     if not file_path.exists():
@@ -357,9 +412,9 @@ async def get_finance_dashboard():
 # ─────────────────────────────────────────────────────────────
 
 @app.get("/v1/climate/dashboard", tags=["Vertical III: Climate"])
-async def get_climate_dashboard():
+def get_climate_dashboard():
     """Get regional climate risk intelligence dashboard."""
-    venues = await get_venue_climate_risk()
+    venues = get_venue_climate_risk()
     from src.constants import TRACKED_CLIMATE_REGIONS
     regions = []
     for reg, meta in TRACKED_CLIMATE_REGIONS.items():
@@ -367,7 +422,7 @@ async def get_climate_dashboard():
     return {"venue_risks": venues, "regional_alerts": regions, "source": "NOAA & Open-Meteo"}
 
 @app.get("/v1/predict/climate/venues")
-async def get_venue_climate_risk():
+def get_venue_climate_risk():
     """Get the current climate and altitude risk profile for all 16 venues."""
     try:
         file_path = RAW_DIR / "venue_climate_signals.csv"
@@ -385,7 +440,7 @@ async def get_venue_climate_risk():
     except: return []
 
 @app.get("/v1/climate/venue/{venue}/impact", tags=["Vertical III: Climate"])
-async def get_venue_impact(venue: str, team: str = "Argentina"):
+def get_venue_impact(venue: str, team: str = "Argentina"):
     """Calculate atmospheric performance penalty for a team at a specific venue."""
     try:
         file_path = RAW_DIR / "venue_climate_signals.csv"
@@ -418,7 +473,7 @@ async def get_venue_impact(venue: str, team: str = "Argentina"):
 # ─────────────────────────────────────────────────────────────
 
 @app.get("/v1/social/trends", tags=["Vertical IV: Social"])
-async def get_social_trends():
+def get_social_trends():
     """Get cultural momentum and sentiment signals."""
     file_path = RAW_DIR / "cultural_moment_signals.csv"
     if not file_path.exists():
@@ -444,7 +499,7 @@ async def get_social_correlation():
 # ─────────────────────────────────────────────────────────────
 
 @app.get("/v1/fusion/hub", tags=["Command Center"])
-async def get_fusion_hub():
+def get_fusion_hub():
     """Get the central cross-domain intelligence hub data."""
     try:
         from src.data.fusion import fusion_engine
@@ -463,12 +518,22 @@ async def get_alpha_discovery():
         print(f"Alpha Discovery Error: {e}")
         return {"error": "Alpha detection scanner offline."}
 
+# --- Briefing Cache ---
+_briefing_cache = {"data": None, "expires": None}
+
 @app.get("/v1/analyst/briefing", tags=["Intelligence Analyst"])
-async def get_analyst_briefing():
-    """Generate a multi-signal executive briefing using Groq (Llama 3)."""
+def get_analyst_briefing():
+    """Generate a multi-signal executive briefing using Groq (Llama 3). Cached for 30m."""
+    global _briefing_cache
+    now = datetime.now()
+    
+    # Return cached if valid
+    if _briefing_cache["data"] and _briefing_cache["expires"] > now:
+        return _briefing_cache["data"]
+
     try:
         if zerve_analyst is None:
-             return {"headline": "Satellite Link Interrupted", "summary": "Direct AI reasoning is currently offline. Statistical streams are active.", "key_bullets": ["Check API credentials", "Macro data preserved"], "timestamp": datetime.now().isoformat()}
+             return {"headline": "Satellite Link Interrupted", "summary": "Direct AI reasoning is currently offline.", "key_bullets": ["Check API credentials"], "timestamp": now.isoformat()}
              
         context = zerve_analyst.build_cross_domain_context("overall tournament and market briefing")
         insight = zerve_analyst.generate_insight(context)
@@ -478,13 +543,22 @@ async def get_analyst_briefing():
         bullets = [l.replace("- ", "").replace("* ", "") for l in lines[1:] if l.startswith("-") or l.startswith("*")][:5]
         if not bullets and len(lines) > 1: bullets = lines[1:5]
             
-        return {"headline": "Tournament Macro Briefing", "summary": summary, "key_bullets": bullets if bullets else ["Signal acquisition in progress..."], "timestamp": datetime.now().isoformat()}
+        data = {
+            "headline": "Tournament Macro Briefing", 
+            "summary": summary, 
+            "key_bullets": bullets if bullets else ["Signal acquisition in progress..."], 
+            "timestamp": now.isoformat()
+        }
+        
+        # Cache for 30 minutes
+        _briefing_cache = {"data": data, "expires": now + timedelta(minutes=30)}
+        return data
     except Exception as e:
         print(f"Briefing Error: {e}")
-        return {"headline": "Analyst Offline", "summary": "Internal signal processing error.", "key_bullets": ["Check API credentials"], "timestamp": datetime.now().isoformat()}
+        return {"headline": "Analyst Offline", "summary": "Internal signal processing error.", "key_bullets": ["Check API credentials"], "timestamp": now.isoformat()}
 
 @app.get("/v1/predict/wc2026/tournament", tags=["Vertical I: Sports"])
-async def get_tournament_simulation():
+def get_tournament_simulation():
     """Run a Monte Carlo simulation of the entire WC2026 tournament."""
     try:
         df = pd.read_csv(PROCESSED_DIR / "conflux_wc2026.csv")
@@ -558,12 +632,95 @@ async def get_tournament_simulation():
         print(f"Tournament Simulation Error: {e}")
         return {"error": str(e)}
 
-@app.get("/health")
-async def health_check():
-    return {"status": "online", "timestamp": datetime.now().isoformat(), "version": "1.0.0", "system": "◈ CONFLUX"}
+@app.get("/health", tags=["System"])
+def get_health():
+    """Health check for deployment monitoring."""
+    from src.constants import VERSION
+    import os
+    from datetime import datetime, timedelta
+    
+    # Estimate last refresh based on file mtime if available
+    last_refresh = datetime.now() - timedelta(hours=2)
+    try:
+        if os.path.exists("data/processed/conflux_wc2026.csv"):
+            mtime = os.path.getmtime("data/processed/conflux_wc2026.csv")
+            last_refresh = datetime.fromtimestamp(mtime)
+    except: pass
+
+    return {
+        "status": "online", 
+        "timestamp": datetime.now().isoformat(), 
+        "version": VERSION, 
+        "last_refresh": last_refresh.isoformat(),
+        "system": "◈ CONFLUX"
+    }
+
+@app.get("/v1/predict/prophecy", tags=["System"])
+def run_prophecy_simulation(
+    climate_shift: float = 0.0,
+    finance_shift: float = 0.0,
+    social_shift: float = 0.0,
+    market_shift: float = 0.0
+):
+    """Simulate a global signal shift and propagate it through the entire field."""
+    try:
+        df = pd.read_csv(PROCESSED_DIR / "conflux_wc2026.csv")
+        
+        baseline = []
+        projected = []
+        
+        for _, row in df.iterrows():
+            sv_base = SignalVector(
+                subject=row["subject"], vertical="wc2026",
+                sports=row["sports"], markets=row["markets"],
+                finance=row["finance"], climate=row["climate"], social=row["social"]
+            )
+            base_res = fusion_engine.fuse(sv_base)
+            baseline.append({"team": row["subject"], "score": base_res.conflux_score})
+            
+            # Apply Perturbation
+            sv_shift = SignalVector(
+                subject=row["subject"], vertical="wc2026",
+                sports=row["sports"], 
+                markets=max(0, min(1, row["markets"] + market_shift)),
+                finance=max(0, min(1, row["finance"] + finance_shift)), 
+                climate=max(0, min(1, row["climate"] + climate_shift)), 
+                social=max(0, min(1, row["social"] + social_shift))
+            )
+            shift_res = fusion_engine.fuse(sv_shift)
+            projected.append({"team": row["subject"], "score": shift_res.conflux_score})
+            
+        # Compute sensitivity and rankings
+        baseline.sort(key=lambda x: x["score"], reverse=True)
+        projected.sort(key=lambda x: x["score"], reverse=True)
+        
+        sensitivity = []
+        for b in baseline:
+            p = next(x for x in projected if x["team"] == b["team"])
+            delta = p["score"] - b["score"]
+            sensitivity.append({
+                "team": b["team"],
+                "base_score": round(b["score"], 3),
+                "new_score": round(p["score"], 3),
+                "delta": round(delta, 4),
+                "impact": "positive" if delta > 0.001 else "negative" if delta < -0.001 else "neutral"
+            })
+            
+        return {
+            "summary": {
+                "top_gainer": max(sensitivity, key=lambda x: x["delta"]),
+                "top_loser": min(sensitivity, key=lambda x: x["delta"]),
+                "volatility": sum(abs(s["delta"]) for s in sensitivity) / len(sensitivity)
+            },
+            "teams": sorted(sensitivity, key=lambda x: abs(x["delta"]), reverse=True)[:20],
+            "timestamp": datetime.now().isoformat()
+        }
+    except Exception as e:
+        print(f"Prophecy Error: {e}")
+        return {"error": str(e)}
 
 @app.get("/v1/model/validation", tags=["Model Integrity"])
-async def get_model_validation():
+def get_model_validation():
     """Return historical backtest metrics and model calibration proof."""
     file_path = Path("data/processed/model_validation.json")
     if not file_path.exists():
@@ -573,21 +730,30 @@ async def get_model_validation():
 
 class ChatRequest(BaseModel):
     message: str
+    history: list = []
+    stream: bool = False
 
 @app.post("/v1/analyst/chat", tags=["Intelligence Analyst"])
-async def analyst_chat(request: ChatRequest):
-    """Conversational interface with the ORACLE-26 Analyst."""
+def analyst_chat(request: ChatRequest):
+    """Conversational interface with the ORACLE-26 Analyst. Supports streaming."""
     try:
         if zerve_analyst is None:
-            return {"response": "The neural link is currently down for maintenance. Please refer to the tactical dashboard.", "timestamp": datetime.now().isoformat()}
+            return {"response": "Link offline.", "timestamp": datetime.now().isoformat()}
             
         context = zerve_analyst.build_cross_domain_context(request.message)
-        context["current_timestamp"] = datetime.now().isoformat()
-        context["mission"] = "Provide World Cup 2026 Intelligence Analysis across 5 domains."
-        system_extension = "You are the Zerve Analyst. Keep your responses concise and analytical. Highlight interactions between different domains."
-        response = zerve_analyst.generate_insight(context, user_query=f"{system_extension}\n\nUser: {request.message}")
-        return {"response": response, "timestamp": datetime.now().isoformat()}
+        
+        if request.stream:
+            from fastapi.responses import StreamingResponse
+            return StreamingResponse(
+                zerve_analyst.generate_insight_stream(context, request.message, request.history),
+                media_type="text/event-stream"
+            )
+        
+        insight = zerve_analyst.generate_insight(context, request.message, request.history)
+        return {"response": insight, "timestamp": datetime.now().isoformat()}
     except Exception as e:
+        print(f"Chat Error: {e}")
+        return {"response": f"◈ Error: {str(e)}", "timestamp": datetime.now().isoformat()}
         print(f"Chat Error: {e}")
         return {"response": "The neural link is experiencing interference. Please try again."}
 

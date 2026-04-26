@@ -7,8 +7,11 @@ import SignalStream from '../components/SignalStream';
 import IntelligenceControls from '../components/IntelligenceControls';
 import AnalystSummary from '../components/AnalystSummary';
 import DivergenceAlert from '../components/DivergenceAlert';
+import { DashboardSkeleton } from '../components/Skeleton';
 
-const DashboardView = ({ rankings, loading, venues, weights, updateWeight, alpha, briefing, onTeamClick }) => {
+const DashboardView = ({ rankings, loading, venues, weights, updateWeight, alpha, briefing, onTeamClick, onViewChange }) => {
+  if (loading && rankings.length === 0) return <DashboardSkeleton />;
+
   return (
     <motion.div 
       initial={{ opacity: 0, x: -20 }}
@@ -17,11 +20,11 @@ const DashboardView = ({ rankings, loading, venues, weights, updateWeight, alpha
       className="space-y-8"
     >
       {/* Landing Section: Market Anomalies */}
-      <DivergenceAlert alpha={alpha} />
+      <DivergenceAlert alpha={alpha} onViewChange={onViewChange} />
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
       <div className="col-span-1 lg:col-span-8 space-y-8">
-        <div className="terminal-card min-h-0 lg:min-h-[500px] border-white/5 bg-bg1/20 backdrop-blur-sm">
+        <div className="terminal-card min-h-0 lg:min-h-[500px] border-border bg-bg1/20 backdrop-blur-sm">
           <Leaderboard rankings={rankings} loading={loading} onTeamClick={onTeamClick} />
         </div>
         <VenueRiskGrid venues={venues} />
@@ -48,8 +51,8 @@ const DashboardView = ({ rankings, loading, venues, weights, updateWeight, alpha
 
 // Simple inline version of Alpha Radar to avoid missing component
 const AlphaRadarBrief = ({ alpha }) => (
-  <div className="terminal-card bg-bg1/40 border-white/5 p-4">
-    <h3 className="text-[10px] font-mono font-bold text-white/40 tracking-[0.2em] uppercase mb-4 flex items-center gap-2">
+  <div className="terminal-card bg-bg1/40 border-border p-4">
+    <h3 className="text-[10px] font-mono font-bold text-muted tracking-[0.2em] uppercase mb-4 flex items-center gap-2">
       Alpha Radar
     </h3>
     <div className="space-y-2">
@@ -59,7 +62,7 @@ const AlphaRadarBrief = ({ alpha }) => (
           <span className="text-teal font-mono">+{ ((item.alpha_gap || 0) * 100).toFixed(1) }%</span>
         </div>
       ))}
-      {!alpha?.value && <div className="text-[10px] text-white/20 italic">Scanning opportunities...</div>}
+      {!alpha?.value && <div className="text-[10px] text-muted italic">Scanning opportunities...</div>}
     </div>
   </div>
 );

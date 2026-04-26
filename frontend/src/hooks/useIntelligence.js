@@ -1,8 +1,9 @@
 import { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
+import toast from 'react-hot-toast';
 
 axios.defaults.baseURL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
-axios.defaults.timeout = 30000; // 30s timeout
+axios.defaults.timeout = 60000; // 60s timeout
 axios.defaults.headers.common['X-API-Key'] = 'conflux_dev_2026';
 
 
@@ -54,7 +55,7 @@ export const useIntelligence = () => {
         };
       });
       setRankings(normalizedRankings);
-
+      toast.success('Leaderboard Synchronized', { id: 'rankings-sync' });
       setError(null);
     } catch (err) {
       setError('Failed to fetch intelligence rankings');
@@ -65,6 +66,9 @@ export const useIntelligence = () => {
   const fetchAlpha = async () => {
     try {
       const response = await axios.get('/v1/predict/market/alpha');
+      if (alpha && response.data.value.length > alpha.value.length) {
+        toast('New Alpha Opportunity Detected', { icon: '🎯' });
+      }
       setAlpha(response.data);
     } catch (err) {
       console.error('Alpha fetch failed', err);

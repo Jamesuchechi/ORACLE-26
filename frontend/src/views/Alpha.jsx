@@ -45,7 +45,7 @@ const AlphaView = () => {
     setIsDeployed(false);
   }, [selectedAlpha]);
 
-  if (loading) return <div className="p-12 text-center font-mono text-white/20 animate-pulse uppercase tracking-widest text-xs">Scanning Markets for Divergence...</div>;
+  if (loading) return <div className="p-12 text-center font-mono text-muted animate-pulse uppercase tracking-widest text-xs">Scanning Markets for Divergence...</div>;
   if (error) return <div className="p-12 text-center text-red font-mono text-xs uppercase">{error}</div>;
 
   // Prepare scatter data
@@ -61,31 +61,31 @@ const AlphaView = () => {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
         {/* Left: Opportunity Radar */}
         <div className="col-span-1 lg:col-span-7 space-y-8">
-          <div className="terminal-card bg-bg1/20 border-white/5 p-4 lg:p-8">
+          <div className="terminal-card bg-bg1/20 border-border p-4 lg:p-8">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-6">
               <h3 className="text-xl font-bold flex items-center gap-3">
                 <Target className="text-teal" size={22} />
                 Opportunity Analysis
               </h3>
               
-              <div className="flex items-center gap-1 bg-white/5 p-1 rounded-lg border border-white/10 w-full sm:w-auto justify-between sm:justify-start">
+              <div className="flex items-center gap-1 bg-foreground/20 p-1 rounded-lg border border-border w-full sm:w-auto justify-between sm:justify-start">
                 <button 
                   onClick={() => setChartType('scatter')}
-                  className={`p-1.5 flex-1 sm:flex-none flex justify-center rounded-md transition-all ${chartType === 'scatter' ? 'bg-teal text-bg1 shadow-lg' : 'text-white/40 hover:text-white'}`}
+                  className={`p-1.5 flex-1 sm:flex-none flex justify-center rounded-md transition-all ${chartType === 'scatter' ? 'bg-teal text-bg1 shadow-lg' : 'text-muted hover:text-foreground'}`}
                   title="Scatter Plot (Radar)"
                 >
                   <Target size={16} />
                 </button>
                 <button 
                   onClick={() => setChartType('bar')}
-                  className={`p-1.5 flex-1 sm:flex-none flex justify-center rounded-md transition-all ${chartType === 'bar' ? 'bg-teal text-bg1 shadow-lg' : 'text-white/40 hover:text-white'}`}
+                  className={`p-1.5 flex-1 sm:flex-none flex justify-center rounded-md transition-all ${chartType === 'bar' ? 'bg-teal text-bg1 shadow-lg' : 'text-muted hover:text-foreground'}`}
                   title="Alpha Ranking (Bar)"
                 >
                   <TrendingUp size={16} />
                 </button>
                 <button 
                   onClick={() => setChartType('delta')}
-                  className={`p-1.5 flex-1 sm:flex-none flex justify-center rounded-md transition-all ${chartType === 'delta' ? 'bg-teal text-bg1 shadow-lg' : 'text-white/40 hover:text-white'}`}
+                  className={`p-1.5 flex-1 sm:flex-none flex justify-center rounded-md transition-all ${chartType === 'delta' ? 'bg-teal text-bg1 shadow-lg' : 'text-muted hover:text-foreground'}`}
                   title="Divergence Delta"
                 >
                   <Activity size={16} />
@@ -95,7 +95,7 @@ const AlphaView = () => {
               <div className="flex gap-4">
                 <div className="flex items-center gap-2">
                   <div className="w-2 h-2 rounded-full bg-teal" />
-                  <span className="text-[10px] font-mono text-white/40 uppercase">High Alpha</span>
+                  <span className="text-[10px] font-mono text-muted uppercase">High Alpha</span>
                 </div>
               </div>
             </div>
@@ -104,15 +104,15 @@ const AlphaView = () => {
                <AnimatePresence mode="wait">
                  {chartType === 'scatter' && (
                    <motion.div key="scatter" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="w-full h-full">
-                     <div className="absolute top-4 left-4 text-[9px] font-mono text-white/20 uppercase vertical-text hidden sm:block">Conflux Model Probability %</div>
-                     <div className="absolute bottom-4 right-4 text-[9px] font-mono text-white/20 uppercase hidden sm:block">Market Implied Probability %</div>
+                     <div className="absolute top-4 left-4 text-[9px] font-mono text-muted uppercase vertical-text hidden sm:block">Conflux Model Probability %</div>
+                     <div className="absolute bottom-4 right-4 text-[9px] font-mono text-muted uppercase hidden sm:block">Market Implied Probability %</div>
                      <ResponsiveContainer width="100%" height="100%">
                        <ScatterChart margin={{ top: 10, right: 10, bottom: 10, left: -20 }}>
-                         <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
-                         <XAxis type="number" dataKey="x" domain={[0, 100]} tick={{ fill: 'rgba(255,255,255,0.3)', fontSize: 9, fontFamily: 'monospace' }} />
-                         <YAxis type="number" dataKey="y" domain={[0, 100]} tick={{ fill: 'rgba(255,255,255,0.3)', fontSize: 9, fontFamily: 'monospace' }} />
-                         <Tooltip cursor={{ strokeDasharray: '3 3' }} contentStyle={{ background: '#111', border: '1px solid rgba(255,255,255,0.1)', fontSize: '10px', fontFamily: 'monospace' }} />
-                         <ReferenceLine segment={[{ x: 0, y: 0 }, { x: 100, y: 100 }]} stroke="rgba(255,255,255,0.1)" strokeDasharray="5 5" />
+                         <CartesianGrid strokeDasharray="3 3" stroke="rgb(var(--foreground-rgb) / 0.05)" />
+                         <XAxis type="number" dataKey="x" domain={[0, 100]} tick={{ fill: 'rgb(var(--foreground-rgb) / 0.3)', fontSize: 9, fontFamily: 'monospace' }} />
+                         <YAxis type="number" dataKey="y" domain={[0, 100]} tick={{ fill: 'rgb(var(--foreground-rgb) / 0.3)', fontSize: 9, fontFamily: 'monospace' }} />
+                         <Tooltip cursor={{ strokeDasharray: '3 3' }} contentStyle={{ background: '#111', border: '1px solid rgb(var(--foreground-rgb) / 0.1)', fontSize: '10px', fontFamily: 'monospace' }} />
+                         <ReferenceLine segment={[{ x: 0, y: 0 }, { x: 100, y: 100 }]} stroke="rgb(var(--foreground-rgb) / 0.1)" strokeDasharray="5 5" />
                          <Scatter name="Alpha" data={scatterData} onClick={(e) => setSelectedAlpha(data.alpha_plays.find(p => p.subject === e.name))}>
                            {scatterData.map((entry, index) => <Cell key={`cell-${index}`} fill={entry.alpha > 10 ? '#2dd4bf' : '#3b82f6'} className="cursor-pointer" />)}
                          </Scatter>
@@ -125,9 +125,9 @@ const AlphaView = () => {
                    <motion.div key="bar" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="w-full h-full">
                      <ResponsiveContainer width="100%" height="100%">
                        <BarChart data={scatterData.sort((a,b) => b.alpha - a.alpha)} layout="vertical" margin={{ left: -20, right: 10, top: 0, bottom: 0 }}>
-                         <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" horizontal={false} />
-                         <XAxis type="number" tick={{ fill: 'rgba(255,255,255,0.3)', fontSize: 9 }} />
-                         <YAxis dataKey="name" type="category" tick={{ fill: 'rgba(255,255,255,0.6)', fontSize: 9, fontWeight: 'bold' }} width={70} />
+                         <CartesianGrid strokeDasharray="3 3" stroke="rgb(var(--foreground-rgb) / 0.05)" horizontal={false} />
+                         <XAxis type="number" tick={{ fill: 'rgb(var(--foreground-rgb) / 0.3)', fontSize: 9 }} />
+                         <YAxis dataKey="name" type="category" tick={{ fill: 'rgb(var(--foreground-rgb) / 0.6)', fontSize: 9, fontWeight: 'bold' }} width={70} />
                          <Tooltip contentStyle={{ background: '#111', border: 'none', borderRadius: '8px' }} />
                          <Bar dataKey="alpha" name="Alpha Edge %" fill="#2dd4bf" radius={[0, 4, 4, 0]}>
                             {scatterData.map((entry, index) => <Cell key={`cell-${index}`} fillOpacity={0.4 + (index * 0.1)} />)}
@@ -141,17 +141,17 @@ const AlphaView = () => {
                    <motion.div key="delta" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="w-full h-full">
                      <ResponsiveContainer width="100%" height="100%">
                        <ComposedChart data={scatterData} margin={{ top: 10, right: 10, left: -30, bottom: 0 }}>
-                         <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
+                         <CartesianGrid strokeDasharray="3 3" stroke="rgb(var(--foreground-rgb) / 0.05)" />
                          <XAxis 
                             dataKey="name" 
-                            tick={{ fill: 'rgba(255,255,255,0.3)', fontSize: 9 }} 
+                            tick={{ fill: 'rgb(var(--foreground-rgb) / 0.3)', fontSize: 9 }} 
                             interval={0}
                             angle={window.innerWidth < 640 ? -45 : 0}
                             textAnchor={window.innerWidth < 640 ? 'end' : 'middle'}
                           />
-                         <YAxis tick={{ fill: 'rgba(255,255,255,0.3)', fontSize: 9 }} />
+                         <YAxis tick={{ fill: 'rgb(var(--foreground-rgb) / 0.3)', fontSize: 9 }} />
                          <Tooltip contentStyle={{ background: '#111', border: 'none' }} />
-                         <Bar dataKey="x" name="Market %" fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.2)" />
+                         <Bar dataKey="x" name="Market %" fill="rgb(var(--foreground-rgb) / 0.05)" stroke="rgb(var(--foreground-rgb) / 0.2)" />
                          <Line type="monotone" dataKey="y" name="Model %" stroke="#2dd4bf" strokeWidth={3} dot={{ fill: '#2dd4bf', r: 4 }} />
                          <Area type="monotone" dataKey="y" fill="#2dd4bf" fillOpacity={0.05} stroke="none" />
                        </ComposedChart>
@@ -178,7 +178,7 @@ const AlphaView = () => {
                  className={`p-4 lg:p-6 rounded-2xl border transition-all cursor-pointer flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 ${
                    selectedAlpha?.subject === play.subject 
                    ? 'bg-teal/10 border-teal/40 shadow-[0_0_20px_rgba(45,212,191,0.1)]' 
-                   : 'bg-white/[0.02] border-white/5 hover:bg-white/[0.04]'
+                   : 'bg-[var(--card-bg)] border-border hover:bg-[var(--card-bg)]'
                  }`}
                >
                  <div className="flex items-center gap-4 lg:gap-6">
@@ -189,7 +189,7 @@ const AlphaView = () => {
                      <h4 className="text-base lg:text-lg font-bold">{play.subject}</h4>
                      <div className="flex gap-2 mt-1">
                        {play.confirmed_by.map(c => (
-                         <span key={c} className="text-[8px] font-mono font-bold text-white/30 uppercase tracking-widest">{c}</span>
+                         <span key={c} className="text-[8px] font-mono font-bold text-foreground/30 uppercase tracking-widest">{c}</span>
                        ))}
                      </div>
                    </div>
@@ -197,14 +197,14 @@ const AlphaView = () => {
                  
                  <div className="flex items-center justify-between sm:justify-end gap-6 lg:gap-12 w-full sm:w-auto">
                     <div className="text-left sm:text-right">
-                       <p className="text-[9px] font-mono text-white/20 uppercase">Alpha Edge</p>
+                       <p className="text-[9px] font-mono text-muted uppercase">Alpha Edge</p>
                        <p className="text-lg lg:text-xl font-mono font-bold text-teal">+{ (play.alpha * 100).toFixed(1) }%</p>
                     </div>
                     <div className="text-right w-20 lg:w-24">
-                       <p className="text-[9px] font-mono text-white/20 uppercase">Conviction</p>
+                       <p className="text-[9px] font-mono text-muted uppercase">Conviction</p>
                        <p className={`text-xs font-bold ${play.conviction === 'HIGH' ? 'text-teal' : 'text-blue'}`}>{play.conviction}</p>
                     </div>
-                    <ChevronRight size={20} className="text-white/10 hidden sm:block" />
+                    <ChevronRight size={20} className="text-foreground/10 hidden sm:block" />
                  </div>
                </motion.div>
              ))}
@@ -228,9 +228,9 @@ const AlphaView = () => {
                  </div>
 
                  <div className="grid grid-cols-2 gap-4 lg:gap-6 mb-8 lg:mb-10">
-                    <div className="p-4 rounded-xl bg-white/[0.02] border border-white/5 text-center sm:text-left">
-                       <p className="text-[10px] font-mono text-white/20 uppercase mb-2">Market Odds</p>
-                       <p className="text-xl lg:text-2xl font-mono font-bold text-white/40">{(selectedAlpha.market_prob * 100).toFixed(1)}%</p>
+                    <div className="p-4 rounded-xl bg-[var(--card-bg)] border border-border text-center sm:text-left">
+                       <p className="text-[10px] font-mono text-muted uppercase mb-2">Market Odds</p>
+                       <p className="text-xl lg:text-2xl font-mono font-bold text-muted">{(selectedAlpha.market_prob * 100).toFixed(1)}%</p>
                     </div>
                     <div className="p-4 rounded-xl bg-teal/5 border border-teal/20 text-center sm:text-left">
                        <p className="text-[10px] font-mono text-teal uppercase mb-2">Conflux Model</p>
@@ -244,8 +244,8 @@ const AlphaView = () => {
                         <Zap size={16} />
                         <span className="text-[10px] font-mono font-bold uppercase">Strategic Logic</span>
                      </div>
-                     <div className="p-5 rounded-xl bg-white/[0.01] border border-white/5">
-                        <p className="text-sm text-white/70 leading-relaxed italic">
+                     <div className="p-5 rounded-xl bg-[var(--card-bg)] border border-border">
+                        <p className="text-sm text-foreground/70 leading-relaxed italic">
                           "Signal confirmation across Sports and Social domains suggests market is underestimating travel fatigue and squad depth interaction. This divergence represents a 4.2-sigma event in current volatility bands."
                         </p>
                      </div>
@@ -272,11 +272,11 @@ const AlphaView = () => {
                           <div className="w-12 h-12 bg-teal/20 text-teal rounded-full flex items-center justify-center mx-auto mb-4">
                             <CheckCircle2 size={24} />
                           </div>
-                          <h4 className="text-sm font-bold text-white mb-2">Capital Deployed</h4>
+                          <h4 className="text-sm font-bold text-foreground mb-2">Capital Deployed</h4>
                           <p className="text-[9px] font-mono text-teal/60 mb-4 tracking-tighter">TX: 0x{Math.random().toString(16).slice(2, 10)}...{Math.random().toString(16).slice(2, 6)}</p>
                           <button 
                             onClick={() => setIsDeployed(false)}
-                            className="text-[10px] font-bold text-white/40 hover:text-white uppercase tracking-widest underline underline-offset-4"
+                            className="text-[10px] font-bold text-muted hover:text-foreground uppercase tracking-widest underline underline-offset-4"
                           >
                             Reset Position
                           </button>
@@ -287,7 +287,7 @@ const AlphaView = () => {
                              <ShieldCheck size={18} />
                              <span className="text-xs font-bold uppercase tracking-widest">Recommended Play</span>
                           </div>
-                          <p className="text-sm font-bold text-white mb-4">{selectedAlpha.strategy}</p>
+                          <p className="text-sm font-bold text-foreground mb-4">{selectedAlpha.strategy}</p>
                           <button 
                             onClick={handleDeploy}
                             className="w-full py-3 bg-teal text-bg1 rounded-xl text-xs font-bold uppercase tracking-widest hover:bg-teal/80 transition-all active:scale-95"
@@ -299,11 +299,11 @@ const AlphaView = () => {
                    </div>
                  </div>
 
-                 <div className="mt-10 pt-8 border-t border-white/5">
-                    <p className="text-[9px] font-mono text-white/20 mb-4 uppercase">Verification Nodes</p>
+                 <div className="mt-10 pt-8 border-t border-border">
+                    <p className="text-[9px] font-mono text-muted mb-4 uppercase">Verification Nodes</p>
                     <div className="flex flex-wrap gap-2">
                        {['Neural_Llama_3.3', 'Conflux_V2', 'Polymarket_Oracle', 'FRED_Sync'].map(node => (
-                         <span key={node} className="px-2 py-1 rounded bg-white/5 text-[8px] font-mono text-white/40">{node}</span>
+                         <span key={node} className="px-2 py-1 rounded bg-foreground/20 text-[8px] font-mono text-muted">{node}</span>
                        ))}
                     </div>
                  </div>

@@ -1,8 +1,8 @@
-
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-import { Landmark, TrendingUp, ArrowUpRight, ArrowDownRight, Activity, DollarSign } from 'lucide-react';
+import { Landmark, ArrowUpRight, Activity } from 'lucide-react';
+import { CardSkeleton, GridSkeleton, DetailSkeleton } from '../components/Skeleton';
 import axios from 'axios';
 import { 
   BarChart, Bar, XAxis, YAxis, CartesianGrid, 
@@ -42,11 +42,16 @@ const FinanceView = () => {
     };
   }, []);
 
-  if (loading) return <div className="p-12 text-center font-mono text-white/20 animate-pulse uppercase tracking-widest text-xs">Syncing Macro-Economic Signals...</div>;
+  if (loading) return (
+    <div className="space-y-8">
+      <GridSkeleton count={4} />
+      <DetailSkeleton />
+    </div>
+  );
   if (error) return (
     <div className="p-12 text-center">
       <p className="text-red font-mono text-xs uppercase mb-4">{error}</p>
-      <button onClick={() => window.location.reload()} className="px-4 py-2 border border-white/10 rounded-lg text-[10px] font-mono text-white/40 hover:text-white transition-colors">RETRY_LINK</button>
+      <button onClick={() => window.location.reload()} className="px-4 py-2 border border-border rounded-lg text-[10px] font-mono text-muted hover:text-foreground transition-colors">RETRY_LINK</button>
     </div>
   );
 
@@ -64,8 +69,8 @@ const FinanceView = () => {
     <div className="space-y-8 pb-12">
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
         {indicators.map(ind => (
-          <div key={ind.name} className="terminal-card bg-bg1/20 border-white/5 p-3 lg:p-4">
-            <p className="text-[9px] lg:text-[10px] font-mono text-white/20 uppercase mb-1 truncate">{ind.name}</p>
+          <div key={ind.name} className="terminal-card bg-bg1/20 border-border p-3 lg:p-4">
+            <p className="text-[9px] lg:text-[10px] font-mono text-muted uppercase mb-1 truncate">{ind.name}</p>
             <div className="flex items-end justify-between gap-2">
               <p className="text-xl lg:text-2xl font-mono font-bold truncate">{ind.value}</p>
               <span className={`text-[10px] font-mono shrink-0 ${ind.change.startsWith('+') ? 'text-teal' : 'text-red'}`}>
@@ -78,19 +83,19 @@ const FinanceView = () => {
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
         <div className="col-span-1 lg:col-span-8 space-y-8">
-          <div className="terminal-card bg-bg1/20 border-white/5 p-6 h-[400px] flex flex-col">
+          <div className="terminal-card bg-bg1/20 border-border p-6 h-[400px] flex flex-col">
             <div className="flex justify-between items-center mb-6">
-              <h3 className="text-[10px] font-mono font-bold text-white/40 tracking-[0.2em] uppercase flex items-center gap-2">
+              <h3 className="text-[10px] font-mono font-bold text-muted tracking-[0.2em] uppercase flex items-center gap-2">
                 <Activity size={12} className="text-amber" /> Macro-Economic Signal Matrix
               </h3>
               <div className="flex gap-4">
                 <div className="flex items-center gap-1.5">
                   <div className="w-2 h-2 bg-amber rounded-full" />
-                  <span className="text-[9px] font-mono text-white/40 uppercase">GDP</span>
+                  <span className="text-[9px] font-mono text-muted uppercase">GDP</span>
                 </div>
                 <div className="flex items-center gap-1.5">
                   <div className="w-2 h-2 bg-blue rounded-full" />
-                  <span className="text-[9px] font-mono text-white/40 uppercase">Inflation</span>
+                  <span className="text-[9px] font-mono text-muted uppercase">Inflation</span>
                 </div>
               </div>
             </div>
@@ -101,12 +106,12 @@ const FinanceView = () => {
                   data={highlights.slice(0, 8)}
                   margin={{ top: 10, right: 10, left: -25, bottom: 20 }}
                 >
-                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" vertical={false} />
+                  <CartesianGrid strokeDasharray="3 3" stroke="rgb(var(--foreground-rgb) / 0.05)" vertical={false} />
                   <XAxis 
                     dataKey="team" 
                     axisLine={false} 
                     tickLine={false} 
-                    tick={{ fill: 'rgba(255,255,255,0.3)', fontSize: 9, fontFamily: 'monospace' }}
+                    tick={{ fill: 'rgb(var(--foreground-rgb) / 0.3)', fontSize: 9, fontFamily: 'monospace' }}
                     interval={0}
                     angle={window.innerWidth < 640 ? -45 : 0}
                     textAnchor={window.innerWidth < 640 ? 'end' : 'middle'}
@@ -115,10 +120,10 @@ const FinanceView = () => {
                   <YAxis 
                     axisLine={false} 
                     tickLine={false} 
-                    tick={{ fill: 'rgba(255,255,255,0.3)', fontSize: 9, fontFamily: 'monospace' }}
+                    tick={{ fill: 'rgb(var(--foreground-rgb) / 0.3)', fontSize: 9, fontFamily: 'monospace' }}
                   />
                   <Tooltip 
-                    contentStyle={{ backgroundColor: '#0f1114', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px' }}
+                    contentStyle={{ backgroundColor: '#0f1114', border: '1px solid rgb(var(--foreground-rgb) / 0.1)', borderRadius: '8px' }}
                     itemStyle={{ fontSize: '11px', fontFamily: 'monospace' }}
                   />
                   <Bar dataKey="gdp_growth" name="GDP Growth" radius={[2, 2, 0, 0]} barSize={window.innerWidth < 640 ? 10 : 25}>
@@ -137,7 +142,7 @@ const FinanceView = () => {
           </div>
         </div>
         <div className="col-span-1 lg:col-span-4 flex flex-col gap-6">
-          <div className="terminal-card bg-bg1/40 border-white/5 p-6 flex-1 overflow-y-auto max-h-[400px]">
+          <div className="terminal-card bg-bg1/40 border-border p-6 flex-1 overflow-y-auto max-h-[400px]">
             <h3 className="text-sm font-bold mb-4 flex items-center gap-2">
               <Landmark size={16} className="text-amber" />
               Equity Signals
@@ -150,10 +155,10 @@ const FinanceView = () => {
                   className={`flex justify-between items-center p-3 rounded border cursor-pointer transition-all ${
                     h.team === selectedTeam 
                       ? 'border-amber/50 bg-amber/5 shadow-[0_0_15px_rgba(232,160,48,0.1)]' 
-                      : 'border-white/5 bg-white/[0.02] hover:bg-white/[0.05]'
+                      : 'border-border bg-[var(--card-bg)] hover:bg-[var(--card-bg)]'
                   }`}
                 >
-                  <span className={`text-xs font-mono uppercase ${h.team === selectedTeam ? 'text-amber' : 'text-white/70'}`}>{h.team}</span>
+                  <span className={`text-xs font-mono uppercase ${h.team === selectedTeam ? 'text-amber' : 'text-foreground/70'}`}>{h.team}</span>
                   <div className="flex items-center gap-2">
                     <span className="text-[10px] font-mono text-teal">{h.econ_signal.toFixed(2)} SIGNAL</span>
                     <ArrowUpRight size={14} className={`transition-transform ${h.team === selectedTeam ? 'translate-x-0.5 -translate-y-0.5 text-amber' : 'text-teal'}`} />
@@ -178,16 +183,16 @@ const FinanceView = () => {
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <p className="text-[9px] font-mono text-white/30 uppercase">GDP Growth</p>
-                    <p className="text-lg font-mono font-bold text-white/90">{selectedData.gdp_growth}%</p>
+                    <p className="text-[9px] font-mono text-foreground/30 uppercase">GDP Growth</p>
+                    <p className="text-lg font-mono font-bold text-foreground/90">{selectedData.gdp_growth}%</p>
                   </div>
                   <div>
-                    <p className="text-[9px] font-mono text-white/30 uppercase">Unemployment</p>
-                    <p className="text-lg font-mono font-bold text-white/90">{selectedData.unemployment}%</p>
+                    <p className="text-[9px] font-mono text-foreground/30 uppercase">Unemployment</p>
+                    <p className="text-lg font-mono font-bold text-foreground/90">{selectedData.unemployment}%</p>
                   </div>
-                  <div className="col-span-2 pt-2 border-t border-white/5">
-                    <p className="text-[9px] font-mono text-white/30 uppercase mb-1">Signal Interpretation</p>
-                    <p className="text-[11px] leading-relaxed text-white/60">
+                  <div className="col-span-2 pt-2 border-t border-border">
+                    <p className="text-[9px] font-mono text-foreground/30 uppercase mb-1">Signal Interpretation</p>
+                    <p className="text-[11px] leading-relaxed text-foreground/60">
                       Economic output is currently <span className="text-amber">{(selectedData?.status || 'Stable').toLowerCase()}</span>. 
                       Inflation is holding at <span className="text-blue">{selectedData?.inflation || '0.0'}%</span>, 
                       providing a <span className="text-teal">robust</span> foundation for localized signal acceleration.

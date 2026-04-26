@@ -117,22 +117,22 @@
 - [x] 🟠 **HIGH · 1h · Impact: High** — Redesign dashboard landing — move DIVERGENCE ALERTS section to the top above the leaderboard table — lead with your unique insight, not a ranked list every competitor has
   > First impression matters more than the depth of the app. Lead with what makes you different.
 
-- [ ] 🟠 **HIGH · 30m · Impact: High** — Add loading skeleton screens to all views — replace "Scanning..." and "Syncing..." text with animated placeholder cards that match the final layout
+- [x] 🟠 **HIGH · 30m · Impact: High** — Add loading skeleton screens to all views — replace "Scanning..." and "Syncing..." text with animated placeholder cards that match the final layout
   > Perceived performance matters enormously during a demo. Skeletons feel dramatically faster than spinner text.
 
-- [ ] 🟠 **HIGH · 45m · Impact: Medium** — Add toast notifications when signals refresh — "Market signal updated · 3 new divergences detected" — pulse the live neural link indicator in the header
+- [x] 🟠 **HIGH · 45m · Impact: Medium** — Add toast notifications when signals refresh — "Market signal updated · 3 new divergences detected" — pulse the live neural link indicator in the header
   > Makes the system feel alive and dynamic during a demo rather than static.
 
-- [ ] 🔵 **MEDIUM · 30m · Impact: Medium** — Fix all 48 team flag codes in `flags.js` — test Scotland (`gb-sct`), Bosnia (`ba`), New Zealand (`nz`), South Africa (`za`), Ivory Coast (`ci`), DR Congo (`cd`), Uzbekistan (`uz`) — verify every flag loads
+- [x] 🔵 **MEDIUM · 30m · Impact: Medium** — Fix all 48 team flag codes in `flags.js` — test Scotland (`gb-sct`), Bosnia (`ba`), New Zealand (`nz`), South Africa (`za`), Ivory Coast (`ci`), DR Congo (`cd`), Uzbekistan (`uz`) — verify every flag loads
   > Broken flags during a live demo look unprofessional and undermine confidence in the data quality.
 
-- [ ] 🔵 **MEDIUM · 30m · Impact: Medium** — Add mobile responsive breakpoints to Dashboard and Leaderboard — the signal fingerprint bars overflow on screens narrower than 768px
+- [x] 🔵 **MEDIUM · 30m · Impact: Medium** — Add mobile responsive breakpoints to Dashboard and Leaderboard — the signal fingerprint bars overflow on screens narrower than 768px
   > Judges may open the app on a phone. A broken mobile layout is a bad signal about code quality.
 
-- [ ] 🔵 **MEDIUM · 20m · Impact: Low** — Add "Copy shareable link" button that encodes selected team and weights in URL query params
+- [x] 🔵 **MEDIUM · 20m · Impact: Low** — Add "Copy shareable link" button that encodes selected team and weights in URL query params
   > Shareable links = free publicity = Zerve amplification before judging ends.
 
-- [ ] 🟢 **LOW · 15m · Impact: Low** — Add CONFLUX version string and pipeline last-run timestamp to the footer and `/health` response
+- [x] 🟢 **LOW · 15m · Impact: Low** — Add CONFLUX version string and pipeline last-run timestamp to the footer and `/health` response
   > Small production signal that shows you think like a real engineer.
 
 ---
@@ -140,19 +140,19 @@
 ## Phase 5 — AI Analyst Upgrade
 > **The analyst is a major differentiator. Right now it's a thin wrapper. Make it earn its place.**
 
-- [ ] 🟠 **HIGH · 2h · Impact: High** — Implement `build_cross_domain_context()` properly — detect query intent (WC / market / climate / cultural keywords), pull relevant rows from all 4 vertical CSVs, build structured context with explicit cross-domain links before calling the LLM
+- [x] 🟠 **HIGH · 2h · Impact: High** — Implement `build_cross_domain_context()` properly — detect query intent (WC / market / climate / cultural keywords), pull relevant rows from all 4 vertical CSVs, build structured context with explicit cross-domain links before calling the LLM
   > Currently dumps raw JSON to the LLM with no structure. Structured context produces 5x more insightful responses.
 
-- [ ] 🟠 **HIGH · 1h · Impact: High** — Add 5 pre-built quick-action buttons in the analyst chat UI: "Who will win the World Cup?", "Top 3 upset picks?", "Biggest market mispricing?", "Climate risk briefing", "Cultural moment report"
+- [x] 🟠 **HIGH · 1h · Impact: High** — Add 5 pre-built quick-action buttons in the analyst chat UI: "Who will win the World Cup?", "Top 3 upset picks?", "Biggest market mispricing?", "Climate risk briefing", "Cultural moment report"
   > Judges are busy. Quick prompts ensure they see your best AI outputs without having to think of questions.
 
-- [ ] 🔵 **MEDIUM · 1h · Impact: Medium** — Add streaming response support to `/v1/analyst/chat` using FastAPI `StreamingResponse` with Server-Sent Events, update `AnalystChat.jsx` to consume the stream
+- [x] 🔵 **MEDIUM · 1h · Impact: Medium** — Add streaming response support to `/v1/analyst/chat` using FastAPI `StreamingResponse` with Server-Sent Events, update `AnalystChat.jsx` to consume the stream
   > Streaming feels dramatically more impressive than waiting 3 seconds for a wall of text to appear.
 
-- [ ] 🔵 **MEDIUM · 30m · Impact: Medium** — Cache analyst briefing for 30 minutes in memory using a simple dict with timestamp — avoid calling the LLM on every `/v1/analyst/briefing` request during judging
+- [x] 🔵 **MEDIUM · 30m · Impact: Medium** — Cache analyst briefing for 30 minutes in memory using a simple dict with timestamp — avoid calling the LLM on every `/v1/analyst/briefing` request during judging
   > Prevents rate limit errors during demo. The briefing content doesn't need to change every request.
 
-- [ ] 🟢 **LOW · 1h · Impact: Medium** — Add conversation memory to analyst chat — pass the last 5 messages as context in each subsequent API call so follow-up questions work naturally
+- [x] 🟢 **LOW · 1h · Impact: Medium** — Add conversation memory to analyst chat — pass the last 5 messages as context in each subsequent API call so follow-up questions work naturally
   > Currently each message is completely stateless. Memory makes it feel like a real analyst, not a one-shot query tool.
 
 ---
@@ -160,16 +160,16 @@
 ## Phase 6 — Zerve Notebooks and Submission Assets
 > **Notebooks are required. The project summary and demo video are the two assets judges spend the most time with.**
 
-- [ ] 🟠 **HIGH · 2h · Impact: High** — Execute all 4 existing notebooks end-to-end in Zerve — fix any import errors, cell ordering issues, or missing file dependencies — every cell must run without errors
+- [x] 🟠 **HIGH · 2h · Impact: High** — Execute all 4 existing notebooks end-to-end in Zerve — fix any import errors, cell ordering issues, or missing file dependencies — every cell must run without errors
   > Zerve notebooks are a required submission component. They must run cleanly or you lose End-to-End Workflow points.
 
-- [ ] 🟠 **HIGH · 1h · Impact: High** — Add rich markdown narrative cells to each notebook — explain the insight above each code block: "Why does economic stability predict football performance?", "What does this divergence tell us?", "What would this mean for a bettor?"
+- [x] 🟠 **HIGH · 1h · Impact: High** — Add rich markdown narrative cells to each notebook — explain the insight above each code block: "Why does economic stability predict football performance?", "What does this divergence tell us?", "What would this mean for a bettor?"
   > Judges read notebooks. Tell the story between the code cells. Analysis without narrative is just code.
 
-- [ ] 🟠 **HIGH · 30m · Impact: High** — Create `05_divergence_analysis.ipynb` — the centrepiece analytical notebook: load real Polymarket odds for top teams, compute CONFLUX vs market divergence, plot calibration curve, highlight the single best value opportunity with full explanation
+- [x] 🟠 **HIGH · 30m · Impact: High** — Create `05_divergence_analysis.ipynb` — the centrepiece analytical notebook: load real Polymarket odds for top teams, compute CONFLUX vs market divergence, plot calibration curve, highlight the single best value opportunity with full explanation
   > This is the notebook that wins the Analytical Depth score. Make it the best thing in the repo.
 
-- [ ] 🔴 **CRITICAL · 1h · Impact: Decisive** — Write the 300-word project summary — open with a concrete finding, not a technology description. Structure: "We found X → here is the evidence → this is why it matters → here is what we built to surface it"
+- [x] 🔴 **CRITICAL · 1h · Impact: Decisive** — Write the 300-word project summary — open with a concrete finding, not a technology description. Structure: "We found X → here is the evidence → this is why it matters → here is what we built to surface it"
   > Judges read this first. If it opens with "CONFLUX is a multi-signal intelligence engine" instead of a real finding, you lose the analytical depth category before they even open the app.
 
 - [ ] 🔴 **CRITICAL · 3h · Impact: Decisive** — Record the 3-minute demo video with this exact structure: (0:00-0:15) state the question out loud → (0:15-0:45) show data being collected live → (0:45-1:30) show the divergence alert for your best example team → (1:30-2:15) run match predictor for that team, show upset alert → (2:15-2:45) show AI analyst explaining the cross-domain reasoning → (2:45-3:00) show a live API call from terminal proving production deployment
@@ -180,22 +180,22 @@
 ## Phase 7 — Production Signals and Amplification
 > **These details signal to judges that you built something real, not a hackathon prototype.**
 
-- [ ] 🟠 **HIGH · 1h · Impact: High** — Verify `slowapi` rate limiting is installed in `requirements.txt` and actually working on the deployed server — test with `curl` in a loop to confirm 429 responses fire correctly
+- [x] 🟠 **HIGH · 1h · Impact: High** — Verify `slowapi` rate limiting is installed in `requirements.txt` and actually working on the deployed server — test with `curl` in a loop to confirm 429 responses fire correctly
   > Rate limit errors during judging from judges hammering the API = lost points. The middleware is coded but may not be installed.
 
-- [ ] 🟠 **HIGH · 30m · Impact: High** — Add full OpenAPI documentation — add `description`, `summary`, `response_model`, and example responses to all major endpoints in `api.py` — make `/docs` look impressive
+- [x] 🟠 **HIGH · 30m · Impact: High** — Add full OpenAPI documentation — add `description`, `summary`, `response_model`, and example responses to all major endpoints in `api.py` — make `/docs` look impressive
   > Judges will visit `/docs`. A well-documented API signals production engineering. An empty one signals a prototype.
 
-- [ ] 🔵 **MEDIUM · 30m · Impact: Medium** — Set up data refresh on a schedule — re-run `bootstrap_signals.py` every 24h via Railway cron tab or an APScheduler job in `api.py` startup
+- [x] 🔵 **MEDIUM · 30m · Impact: Medium** — Set up data refresh on a schedule — re-run `bootstrap_signals.py` every 24h via Railway cron tab or an APScheduler job in `api.py` startup
   > Live data refresh is a production signal. "Data refreshed 3 hours ago" in the dashboard is a credibility multiplier.
 
-- [ ] 🔵 **MEDIUM · 20m · Impact: Medium** — Post on LinkedIn and X immediately after your app is deployed — include the live URL, your single best finding (the divergence number), one screenshot of the divergence alert UI, and tag `@Zerve AI` (LinkedIn) and `@Zerve_AI` (X)
+- [x] 🔵 **MEDIUM · 20m · Impact: Medium** — Post on LinkedIn and X immediately after your app is deployed — include the live URL, your single best finding (the divergence number), one screenshot of the divergence alert UI, and tag `@Zerve AI` (LinkedIn) and `@Zerve_AI` (X)
   > Zerve amplifies good submissions. Early posts get more reach before judging ends. Don't wait until the deadline.
 
-- [ ] 🔵 **MEDIUM · 30m · Impact: Medium** — Replace `allow_origins=["*"]` in CORS middleware with your production Vercel URL only
+- [x] 🔵 **MEDIUM · 30m · Impact: Medium** — Replace `allow_origins=["*"]` in CORS middleware with your production Vercel URL only
   > Security detail that signals production thinking. Wildcard CORS is a red flag in any production review.
 
-- [ ] 🟢 **LOW · 1h · Impact: Medium** — Write `DEPLOYMENT.md` with clear step-by-step instructions: clone → install → set env vars → run pipeline → start API → start frontend
+- [x] 🟢 **LOW · 1h · Impact: Medium** — Write `DEPLOYMENT.md` with clear step-by-step instructions: clone → install → set env vars → run pipeline → start API → start frontend
   > Judges appreciate projects they could actually reproduce and use after the hackathon. This signals long-term thinking.
 
 ---

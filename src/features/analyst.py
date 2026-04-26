@@ -44,6 +44,7 @@ class ConfluxAnalyst:
     def build_cross_domain_context(self, query: str) -> dict:
         """
         Builds a structured context by pulling relevant signals from all 4 verticals.
+        Enhanced to detect intent and cross-link entities.
         """
         query = query.lower()
         processed_dir = Path("data/processed")
@@ -51,49 +52,75 @@ class ConfluxAnalyst:
             "sports_wc2026": [],
             "markets": [],
             "climate": [],
-            "social_cultural": []
+            "social_cultural": [],
+            "intent": "general"
         }
         
-        # 1. Sports / WC2026
+        # Keywords for intent detection
+        intents = {
+            "markets": ["market", "alpha", "price", "odds", "polymarket", "kalshi", "mispricing", "value", "arbitrage"],
+            "climate": ["climate", "weather", "heat", "altitude", "stress", "humidity", "venue", "risk", "environment"],
+            "social": ["social", "cultural", "trend", "momentum", "hype", "reddit", "tipping", "sentiment", "buzz"],
+            "sports": ["win", "lose", "match", "team", "score", "bracket", "simulation", "rankings", "cup", "fifa"]
+        }
+        
+        found_intents = [k for k, v in intents.items() if any(w in query for w in v)]
+        if found_intents:
+            context["intent"] = found_intents[0]
+
+        # 1. Sports / WC2026 - Find mentioned teams
         try:
-            df = pd.read_csv(processed_dir / "conflux_wc2026.csv")
+            df_sports = pd.read_csv(processed_dir / "conflux_wc2026.csv")
             from src.constants import ALL_WC_TEAMS
-            mentioned = [t for t in ALL_WC_TEAMS if t.lower() in query]
-            if mentioned:
-                res = df[df['subject'].isin(mentioned)]
-                if not res.empty:
-                    context["sports_wc2026"] = res.to_dict(orient="records")
+            mentioned_teams = [t for t in ALL_WC_TEAMS if t.lower() in query]
             
-            if len(context["sports_wc2026"]) < 2:
-                top3 = df.sort_values("conflux_score", ascending=False).head(3).to_dict(orient="records")
-                context["sports_wc2026"].extend([t for t in top3 if t not in context["sports_wc2026"]])
-        except: pass
-
-        # 2. Markets
-        try:
-            df = pd.read_csv(processed_dir / "conflux_market_calib.csv")
-            relevant = df[df.apply(lambda row: any(str(v).lower() in query for v in row), axis=1)]
-            if not relevant.empty:
-                context["markets"] = relevant.head(5).to_dict(orient="records")
+            if mentioned_teams:
+                res = df_sports[df_sports['subject'].isin(mentioned_teams)]
+                context["sports_wc2026"] = res.to_dict(orient="records")
             else:
-                context["markets"] = df.sort_values("abs_alpha", ascending=False).head(3).to_dict(orient="records")
+                # Default: Top alpha gaps or top rankings
+                context["sports_wc2026"] = df_sports.sort_values("conflux_score", ascending=False).head(3).to_dict(orient="records")
         except: pass
 
-        # 3. Climate
+        # 2. Cross-Domain Linkage: If teams mentioned, pull their climate and social signals
+        if mentioned_teams:
+            try:
+                # Climate
+                df_climate = pd.read_csv(processed_dir / "conflux_climate_risk.csv")
+                # Find venues for these teams (assuming they play in specific cities or mapping exists)
+                # For now, just search for team name in climate rows if they appear there
+                relevant_climate = df_climate[df_climate.apply(lambda row: any(t.lower() in str(row).lower() for t in mentioned_teams), axis=1)]
+                context["climate"] = relevant_climate.to_dict(orient="records")
+                
+                # Social
+                df_social = pd.read_csv(processed_dir / "conflux_cultural_moment.csv")
+                relevant_social = df_social[df_social.apply(lambda row: any(t.lower() in str(row).lower() for t in mentioned_teams), axis=1)]
+                context["social_cultural"] = relevant_social.to_dict(orient="records")
+            except: pass
+
+        # 3. Market Specific Context
         try:
-            df = pd.read_csv(processed_dir / "conflux_climate_risk.csv")
-            relevant = df[df.apply(lambda row: any(str(v).lower() in query for v in row), axis=1)]
-            if not relevant.empty:
-                context["climate"] = relevant.to_dict(orient="records")
+            df_markets = pd.read_csv(processed_dir / "conflux_market_calib.csv")
+            if mentioned_teams:
+                relevant_m = df_markets[df_markets['subject'].isin(mentioned_teams)]
+                context["markets"] = relevant_m.to_dict(orient="records")
+            
+            if not context["markets"]:
+                context["markets"] = df_markets.sort_values("abs_alpha", ascending=False).head(3).to_dict(orient="records")
         except: pass
 
-        # 4. Social / Cultural
-        try:
-            df = pd.read_csv(processed_dir / "conflux_cultural_moment.csv")
-            relevant = df[df.apply(lambda row: any(str(v).lower() in query for v in row), axis=1)]
-            if not relevant.empty:
-                context["social_cultural"] = relevant.to_dict(orient="records")
-        except: pass
+        # 4. Fill gaps if still empty
+        if not context["climate"]:
+            try:
+                df_climate = pd.read_csv(processed_dir / "conflux_climate_risk.csv")
+                context["climate"] = df_climate.sort_values("risk_score", ascending=False).head(2).to_dict(orient="records")
+            except: pass
+            
+        if not context["social_cultural"]:
+            try:
+                df_social = pd.read_csv(processed_dir / "conflux_cultural_moment.csv")
+                context["social_cultural"] = df_social.sort_values("tipping_score", ascending=False).head(2).to_dict(orient="records")
+            except: pass
 
         return context
 
@@ -130,9 +157,10 @@ class ConfluxAnalyst:
         report += "\n---\n*NOTE: This is a pre-formatted heuristic report generated by the Conflux Core Engine while AI reasoning modules are in maintenance.*"
         return report
 
-    def generate_insight(self, context_data: dict, user_query: str = None) -> str:
+    def generate_insight(self, context_data: dict, user_query: str = None, history: list = None) -> str:
         """
         Generates reasoning with automatic fallback across providers.
+        Supports conversation history.
         """
         system_prompt = """
         You are the ORACLE-26 Intelligence Analyst. Provide deep, multi-modal reasoning 
@@ -152,10 +180,17 @@ class ConfluxAnalyst:
         """
         
         content = f"Current Intelligence Context:\n{json.dumps(context_data, indent=2)}\n\n"
+        
+        messages = [{"role": "system", "content": system_prompt}]
+        
+        if history:
+            # Add last 5 messages for context
+            messages.extend(history[-5:])
+            
         if user_query:
-            content += f"User Query: {user_query}"
+            messages.append({"role": "user", "content": f"{content}\nUser Query: {user_query}"})
         else:
-            content += "Task: Provide a macro-briefing on the current tournament state."
+            messages.append({"role": "user", "content": f"{content}\nTask: Provide a macro-briefing on the current tournament state."})
 
         for model_info in self.models:
             provider = model_info["provider"]
@@ -165,24 +200,18 @@ class ConfluxAnalyst:
                 if provider == "groq" and self.groq_client:
                     completion = self.groq_client.chat.completions.create(
                         model=model_name,
-                        messages=[
-                            {"role": "system", "content": system_prompt},
-                            {"role": "user", "content": content}
-                        ],
+                        messages=messages,
                         temperature=0.2,
-                        max_tokens=512
+                        max_tokens=768
                     )
                     return completion.choices[0].message.content
                 
                 elif provider == "mistral" and self.mistral_client:
                     completion = self.mistral_client.chat.complete(
                         model=model_name,
-                        messages=[
-                            {"role": "system", "content": system_prompt},
-                            {"role": "user", "content": content}
-                        ],
+                        messages=messages,
                         temperature=0.2,
-                        max_tokens=512
+                        max_tokens=768
                     )
                     return completion.choices[0].message.content
             
@@ -192,6 +221,40 @@ class ConfluxAnalyst:
                 
         # Final Fallback: Heuristic Template (Zero-AI)
         return self._generate_heuristic_report(context_data)
+
+    def generate_insight_stream(self, context_data: dict, user_query: str = None, history: list = None):
+        """
+        Streaming version of generate_insight.
+        Yields chunks of text.
+        """
+        system_prompt = """
+        You are the ORACLE-26 Intelligence Analyst. Provide deep, multi-modal reasoning.
+        Bloomberg-style tone. Markdown format. Highlight USA Institutional Underdog thesis.
+        """
+        
+        content = f"Context: {json.dumps(context_data)}\n\nQuery: {user_query or 'Macro-briefing'}"
+        messages = [{"role": "system", "content": system_prompt}]
+        if history: messages.extend(history[-5:])
+        messages.append({"role": "user", "content": content})
+
+        # Only Groq supports easy streaming for now in this setup
+        if self.groq_client:
+            try:
+                stream = self.groq_client.chat.completions.create(
+                    model=self.models[0]["name"],
+                    messages=messages,
+                    temperature=0.2,
+                    max_tokens=1024,
+                    stream=True
+                )
+                for chunk in stream:
+                    if chunk.choices[0].delta.content:
+                        yield chunk.choices[0].delta.content
+            except Exception as e:
+                yield f"◈ Stream Error: {str(e)}. Falling back to static."
+                yield self.generate_insight(context_data, user_query, history)
+        else:
+            yield self.generate_insight(context_data, user_query, history)
 
 # Singleton for API use
 zerve_analyst = ConfluxAnalyst()

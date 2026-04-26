@@ -33,9 +33,9 @@ const SignalStream = () => {
   }, []);
 
   return (
-    <div className="terminal-card bg-bg1/20 border-white/5 h-[300px] flex flex-col">
+    <div className="terminal-card bg-bg1/20 border-border h-[300px] flex flex-col">
       <div className="flex justify-between items-center mb-4">
-        <h3 className="text-[10px] font-mono font-bold text-white/40 tracking-[0.2em] uppercase flex items-center gap-2">
+        <h3 className="text-[10px] font-mono font-bold text-muted tracking-[0.2em] uppercase flex items-center gap-2">
           <Terminal size={12} className="text-amber" /> Neural Signal Stream
         </h3>
         <div className="flex gap-1">
@@ -52,28 +52,28 @@ const SignalStream = () => {
               initial={{ opacity: 0, x: -10 }}
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, scale: 0.95 }}
-              className="flex gap-3 text-[10px] leading-relaxed border-b border-white/[0.02] pb-2 last:border-0"
+              className="flex gap-3 text-[10px] leading-relaxed border-b border-foreground/[0.02] pb-2 last:border-0"
             >
-              <span className="text-white/10 shrink-0">[{log.time}]</span>
+              <span className="text-foreground/10 shrink-0">[{log.time}]</span>
               <span className={`shrink-0 uppercase font-bold ${
                 log.type === 'alert' ? 'text-amber' : 
                 log.type === 'climate' ? 'text-red' : 
-                log.type === 'zap' ? 'text-teal' : 'text-white/30'
+                log.type === 'zap' ? 'text-teal' : 'text-foreground/30'
               }`}>
                 {log.type}
               </span>
-              <span className="text-white/50 truncate">{log.text}</span>
+              <span className="text-foreground/50 truncate">{log.text}</span>
             </motion.div>
           ))}
         </AnimatePresence>
       </div>
 
-      <div className="mt-4 pt-4 border-t border-white/5 flex justify-between items-center">
+      <div className="mt-4 pt-4 border-t border-border flex justify-between items-center">
         <div className="flex items-center gap-2">
            <Activity size={10} className="text-teal" />
-           <span className="text-[8px] font-mono text-white/20 uppercase tracking-widest">IO: 1.2 GB/S</span>
+           <span className="text-[8px] font-mono text-muted uppercase tracking-widest">IO: 1.2 GB/S</span>
         </div>
-        <span className="text-[8px] font-mono text-white/20 uppercase">Encryption: AES-256</span>
+        <span className="text-[8px] font-mono text-muted uppercase">Encryption: AES-256</span>
       </div>
     </div>
   );
