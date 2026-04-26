@@ -51,13 +51,7 @@ app = FastAPI(
     }
 )
 
-# CORS
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+
 
 # API Security Middleware
 @app.middleware("http")
@@ -99,6 +93,20 @@ async def rate_limit_middleware(request: Request, call_next):
     _rate_limit_store[client_ip].append(now)
     return await call_next(request)
 
+# CORS (Added last to ensure it wraps other middleware)
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "https://conflux-five.vercel.app",
+        "http://localhost:3000",
+        "http://localhost:5173",
+        "*"
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 PROCESSED_DIR = Path("data/processed")
 RAW_DIR = Path("data/raw")
 fusion_engine = ConfluxFusionEngine()
@@ -110,6 +118,10 @@ fusion_engine = ConfluxFusionEngine()
 def run_pipeline_refresh():
     """Background task to re-run signal bootstrap every 24h with retry logic."""
     from time import sleep
+    
+    # Delay first run by 10s to allow API to stabilize
+    sleep(10)
+    
     try:
         from src.data.bootstrap_signals import bootstrap
     except Exception as e:
