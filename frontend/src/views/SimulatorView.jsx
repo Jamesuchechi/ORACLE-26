@@ -98,7 +98,7 @@ const SimulatorView = () => {
                 Knockout Advancement Matrix
               </h3>
               <div className="space-y-6">
-                {data.advancement.slice(0, 15).map((t, idx) => (
+                {(data?.advancement || []).slice(0, 15).map((t, idx) => (
                   <div key={t.team} className="space-y-2">
                     <div className="flex justify-between items-end">
                       <div className="flex items-center gap-3">
@@ -132,23 +132,25 @@ const SimulatorView = () => {
                 <Activity size={12} /> Probabilistic Insights
               </h3>
               <div className="space-y-6">
-                <div className="p-4 rounded-xl bg-[var(--card-bg)] border border-border">
-                  <p className="text-[10px] font-mono text-muted uppercase mb-2">Likely Finalists</p>
-                  <div className="flex items-center justify-between text-xs font-bold">
-                    <div className="flex items-center gap-2">
-                      <img src={getFlagUrl(data.advancement[0].team)} className="w-4 h-3 rounded-sm" />
-                      {data.advancement[0].team}
+                {data?.advancement?.[0] && (
+                  <div className="p-4 rounded-xl bg-[var(--card-bg)] border border-border">
+                    <p className="text-[10px] font-mono text-muted uppercase mb-2">Likely Finalists</p>
+                    <div className="flex items-center justify-between text-xs font-bold">
+                      <div className="flex items-center gap-2">
+                        <img src={getFlagUrl(data.advancement[0].team)} className="w-4 h-3 rounded-sm" />
+                        {data.advancement[0].team}
+                      </div>
+                      <div className="text-muted font-light">VS</div>
+                      <div className="flex items-center gap-2">
+                        {data.advancement[1]?.team}
+                        {data.advancement[1]?.team && <img src={getFlagUrl(data.advancement[1].team)} className="w-4 h-3 rounded-sm" />}
+                      </div>
                     </div>
-                    <div className="text-muted font-light">VS</div>
-                    <div className="flex items-center gap-2">
-                      {data.advancement[1].team}
-                      <img src={getFlagUrl(data.advancement[1].team)} className="w-4 h-3 rounded-sm" />
+                    <div className="mt-4 pt-4 border-t border-border text-[10px] italic text-muted leading-relaxed">
+                      "Monte Carlo simulations suggest an {((data.advancement[0].probs.winner + (data.advancement[1]?.probs?.winner || 0))*100).toFixed(0)}% probability of the trophy being claimed by these two favorites."
                     </div>
                   </div>
-                  <div className="mt-4 pt-4 border-t border-border text-[10px] italic text-muted leading-relaxed">
-                    "Monte Carlo simulations suggest an {((data.advancement[0].probs.winner + data.advancement[1].probs.winner)*100).toFixed(0)}% probability of the trophy being claimed by these two favorites."
-                  </div>
-                </div>
+                )}
               </div>
             </div>
           </div>

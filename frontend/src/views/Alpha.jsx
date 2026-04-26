@@ -30,7 +30,7 @@ const AlphaView = () => {
       try {
         const res = await axios.get('/v1/predict/alpha/discovery');
         setData(res.data);
-        if (res.data.alpha_plays.length > 0) setSelectedAlpha(res.data.alpha_plays[0]);
+        if (res.data?.alpha_plays?.length > 0) setSelectedAlpha(res.data.alpha_plays[0]);
         setLoading(false);
       } catch (err) {
         console.error(err);
@@ -49,11 +49,11 @@ const AlphaView = () => {
   if (error) return <div className="p-12 text-center text-red font-mono text-xs uppercase">{error}</div>;
 
   // Prepare scatter data
-  const scatterData = data.alpha_plays.map(p => ({
+  const scatterData = (data?.alpha_plays || []).map(p => ({
     name: p.subject,
-    x: p.market_prob * 100,
-    y: p.model_prob * 100,
-    alpha: p.alpha * 100
+    x: (p.market_prob || 0) * 100,
+    y: (p.model_prob || 0) * 100,
+    alpha: (p.alpha || 0) * 100
   }));
 
   return (
@@ -170,7 +170,7 @@ const AlphaView = () => {
           </div>
 
           <div className="space-y-4">
-             {data.alpha_plays.map((play, i) => (
+             {(data?.alpha_plays || []).map((play, i) => (
                <motion.div 
                  key={play.subject}
                  onClick={() => setSelectedAlpha(play)}

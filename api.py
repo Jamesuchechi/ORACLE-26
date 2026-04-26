@@ -486,7 +486,7 @@ def get_venue_impact(venue: str, team: str = "Argentina"):
         }
     except Exception as e:
         print(f"Climate Impact Error: {e}")
-        return {"error": str(e)}
+        raise HTTPException(status_code=500, detail=str(e))
 
 # ─────────────────────────────────────────────────────────────
 # VERTICAL V: Social Trends
@@ -526,7 +526,7 @@ def get_fusion_hub():
         return {"matrix": fusion_engine.calculate_domain_matrix(), "alerts": fusion_engine.get_intelligence_stream(), "timestamp": datetime.now().isoformat()}
     except Exception as e:
         print(f"Fusion Hub Error: {e}")
-        return {"error": "Intelligence link interrupted."}
+        raise HTTPException(status_code=500, detail="Intelligence link interrupted.")
 
 @app.get("/v1/predict/alpha/discovery", tags=["Command Center"])
 async def get_alpha_discovery():
@@ -536,7 +536,7 @@ async def get_alpha_discovery():
         return {"alpha_plays": fusion_engine.identify_alpha_signals(), "timestamp": datetime.now().isoformat()}
     except Exception as e:
         print(f"Alpha Discovery Error: {e}")
-        return {"error": "Alpha detection scanner offline."}
+        raise HTTPException(status_code=500, detail="Alpha detection scanner offline.")
 
 # --- Briefing Cache ---
 _briefing_cache = {"data": None, "expires": None}
@@ -650,7 +650,7 @@ def get_tournament_simulation():
         }
     except Exception as e:
         print(f"Tournament Simulation Error: {e}")
-        return {"error": str(e)}
+        raise HTTPException(status_code=500, detail=str(e))
 
 @app.get("/health", tags=["System"])
 def get_health():
@@ -737,14 +737,14 @@ def run_prophecy_simulation(
         }
     except Exception as e:
         print(f"Prophecy Error: {e}")
-        return {"error": str(e)}
+        raise HTTPException(status_code=500, detail=str(e))
 
 @app.get("/v1/model/validation", tags=["Model Integrity"])
 def get_model_validation():
     """Return historical backtest metrics and model calibration proof."""
     file_path = Path("data/processed/model_validation.json")
     if not file_path.exists():
-        return {"error": "Validation scanner offline. Run backtest_accuracy.py to generate."}
+        raise HTTPException(status_code=404, detail="Validation scanner offline. Run backtest_accuracy.py to generate.")
     with open(file_path, "r") as f:
         return json.load(f)
 
