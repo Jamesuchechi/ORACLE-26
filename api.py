@@ -581,10 +581,27 @@ def get_analyst_briefing():
 def get_tournament_simulation():
     """Run a Monte Carlo simulation of the entire WC2026 tournament."""
     try:
-        df = pd.read_csv(PROCESSED_DIR / "conflux_wc2026.csv")
+        # Retry logic for reading the CSV to handle race conditions during pipeline refresh
+        df = None
+        for _ in range(3):
+            try:
+                df = pd.read_csv(PROCESSED_DIR / "conflux_wc2026.csv")
+                if not df.empty and 'subject' in df.columns:
+                    break
+            except:
+                time.sleep(0.5)
+        
+        if df is None:
+            raise Exception("Could not read conflux_wc2026.csv after multiple attempts")
+        
         from src.constants import SIGNAL_WEIGHTS
         
         # 1. Group Stage Simulation
+        if 'group' not in df.columns:
+            # Fallback mapping if somehow the CSV is missing the column
+            from src.constants import TEAM_TO_GROUP
+            df['group'] = df['subject'].map(TEAM_TO_GROUP)
+            
         groups = df['group'].unique()
         group_results = {}
         
@@ -648,6 +665,9 @@ def get_tournament_simulation():
             "advancement": sorted(advancement, key=lambda x: x['probs']['winner'], reverse=True),
             "timestamp": datetime.now().isoformat()
         }
+    except KeyError as e:
+        print(f"Tournament Simulation KeyError: {e} (Missing column or dictionary key)")
+        raise HTTPException(status_code=500, detail=f"Simulation data error: missing {e}")
     except Exception as e:
         print(f"Tournament Simulation Error: {e}")
         raise HTTPException(status_code=500, detail=str(e))

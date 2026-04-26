@@ -147,8 +147,10 @@ class ConfluxPipeline:
         fused_df["elo"]   = fused_df["subject"].map(CURATED_ELO)
 
         out = PROCESSED_DIR / "conflux_wc2026.csv"
-        fused_df.to_csv(out, index=False)
-        print(f"  ✓ WC2026 intelligence saved → {out}")
+        temp_out = out.with_suffix(".tmp")
+        fused_df.to_csv(temp_out, index=False)
+        temp_out.replace(out)
+        print(f"  ✓ WC2026 intelligence saved (atomically) → {out}")
 
         print("\n  TOP 10 CONFLUX RANKINGS:")
         top10 = fused_df[["subject", "group", "elo", "sports", "markets",
@@ -206,8 +208,11 @@ class ConfluxPipeline:
             })
 
         df = pd.DataFrame(rows).sort_values("alpha", key=abs, ascending=False)
-        df.to_csv(PROCESSED_DIR / "conflux_market_calib.csv", index=False)
-        print(f"  ✓ Market calibration saved → {PROCESSED_DIR}/conflux_market_calib.csv")
+        out = PROCESSED_DIR / "conflux_market_calib.csv"
+        temp_out = out.with_suffix(".tmp")
+        df.to_csv(temp_out, index=False)
+        temp_out.replace(out)
+        print(f"  ✓ Market calibration saved (atomically) → {out}")
         print(df[["event_id", "market_prob", "model_prob", "alpha", "signal_strength"]].to_string(index=False))
         return df
 
@@ -251,8 +256,11 @@ class ConfluxPipeline:
             })
 
         df = pd.DataFrame(rows).sort_values("conflux_risk", ascending=False)
-        df.to_csv(PROCESSED_DIR / "conflux_climate_risk.csv", index=False)
-        print(f"  ✓ Climate risk saved → {PROCESSED_DIR}/conflux_climate_risk.csv")
+        out = PROCESSED_DIR / "conflux_climate_risk.csv"
+        temp_out = out.with_suffix(".tmp")
+        df.to_csv(temp_out, index=False)
+        temp_out.replace(out)
+        print(f"  ✓ Climate risk saved (atomically) → {out}")
         print(df[["region", "risk_type", "conflux_risk", "confidence"]].to_string(index=False))
         return df
 
@@ -290,8 +298,11 @@ class ConfluxPipeline:
             })
 
         df = pd.DataFrame(rows).sort_values("conflux_score", ascending=False)
-        df.to_csv(PROCESSED_DIR / "conflux_cultural_moment.csv", index=False)
-        print(f"  ✓ Cultural moments saved → {PROCESSED_DIR}/conflux_cultural_moment.csv")
+        out = PROCESSED_DIR / "conflux_cultural_moment.csv"
+        temp_out = out.with_suffix(".tmp")
+        df.to_csv(temp_out, index=False)
+        temp_out.replace(out)
+        print(f"  ✓ Cultural moments saved (atomically) → {out}")
         print(df[["topic", "tipping_score", "is_tipping", "conflux_score"]].to_string(index=False))
         return df
 
