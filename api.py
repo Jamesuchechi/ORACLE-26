@@ -337,11 +337,15 @@ async def get_market_alpha():
             }
             
         df = pd.read_csv(file_path)
-        # Use existing 'alpha' column or calculate from prob
-        if 'alpha' in df.columns:
+        # Use existing alpha columns or calculate from available signals
+        if 'alpha_gap' in df.columns:
+            pass
+        elif 'alpha' in df.columns:
             df["alpha_gap"] = df["alpha"]
-        else:
+        elif 'model_prob' in df.columns and 'market_prob' in df.columns:
             df["alpha_gap"] = df["model_prob"] - df["market_prob"]
+        else:
+            df["alpha_gap"] = df["sports"] - df["markets"]
             
         value_ops = df.sort_values("alpha_gap", ascending=False).head(5)
         hype_ops  = df.sort_values("alpha_gap", ascending=True).head(5)
